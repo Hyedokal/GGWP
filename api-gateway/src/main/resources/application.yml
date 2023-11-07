@@ -7,7 +7,7 @@ spring:
   cloud:
     gateway:
       routes:
-        # ??? ??? microservice ?? ??
+        # 이 밑에 본인의 Microservice 등록하기
         - id: squad-service
           uri: lb://SQUAD-SERVICE
           predicates:
