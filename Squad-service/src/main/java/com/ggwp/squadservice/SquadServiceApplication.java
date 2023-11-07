@@ -1,4 +1,4 @@
-package com.example.squadservice;
+package com.ggwp.squadservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
