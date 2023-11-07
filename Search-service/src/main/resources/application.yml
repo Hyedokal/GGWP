@@ -1,7 +1,7 @@
 # spring
   spring:
     application:
-      name: Notice-service
+      name: Search-service
     profiles:
       active: db
     datasource:
