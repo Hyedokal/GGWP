@@ -26,6 +26,7 @@ public class RequestAnnounceDto {
         return Announce.builder()
                 .aTitle(this.aTitle)
                 .aContent(this.aContent)
+                .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
     }

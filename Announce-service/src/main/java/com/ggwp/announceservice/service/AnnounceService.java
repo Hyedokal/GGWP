@@ -19,19 +19,24 @@ public class AnnounceService {
     private final AnnounceRepository announceRepository;
 
     //공지사항 작성 후 저장하기
+    public void writeAnnounce(RequestAnnounceDto dto){
+        Announce announce = dto.toEntity();
+        announceRepository.save(announce);
+    }
 
     //공지사항 수정하기
     @Transactional
-    public void editAnnounce(Long aId, String aTitle, String aContent){
-        Announce announce = announceRepository.findByAId(aId)
+    public void editAnnounce(Long aId, RequestAnnounceDto dto){
+        Announce announce = announceRepository.findByaId(aId)
                 .orElseThrow(() -> new NoSuchElementException("해당 ID값의 공지사항이 존재하지 않습니다."));
-        RequestAnnounceDto dto = new RequestAnnounceDto(aTitle, aContent);
+        announce.updateAnnounce(dto.getATitle(), dto.getAContent());
+        announceRepository.save(announce);
     }
 
     //공지사항 삭제하기
     @Transactional
     public void deleteAnnounce(Long aId){
-        Announce announce = announceRepository.findByAId(aId)
+        Announce announce = announceRepository.findByaId(aId)
                 .orElseThrow(() -> new NoSuchElementException("해당 ID값의 공지사항이 존재하지 않습니다."));
         announceRepository.delete(announce);
     }
@@ -39,5 +44,11 @@ public class AnnounceService {
     //공지사항 전체 조회하기
     public List<Announce> getAllAnnounce(){
         return announceRepository.findAll();
+    }
+
+    //공지사항 상세 조회하기
+    public Announce getOneAnnounce(Long aId){
+        return announceRepository.findByaId(aId)
+                .orElseThrow(() -> new NoSuchElementException("해당 ID값의 공지사항이 존재하지 않습니다."));
     }
 }
