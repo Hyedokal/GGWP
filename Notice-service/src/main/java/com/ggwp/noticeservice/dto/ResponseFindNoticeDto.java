@@ -11,25 +11,27 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ResponseFindNoticeDto {
+
+    // notice_id
     private Long id;
-
-    // 내용
-    private String content;
-
-    // 알림 동의 여부
-    private boolean checked;
 
     // 알림의 상태
     private NoticeEnum status;
+
+    // 보낸 사람
+    private Long senderId;
+
+    // 받는 사람
+    private Long receiverId;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
     public ResponseFindNoticeDto(Notice notice){
         this.id = notice.getId();
-        this.content = notice.getContent();
-        this.checked = notice.isChecked();
         this.status = notice.getStatus();
+        this.senderId = notice.getSenderId();
+        this.receiverId = notice.getReceiverId();
         this.createdAt = notice.getCreatedAt();
         this.updatedAt = notice.getUpdatedAt();
     }

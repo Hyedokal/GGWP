@@ -17,4 +17,21 @@ public enum NoticeEnum {
         this.code = code;
         this.description = description;
     }
+
+    public static NoticeEnum getByCode(int code) {
+        switch (code) {
+            case 1:
+                return UNREAD;
+            case 2:
+                return READ;
+            case 3:
+                return ACCEPTED;
+            case 4:
+                return REJECTED;
+            default:
+                throw new IllegalArgumentException("No matching constant for code: " + code);
+        }
+    }
+
+
 }
