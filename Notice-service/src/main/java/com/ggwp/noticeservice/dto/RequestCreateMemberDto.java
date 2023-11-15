@@ -11,7 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class RequestCreateMemberDto {
-    private Long id;
 
     private String username;
 

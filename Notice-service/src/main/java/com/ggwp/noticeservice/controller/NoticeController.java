@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("notice-service")
+@RequestMapping("v1/notice")
 @RequiredArgsConstructor
 public class NoticeController {
 
