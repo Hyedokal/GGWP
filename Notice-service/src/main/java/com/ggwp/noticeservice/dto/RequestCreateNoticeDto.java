@@ -1,5 +1,6 @@
 package com.ggwp.noticeservice.dto;
 
+import com.ggwp.noticeservice.domain.Member;
 import com.ggwp.noticeservice.domain.Notice;
 import com.ggwp.noticeservice.enums.NoticeEnum;
 import lombok.*;
@@ -10,18 +11,18 @@ import lombok.*;
 @Builder
 public class RequestCreateNoticeDto {
 
-    // 내용
-    private String content;
+    // 보낸 사람
+    private Long senderId;
 
-    // 알림 동의 여부
-    private boolean checked;
+    // 받는 사람
+    private Long receiverId;
 
-    // 알림의 상태
+    //알림의 상태
     private NoticeEnum status;
-    public Notice toEntity(){
+    public Notice toEntity(Long senderId, Long receiverId){
         return Notice.builder()
-                .content("알림 내용입니다.")
-                .checked(false)
+                .senderId(senderId)
+                .receiverId(receiverId)
                 .status(NoticeEnum.UNREAD)
                 .build();
     }

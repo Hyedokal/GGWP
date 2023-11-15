@@ -2,8 +2,10 @@ package com.ggwp.noticeservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class NoticeServiceApplication {
 
     public static void main(String[] args) {
