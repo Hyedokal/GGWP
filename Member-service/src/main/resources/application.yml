@@ -5,7 +5,7 @@ spring:
   application:
     name: member-service
   profiles:
-    active: db
+    active: db,jwt
   datasource:
     driver-class-name: ${driver-class-name}
     url: ${url}
@@ -15,7 +15,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
