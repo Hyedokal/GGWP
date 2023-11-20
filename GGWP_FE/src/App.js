@@ -101,6 +101,7 @@ import { useNavigate } from 'react-router-dom';
 // 컴포넌트화 한것
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+
 import BackgroundRectangle from './BackgroundRectangle';
 import KakaoButton from './KakaoButton';
 import KakaoImage from './KakaoImage';
@@ -111,7 +112,8 @@ import TextOnRectangle from './TextOnRectangle';
  //import MyInfoButton from './MyInfoButton';
 import AdminLoginButton from './AdminLoginButton';
 import Header from './Header';
-import Log from './Log';
+//import Log from './Log';
+import MyPage from './MyPage';
 //import Header2 from './Header2';
 function App() {
     const API_KEY = "6c01a4160a5e8472a65359304bb6d1f0";
@@ -124,9 +126,9 @@ function App() {
             <header className="App-header">
                 <div >
 
-                    <Log/>
-                  <Header/>
 
+                  <Header/>
+                    <MyPage/>
 
 
                     <div >
