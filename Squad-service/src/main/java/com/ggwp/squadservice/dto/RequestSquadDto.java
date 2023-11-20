@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-    @AllArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class RequestSquadDto {
     @NotBlank(message = "반드시 하나의 포지션을 선택하셔야 합니다.")
