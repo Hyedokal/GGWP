@@ -67,12 +67,14 @@ public class NoticeController {
         return ResponseEntity.ok(noticeList);
     }
 
+    // 알림 업데이트
     @PutMapping("update")
     public ResponseEntity<?> readNotice(@RequestBody RequestUpdateNoticeDto updateNoticeDto){
         noticeService.updateNotice(updateNoticeDto);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    // 알림 삭제
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> deleteNotice(@PathVariable Long id){
         noticeService.deleteNotice(id);

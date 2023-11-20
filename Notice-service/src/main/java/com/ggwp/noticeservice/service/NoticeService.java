@@ -7,6 +7,7 @@ import com.ggwp.noticeservice.dto.RequestCreateMemberDto;
 import com.ggwp.noticeservice.dto.RequestCreateNoticeDto;
 import com.ggwp.noticeservice.dto.RequestUpdateNoticeDto;
 import com.ggwp.noticeservice.dto.ResponseFindNoticeDto;
+import com.ggwp.noticeservice.exception.NoticeNotFoundException;
 import com.ggwp.noticeservice.repository.MemberRepository;
 import com.ggwp.noticeservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,6 @@ public class NoticeService {
     // 알림 생성 (보낸 사람, 받는 사람, 상태)
     @Transactional
     public void createNotice(RequestCreateNoticeDto noticeDto){
-
         // 알림 생성
         Notice notice = noticeDto.toEntity(noticeDto.getSenderId(), noticeDto.getReceiverId());
         // 알림 저장
@@ -42,7 +42,7 @@ public class NoticeService {
     // 알림 찾기(알림의 ID)
     public ResponseFindNoticeDto findNoticeById(Long id){
         Notice notice = noticeRepository.findNoticeById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 ID값의 알림은 존재하지 않습니다."));
+                .orElseThrow(() -> new NoticeNotFoundException("해당 ID값의 알림은 존재하지 않습니다."));
 
         return new ResponseFindNoticeDto(notice);
     }
@@ -52,7 +52,7 @@ public class NoticeService {
         List<Notice> noiceList = noticeRepository.findNoticeByReceiverId(receiverId);
 
         if(noiceList.isEmpty()){
-            throw new NoSuchElementException("해당하는 receiverId값을 가진 알림이 존재하지 않습니다.");
+            throw new NoticeNotFoundException("해당하는 receiverId값을 가진 알림이 존재하지 않습니다.");
         }
         return noiceList;
     }
@@ -63,22 +63,22 @@ public class NoticeService {
         List<Notice> noticeList = noticeRepository.findNoticeBySenderId(senderId);
 
         if(noticeList.isEmpty()){
-            throw new NoSuchElementException("해당하는 receiverId값을 가진 알림이 존재하지 않습니다.");
+            throw new NoticeNotFoundException("해당하는 receiverId값을 가진 알림이 존재하지 않습니다.");
         }
         return noticeList;
     }
 
-    @Transactional //공지사항 업데이트하기
+    @Transactional //알림 업데이트하기
     public void updateNotice(RequestUpdateNoticeDto updateNoticeDto){
         Notice notice = noticeRepository.findNoticeById(updateNoticeDto.getNoticeId())
-                        .orElseThrow(() -> new NoSuchElementException("해당 ID값의 알림은 존재하지 않습니다."));
+                        .orElseThrow(() -> new NoticeNotFoundException("해당 ID값의 알림은 존재하지 않습니다."));
         notice.updateNotice(updateNoticeDto.getCode());
     }
 
-    @Transactional //공지사항 삭제하기
+    @Transactional //알림 삭제하기
     public void deleteNotice(Long id){
         Notice notice = noticeRepository.findNoticeById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 ID값의 알림은 존재하지 않습니다."));
+                .orElseThrow(() -> new NoticeNotFoundException("해당 ID값의 알림은 존재하지 않습니다."));
         noticeRepository.delete(notice);
     }
 

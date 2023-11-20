@@ -1,7 +1,10 @@
 package com.ggwp.noticeservice.domain;
+
 import com.ggwp.noticeservice.enums.NoticeEnum;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
