@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @Builder
-public class Comment {
+public class Comment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cId;
@@ -40,10 +41,11 @@ public class Comment {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
     //엔티티 수정을 위한 메서드
     public void updateComment(RequestCommentDto dto){
