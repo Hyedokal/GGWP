@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: announce-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1/GGWP_ANNOUNCE?createDatabaseIfNotExist=true&tinyInt1isBit=false&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: hello
+    password: world
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
