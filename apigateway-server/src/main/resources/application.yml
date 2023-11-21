@@ -1,0 +1,23 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: apigateway-server
+  cloud:
+    gateway:
+      routes:
+        # 이 밑에 본인의 Microservice 등록하기
+        - id: squad-service
+          uri: lb://SQUAD-SERVICE
+          predicates:
+            - Path=/Squad-service/**
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://127.0.0.1:8761/eureka
+  instance:
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+
