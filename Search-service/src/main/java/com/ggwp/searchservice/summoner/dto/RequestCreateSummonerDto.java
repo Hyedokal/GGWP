@@ -12,11 +12,10 @@ import java.time.ZoneOffset;
 @NoArgsConstructor
 @Builder
 public class RequestCreateSummonerDto {
+
     private String id;
 
-    private Long profileIconId;
-
-//    private String accountId;
+    private int profileIconId;
 
     private String puuid;
 
@@ -25,6 +24,8 @@ public class RequestCreateSummonerDto {
     private Long revisionDate;
 
     private Long summonerLevel;
+
+    //    private String accountId;
 
     // DTO를 -> Entity 로 변경
     public Summoner toEntity() {

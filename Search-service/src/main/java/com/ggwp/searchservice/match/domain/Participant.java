@@ -1,6 +1,8 @@
 package com.ggwp.searchservice.match.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ggwp.searchservice.summoner.domain.Summoner;
+import com.ggwp.searchservice.summoner.dto.RequestCreateSummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +36,7 @@ public class Participant {
 
     @Column(name = "summoner_level")
     private Long summonerLevel;
+
     ////////////////////////////////////////////////////////////
 
     private int champExperience; // 챔피언 숙련도
@@ -74,4 +77,13 @@ public class Participant {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    public RequestCreateSummonerDto createSummoner(){
+        return RequestCreateSummonerDto.builder()
+                .id(this.summonerId)
+                .profileIconId(this.profileIcon)
+                .puuid(this.puuid)
+                .name(this.summonerName)
+                .summonerLevel(this.summonerLevel)
+                .build();
+    }
 }

@@ -16,7 +16,7 @@ public class ResponseGetSummonerDto {
 
     private String id;
 
-    private Long profileIconId;
+    private int profileIconId;
 
 //    private String accountId;
 

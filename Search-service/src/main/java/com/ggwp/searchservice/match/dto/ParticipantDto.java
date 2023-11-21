@@ -3,6 +3,7 @@ package com.ggwp.searchservice.match.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ggwp.searchservice.match.domain.Participant;
 import com.ggwp.searchservice.match.domain.Team;
+import com.ggwp.searchservice.summoner.dto.RequestCreateSummonerDto;
 import lombok.*;
 
 @Getter
@@ -92,7 +93,6 @@ public class ParticipantDto {
 
     @JsonProperty("teamPosition")
     private String teamPosition;
-
     public Participant toEntity(Team team) {
         return Participant.builder()
                 .participantId(this.participantId)
