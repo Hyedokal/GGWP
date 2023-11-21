@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/v1/member")
 @RequiredArgsConstructor
 public class MemberApiController {
 
@@ -20,20 +20,11 @@ public class MemberApiController {
     public String healthCheck(){
         return "server is available!";
     }
-
-
-
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signUp(@RequestBody RequestCreateMemberDto requestCreateMemberDto) {
-        try {
-            memberService.createUser(requestCreateMemberDto);
-            ResponseDto responseDto = new ResponseDto("success", "회원가입 성공", null);
-            return ResponseEntity.ok(responseDto);
-        } catch (Exception e) {
-            log.error("회원가입 실패: {}", e.getMessage());
-            ResponseDto responseDto = new ResponseDto("error", "회원가입 실패",null);
-            return ResponseEntity.badRequest().body(responseDto);
-        }
+        memberService.createUser(requestCreateMemberDto);
+        log.info("뉴유저 signed up: {}", requestCreateMemberDto.getEmail());
+        return ResponseEntity.ok(null);
     }
 
 }

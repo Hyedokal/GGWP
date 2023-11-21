@@ -1,6 +1,7 @@
 package com.ggwp.memberservice.dto;
 
 import com.ggwp.memberservice.domain.Member;
+import com.ggwp.memberservice.global.entity.RoleType;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -8,10 +9,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder @ToString
+@Builder
+@ToString
 public class RequestCreateMemberDto {
 
-    private String userId;
+    private String email;
     private String password;
     private String nickname;
 
@@ -19,11 +21,11 @@ public class RequestCreateMemberDto {
     public Member toEntity() {
         // 암호화 비번을 저장하기 위해 필요한 암호화 라이브러리
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
         return Member.builder()
-                .userId(userId)
+                .email(email)
                 .password(bCryptPasswordEncoder.encode(password))
                 .nickname(nickname)
+                .role(RoleType.USER)
                 .build();
     }
 

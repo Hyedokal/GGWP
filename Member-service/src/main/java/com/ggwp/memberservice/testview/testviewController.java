@@ -16,6 +16,5 @@ public class testviewController {
     public String loginform(){
         return "/login";
     }
-    //테스트
-    
+
 }

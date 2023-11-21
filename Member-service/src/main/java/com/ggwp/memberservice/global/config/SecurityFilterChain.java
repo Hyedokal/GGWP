@@ -1,17 +1,23 @@
-package com.ggwp.memberservice.config;
-
+package com.ggwp.memberservice.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ggwp.memberservice.controller.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
-import com.ggwp.memberservice.controller.login.handler.LoginFailureHandler;
-import com.ggwp.memberservice.controller.login.handler.LoginSuccessHandler;
-import com.ggwp.memberservice.jwt.JwtAuthenticationProcessingFilter;
-import com.ggwp.memberservice.jwt.JwtService;
+import com.ggwp.memberservice.global.filter.CustomJsonUsernamePasswordAuthenticationFilter;
+import com.ggwp.memberservice.global.handler.LoginFailureHandler;
+import com.ggwp.memberservice.global.handler.LoginSuccessHandler;
+import com.ggwp.memberservice.global.handler.TokenAccessDeniedHandler;
+import com.ggwp.memberservice.global.jwt.JwtAuthenticationProcessingFilter;
+import com.ggwp.memberservice.global.jwt.JwtTokenProvider;
+import com.ggwp.memberservice.global.jwt.service.CustomUserDetailService;
 import com.ggwp.memberservice.repository.MemberRepository;
-import com.ggwp.memberservice.security.UserDetailsServiceImpl;
+import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,9 +27,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
@@ -33,15 +39,22 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfiguration {
+public class SecurityFilterChain {
 
-    private final JwtService jwtService;
+    private final CustomUserDetailService customUserDetailService;
+    private final JwtTokenProvider jwtTokenProvider;
+    //    private final BlacklistTokenRepository blacklistTokenRepository;
+    private  final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
-    private final MemberRepository memberRepository;
-    private  final  UserDetailsServiceImpl userDetailsService;
+    //    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+//    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+//    private final CustomOAuth2UserService customOAuth2UserService;
+    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
+
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public org.springframework.security.web.SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
@@ -50,57 +63,53 @@ public class SecurityConfiguration {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(frameOptions -> headers.disable()))
-
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                        .accessDeniedHandler(tokenAccessDeniedHandler))
+                //== URL별 권한 관리 옵션 ==//
+//        .authorizeHttpRequests(m -> methodSecurityExpressionHandler(new RoleHierarchy()))
                 .authorizeHttpRequests(authorizationHttpRequests -> authorizationHttpRequests
                         .requestMatchers(
-                                "/api/member/signup",//회원가입
-                                "/login",//로그인
-                                "/member/signupform", // 회원가입 폼
-                                "/member/loginform" // 로그인 폼
+                                // -- Swagger UI v3 (OpenAPI)
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**").permitAll()
+                        .requestMatchers(
+                                "/v1/member/signup",//회원가입
+                                "/v1/users/login"//로그인
+
                         ).permitAll()
+
                         .anyRequest().authenticated()) // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .logout(logout -> logout.logoutSuccessUrl("/"))
                 .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(),
                         CustomJsonUsernamePasswordAuthenticationFilter.class);
+
         return http.build();
-
     }
 
-    //cors 설정
-    //cors 설정
-    @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    //password Encoder
     @Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService);
+        provider.setUserDetailsService(customUserDetailService);
         return new ProviderManager(provider);
     }
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, memberRepository);
+        return new LoginSuccessHandler(jwtTokenProvider, memberRepository);
     }
+
     @Bean
     public LoginFailureHandler loginFailureHandler() {
         return new LoginFailureHandler();
     }
+
     //커스텀 필터 및 성공 실패 핸들러
     @Bean
     public CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter() {
@@ -116,7 +125,34 @@ public class SecurityConfiguration {
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
         return new JwtAuthenticationProcessingFilter(
-                jwtService, memberRepository);
+                jwtTokenProvider, memberRepository); //f블랙ㅅ리스트 추가예정
+    }
+    //cors 설정
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+        return roleHierarchy;
+    }
+
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(
+            RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
+    }
 }
