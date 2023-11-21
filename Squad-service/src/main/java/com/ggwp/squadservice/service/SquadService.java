@@ -2,10 +2,13 @@ package com.ggwp.squadservice.service;
 
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.RequestSquadDto;
+import com.ggwp.squadservice.enums.Position;
+import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.repository.SquadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +54,23 @@ public class SquadService {
     public Squad findOneSquad(Long sId){
         return squadRepository.findById(sId)
                 .orElseThrow(() -> new NoSuchElementException("해당 번호에 대한 게시글이 없습니다."));
+    }
+
+    //게시글 필터 별 조회하기
+    public List<Squad> findSquadWithFilters(Position myPos, QType qType){
+        Specification<Squad> spec = Specification.where(null);
+
+        if (myPos != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("myPos"), myPos));
+        }
+
+        if (qType != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("qType"), qType));
+        }
+
+        return squadRepository.findAllBySpec(spec);
+
     }
 }

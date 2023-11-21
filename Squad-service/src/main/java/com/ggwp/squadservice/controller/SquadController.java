@@ -59,4 +59,14 @@ public class SquadController {
         squadService.deleteSquad(sId);
         return ResponseEntity.ok().build();
     }
+
+    //게시글 필터조회
+    @GetMapping("/filter")
+    public ResponseEntity<List<Squad>> filterSquads(
+            @RequestParam(required = false) Position myPos,
+            @RequestParam(required = false) QType qType
+    ) {
+        List<Squad> filteredSquads = squadService.findSquadWithFilters(myPos, qType);
+        return ResponseEntity.ok(filteredSquads);
+    }
 }
