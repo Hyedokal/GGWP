@@ -70,7 +70,7 @@ public class SquadService {
                     criteriaBuilder.equal(root.get("qType"), qType));
         }
 
-        return squadRepository.findAllBySpec(spec);
+        return squadRepository.findAll(spec);
 
     }
 }

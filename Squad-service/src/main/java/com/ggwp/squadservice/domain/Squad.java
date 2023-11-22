@@ -21,9 +21,9 @@ public class Squad {
     private Long sId;
 
     //Member 객체를 Join해 올 칼럼. member-service 작성 완료시 활성화.
-    @ManyToOne
-    @JoinColumn(name = "uuid")
-    private Member member;
+//    @ManyToOne
+//    @JoinColumn(name = "uuid")
+//    private Member member;
 
     @Enumerated(EnumType.STRING)
     private Position myPos;
