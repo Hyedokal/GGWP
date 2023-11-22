@@ -1,9 +1,12 @@
 package com.ggwp.squadservice.service;
 
+import com.ggwp.squadservice.domain.Comment;
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.RequestSquadDto;
+import com.ggwp.squadservice.dto.ResponseFindSquadDto;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
+import com.ggwp.squadservice.feign.CommentFeignClient;
 import com.ggwp.squadservice.repository.SquadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ public class SquadService {
     
     @Autowired
     private final SquadRepository squadRepository;
+    private final CommentFeignClient commentFeignClient;
     
     //게시글 작성 후 저장하기
     public void writeSquad(RequestSquadDto dto){
@@ -71,6 +75,15 @@ public class SquadService {
         }
 
         return squadRepository.findAll(spec);
+    }
 
+    //게시글 별 댓글 리스트를 받아오는 메서드
+    public ResponseFindSquadDto findSquadCommentList(Long sId){
+        Squad squad = squadRepository.findById(sId)
+                .orElseThrow(() -> new NoSuchElementException("해당 번호의 게시글이 없습니다."));
+        ResponseFindSquadDto dto = new ResponseFindSquadDto(squad);
+        List<Comment> commentList = commentFeignClient.getCommentList(sId);
+        dto.setCommentList(commentList);
+        return dto;
     }
 }
