@@ -30,7 +30,7 @@ public class SquadController {
 
     //게시글 하나 가져오는 메서드
     @GetMapping("/list/{sId}")
-    public ResponseEntity<Squad> getOneAnnounce(@PathVariable Long sId){
+    public ResponseEntity<Squad> getOneSquad(@PathVariable Long sId){
         Squad squad = squadService.findOneSquad(sId);
         return ResponseEntity.ok().body(squad);
     }

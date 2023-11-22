@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,8 +22,9 @@ public class CommentController {
     //게시글별 댓글 가져오는 메서드
     @GetMapping("/{sId}")
     public ResponseEntity<?> getCommentList(@PathVariable Long sId){
-        List<Comment> commentList = commentService.listCommentBySquad(sId);
-        return  ResponseEntity.ok().body(commentList);
+        List<Comment> commentList = commentService.listCommentBySquad(sId)
+                .stream().toList();
+        return  ResponseEntity.ok(commentList);
     }
 
     //댓글 작성하는 메서드
