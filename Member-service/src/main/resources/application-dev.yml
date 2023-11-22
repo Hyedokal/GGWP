@@ -20,7 +20,16 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
 
+jwt:
+  secretKey: helloworld
+  access:
+    expiration: 60
+    header: Authorization
+  refresh:
+    expiration: 120
+    header: Authorization
 #
 #eureka:
 #  instance:
