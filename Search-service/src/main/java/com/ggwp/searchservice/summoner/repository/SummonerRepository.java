@@ -10,4 +10,6 @@ public interface SummonerRepository extends JpaRepository<Summoner,Long> {
     Summoner findSummonerByName(String name);
 
     Summoner findSummonerById(String id);
+
+    boolean existsById(String id);
 }

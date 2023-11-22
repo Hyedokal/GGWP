@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SummonerService {
@@ -36,7 +39,24 @@ public class SummonerService {
 
     // match 값에서 가져온 정보로 summoner 저장
     public void createSummoner(RequestCreateSummonerDto summonerDto){
-        Summoner summoner = summonerDto.toEntity();
-        summonerRepository.save(summoner);
+        if (!summonerRepository.existsById(summonerDto.getId())) {
+            Summoner summoner = summonerDto.toEntity();
+            summonerRepository.save(summoner);
+        }
     }
+
+
+//    public void createSummoners(List<RequestCreateSummonerDto> summonerDtos) {
+//        List<Summoner> summoners = new ArrayList<>();
+//
+//        for (RequestCreateSummonerDto summonerDto : summonerDtos) {
+//            // 검색
+//            if (!summonerRepository.existsById(summonerDto.getId())) {
+//                Summoner summoner = summonerDto.toEntity();
+//                summoners.add(summoner);
+//            }
+//        }
+//        summonerRepository.saveAll(summoners);
+//    }
+
 }

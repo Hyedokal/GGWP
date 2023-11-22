@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ggwp.searchservice.match.domain.Match;
 import com.ggwp.searchservice.match.domain.Participant;
 import com.ggwp.searchservice.match.domain.Team;
+import com.ggwp.searchservice.summoner.domain.Summoner;
+import com.ggwp.searchservice.summoner.service.SummonerService;
 import lombok.*;
 
 import java.util.List;
@@ -11,9 +13,9 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@RequiredArgsConstructor
 public class MatchDto {
 
     @JsonProperty("info")
@@ -21,6 +23,8 @@ public class MatchDto {
 
     @JsonProperty("metadata")
     private MetadataDto metadataDto;
+
+    List<Participant> participantEntities;
 
     @Getter
     @Setter
@@ -52,7 +56,7 @@ public class MatchDto {
                 })
                 .collect(Collectors.toList());
 
-        List<Participant> participantEntities = info.getParticipants().stream()
+        participantEntities = info.getParticipants().stream()
                 .map(participantDto -> {
                     int teamId = participantDto.getTeamId();
 
@@ -70,6 +74,7 @@ public class MatchDto {
         match.setTeams(teamEntities);
         return match;
     }
+
 
 
 

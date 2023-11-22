@@ -25,7 +25,7 @@ public class Summoner {
     @Column(name = "summoner_id")
     private String id; // summoner_id encrypted
 
-    private Long profileIconId; // 프로필 아이콘 번호
+    private int profileIconId; // 프로필 아이콘 번호
 
 //    private String accountId; // account encrypted 필요없어 보임
 
