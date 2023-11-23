@@ -19,12 +19,6 @@ public class RequestAnnounceDto {
     @Length(max = 1000, message = "내용의 길이는 1000자를 초과할 수 없습니다.")
     private String aContent;
 
-    public static RequestAnnounceDto CREATE(String aTitle, String aContent) {
-        return new RequestAnnounceDto()
-                .setATitle(aTitle)
-                .setAContent(aContent);
-    }
-
     public Announce toEntity() {
         return Announce.CREATE(this.aTitle, this.aContent);
     }
