@@ -9,6 +9,6 @@ import java.util.List;
 
 @FeignClient(name = "comment-service")
 public interface CommentFeignClient {
-    @GetMapping("/v1/comment/{sId}")
+    @GetMapping("/v1/comments/{sId}")
     public List<Comment> getCommentList(@PathVariable Long sId);
 }

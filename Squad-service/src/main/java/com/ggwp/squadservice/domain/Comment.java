@@ -1,19 +1,13 @@
 package com.ggwp.squadservice.domain;
 
 import com.ggwp.squadservice.enums.Position;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
-@AllArgsConstructor @Getter
-@ToString @Builder
+@Data
+@Accessors(chain = true)
 public class Comment {
 
     private Long cId;
