@@ -2,6 +2,7 @@ package com.ggwp.squadservice.controller;
 
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.RequestSquadDto;
+import com.ggwp.squadservice.dto.ResponseFindSquadDto;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.service.SquadService;
@@ -68,5 +69,12 @@ public class SquadController {
     ) {
         List<Squad> filteredSquads = squadService.findSquadWithFilters(myPos, qType);
         return ResponseEntity.ok(filteredSquads);
+    }
+
+    //게시글마다의 댓글 리스트 조회
+    @GetMapping("/list/{sId}/comments")
+    public ResponseEntity<?> findCommentsBysId(@PathVariable Long sId){
+        ResponseFindSquadDto squadDto = squadService.findSquadCommentList(sId);
+        return ResponseEntity.ok(squadDto);
     }
 }
