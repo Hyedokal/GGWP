@@ -1,38 +1,51 @@
 package com.ggwp.announceservice.entity;
 
-import jakarta.annotation.Nullable;
+import com.ggwp.announceservice.dto.request.RequestAnnounceDto;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
 // 공지사항 정보를 저장하는 엔티티.
 @Entity
-@RequiredArgsConstructor
-@AllArgsConstructor @Getter @ToString @Builder
+@Data
+@NoArgsConstructor
+@Accessors(chain = true)
 public class Announce {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long aId;
 
-    //공지사항 제목
+    //공지사항 제목(최대 50자)
+    @Column(columnDefinition = "varchar(50)", nullable = false)
     private String aTitle;
 
     //공지사항 내용 (최대 1000자)
-    @Column
-    @Length(max = 1000)
+    @Column(columnDefinition = "varchar(1000)", nullable = false)
     private String aContent;
 
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    //생성자를 담당하는 정적 메서드
+    public static Announce CREATE(String aTitle, String aContent) {
+        return new Announce()
+                .setATitle(aTitle)
+                .setAContent(aContent)
+                .setCreatedAt(LocalDateTime.now())
+                .setUpdatedAt(LocalDateTime.now());
+    }
+
     //엔티티 수정을 위한 메서드
-    public void updateAnnounce(String aTitle, String aContent){
-        this.aTitle = aTitle;
-        this.aContent = aContent;
+    public void updateAnnounce(RequestAnnounceDto dto) {
+        this.aTitle = dto.getATitle();
+        this.aContent = dto.getAContent();
         this.updatedAt = LocalDateTime.now();
     }
 }
