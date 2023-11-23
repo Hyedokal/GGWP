@@ -2,7 +2,7 @@ package com.ggwp.announceservice.controller;
 
 import com.ggwp.announceservice.dto.request.RequestAnnounceDto;
 import com.ggwp.announceservice.dto.response.ResponseAnnounceDto;
-import com.ggwp.announceservice.service.AnnounceService;
+import com.ggwp.announceservice.service.impl.AnnounceServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import java.util.List;
 public class AnnounceController {
 
     @Autowired
-    private final AnnounceService announceService;
+    private final AnnounceServiceImpl announceService;
 
     //공지사항 리스트 가져오는 메서드
     @GetMapping
