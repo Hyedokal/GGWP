@@ -115,8 +115,8 @@ import Header from './Header';
 //import Log from './Log';
 //import MyPage from './MyPage';
 //import AdminPage from "./AdminPage";
-import MainPage from "./MainPage"
-//import DetailPage from "./DetailPage"
+//import MainPage from "./MainPage"
+import DetailPage from "./DetailPage"
 function App() {
     //const API_KEY = "6c01a4160a5e8472a65359304bb6d1f0";
     //const REDIRECT_URI = 'http://localhost:3000/oauth';
@@ -128,7 +128,7 @@ function App() {
             <header className="App-header">
                 <div >
                     <Header/>
-                    <MainPage/>
+                    <DetailPage/>
 
 
 
