@@ -165,3 +165,40 @@
     top:10%;
     left:85%;
 }
+
+.adminbox{
+    width: 80vw;
+    height: 6vh;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+    display: flex;
+
+    align-items: center;
+    position:absolute;
+    top:50%;
+    left:10%;
+
+}
+
+.adminlistbox{
+    width: 80vw;
+    height: 50vh;
+    background-color: #8FCBCF;
+    border-radius: 10px;
+    display: flex;
+
+    align-items: center;
+    position:absolute;
+    top:65%;
+    left:10%;
+}
+.header {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+

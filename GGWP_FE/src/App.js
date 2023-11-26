@@ -1,7 +1,7 @@
-import axios from "axios"
+//import axios from "axios"
 
-import{useEffect} from "react";
-import { useNavigate } from 'react-router-dom';
+//import{useEffect} from "react";
+//import { useNavigate } from 'react-router-dom';
 // import './styles.css'
 
 
@@ -98,43 +98,32 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-// 컴포넌트화 한것
+//컴포넌트화 한것
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-
-import BackgroundRectangle from './BackgroundRectangle';
-import KakaoButton from './KakaoButton';
-import KakaoImage from './KakaoImage';
- //import KakaoImageTop from './KakaoImageTop';
-import TextOnRectangle from './TextOnRectangle';
- //import MatchButton from './MatchButton';
- //import SearchButton from './SearchButton';
- //import MyInfoButton from './MyInfoButton';
-import AdminLoginButton from './AdminLoginButton';
 import Header from './Header';
 //import Log from './Log';
-import MyPage from './MyPage';
-//import Header2 from './Header2';
+//import MyPage from './MyPage';
+import AdminPage from "./AdminPage";
+//import MainPage from "./MainPage"
 function App() {
-    const API_KEY = "6c01a4160a5e8472a65359304bb6d1f0";
-    const REDIRECT_URI = 'http://localhost:3000/oauth';
-    const AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    //const API_KEY = "6c01a4160a5e8472a65359304bb6d1f0";
+    //const REDIRECT_URI = 'http://localhost:3000/oauth';
+    //const AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
     return (
         <Router>
         <div className="App" >
             <header className="App-header">
                 <div >
+                    <Header/>
+                    <AdminPage/>
 
 
-                  <Header/>
-                    <MyPage/>
 
 
-                    <div >
 
 
-                    </div>
 
                 </div>
 
@@ -144,9 +133,87 @@ function App() {
     );
 }
 
+ export default App;
+//
+//   export default App;
+//
+//
+//
+//import LinkTest from "./LinkTest";
+// import React, {useEffect, useState} from 'react';
+// import axios from 'axios';
+//
+// function LinkTest() {
+//     const [hello, setHello] = useState('')
+//
+//     useEffect(() => {
+//         axios.get('/api/hello')
+//             .then(response => setHello(response.data))
+//             .catch(error => console.log(error))
+//     }, []);
+//
+//     return (
+//         <div>
+//             백엔드에서 가져온 데이터입니다 : {hello}
+//         </div>
+//     );
+// }
+//
+// export default LinkTest;
+
+
+
+// import React, {useEffect, useState} from 'react';
+// import axios from 'axios';
+//
+// function App() {
+//     const [user, setUser] = useState("");
+//
+//     useEffect(() => {
+//         axios.get('/api/users')
+//             .then(response => {
+//                 if(response.data){
+//                     setUser(response.data)
+//                 }else {
+//                     alert("failed to");
+//                 }
+//
+//             });
+//
+//     }, []);
+//
+//     return (
+//
+//         <div className = "App">
+//             <header className="App-header">
+//
+//                 <h1>{user.name}</h1>
+//
+//                 <h1>{user.email}</h1>
+//             </header>
+//         </div>
+//     );
+// }
+//
 // export default App;
 
-  export default App;
 
 
-
+// import React from 'react';
+//
+//
+// import AxiosMovie from './AxiosMovie';
+//
+// const apiKEY = '809f2bf060a85de17315a0248e4d10c9'
+// const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKEY}&language=en-US&page=1`;
+//
+// const App = () => {
+//     return (
+//         <div>
+//
+//             <AxiosMovie url={url} />
+//         </div>
+//     );
+// };
+//
+// export default App;
