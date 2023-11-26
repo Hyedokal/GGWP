@@ -23,7 +23,7 @@ public class RequestCreateSummonerDto {
 
     private Long revisionDate;
 
-    private Long summonerLevel;
+    private int summonerLevel;
 
     //    private String accountId;
 
