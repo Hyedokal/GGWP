@@ -1,15 +1,11 @@
 package com.ggwp.searchservice.match.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ggwp.searchservice.summoner.domain.Summoner;
 import com.ggwp.searchservice.summoner.dto.RequestCreateSummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
 
 @Entity
 @AllArgsConstructor
@@ -35,7 +31,7 @@ public class Participant {
     private String summonerName;
 
     @Column(name = "summoner_level")
-    private Long summonerLevel;
+    private int summonerLevel;
 
     ////////////////////////////////////////////////////////////
 
@@ -77,7 +73,11 @@ public class Participant {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    public RequestCreateSummonerDto createSummoner(){
+    @ManyToOne(cascade = CascadeType.ALL)  // 이 부분 추가
+    @JoinColumn(name = "match_id")
+    private Match match;
+    
+    public RequestCreateSummonerDto createSummoner() {
         return RequestCreateSummonerDto.builder()
                 .id(this.summonerId)
                 .profileIconId(this.profileIcon)

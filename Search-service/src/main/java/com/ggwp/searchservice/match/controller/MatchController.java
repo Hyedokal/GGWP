@@ -16,16 +16,11 @@ public class MatchController {
 
     private final MatchService matchService;
 
-//    @GetMapping("get/match-id/{puuid}") 매치 0~5 가져오기
-//    public ResponseEntity<?> getMatchId(@PathVariable String puuid){
-//        List<String> list = matchService.getMatch(puuid);
-//        return ResponseEntity.ok(list);
-//    }
+    @GetMapping("matchlist/{puuid}") // 매치 1개 api 불러와서 저장
+    public ResponseEntity<?> getMatch(@PathVariable String puuid) {
 
-    @GetMapping("get/match/{matchId}") // 매치 1개 api 불러와서 저장
-    public ResponseEntity<?> getMatch(@PathVariable String matchId){
-        System.out.println("matchId = " + matchId);
-        matchService.createMatch(matchId);
+        matchService.createMatch(puuid);
+
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 }

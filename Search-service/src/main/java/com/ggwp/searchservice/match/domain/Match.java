@@ -1,6 +1,5 @@
 package com.ggwp.searchservice.match.domain;
 
-import com.ggwp.searchservice.enums.GameMode;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,12 +40,28 @@ public class Match {
     private long gameStartTimestamp; // 게임 시작 시각
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
-    private List<Team> teams; // 매치 1 팀 2
+    private List<Team> teams = new ArrayList<>(); // 매치 1 팀 2
 
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
+    @ManyToMany
+    @JoinTable(
+            name = "match_summoner",
+            joinColumns = @JoinColumn(name = "match_id"),
+            inverseJoinColumns = @JoinColumn(name = "summoner_id"))
+    private List<Summoner> summoners = new ArrayList<>();
+
+    public void addTeams(List<Team> teams) {
+        this.teams.addAll(teams);
         for (Team team : teams) {
             team.setMatch(this); // Team과 Match 연관관계 설정
         }
+    }
+
+    public void addSummoners(List<Summoner> summonerList) {
+        if (this.summoners == null) {
+            this.summoners = new ArrayList<>();
+        }
+        // 명시적으로 로딩
+        this.summoners.size(); // 또는 다른 메서드 호출을 통한 로딩
+        this.summoners.addAll(summonerList);
     }
 }

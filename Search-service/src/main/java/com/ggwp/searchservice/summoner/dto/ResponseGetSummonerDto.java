@@ -3,10 +3,6 @@ package com.ggwp.searchservice.summoner.dto;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import lombok.*;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,10 +22,10 @@ public class ResponseGetSummonerDto {
 
     private Long revisionDate;
 
-    private Long summonerLevel;
+    private int summonerLevel;
 
     // DTO를 -> Entity 로 변경
-    public Summoner toEntity(){
+    public Summoner toEntity() {
         return Summoner.builder()
                 .id(this.id)
                 .profileIconId(this.profileIconId)
