@@ -101,11 +101,22 @@
 //컴포넌트화 한것
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+
+//import BackgroundRectangle from './BackgroundRectangle';
+//import KakaoButton from './KakaoButton';
+//import KakaoImage from './KakaoImage';
+ //import KakaoImageTop from './KakaoImageTop';
+//import TextOnRectangle from './TextOnRectangle';
+ //import MatchButton from './MatchButton';
+// import SearchButton from './SearchButton';
+ //import MyInfoButton from './MyInfoButton';
+//import AdminLoginButton from './AdminLoginButton';
 import Header from './Header';
 //import Log from './Log';
 //import MyPage from './MyPage';
-import AdminPage from "./AdminPage";
-//import MainPage from "./MainPage"
+//import AdminPage from "./AdminPage";
+import MainPage from "./MainPage"
+//import DetailPage from "./DetailPage"
 function App() {
     //const API_KEY = "6c01a4160a5e8472a65359304bb6d1f0";
     //const REDIRECT_URI = 'http://localhost:3000/oauth';
@@ -117,7 +128,7 @@ function App() {
             <header className="App-header">
                 <div >
                     <Header/>
-                    <AdminPage/>
+                    <MainPage/>
 
 
 
