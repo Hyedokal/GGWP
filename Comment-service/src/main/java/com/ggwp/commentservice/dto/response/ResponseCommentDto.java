@@ -13,12 +13,15 @@ public class ResponseCommentDto {
 
     private Boolean cMic;
 
+    private String summonerName;
+
     private String cMemo;
 
     public static ResponseCommentDto fromEntity(Comment comment) {
         return new ResponseCommentDto()
                 .setCMyPos(comment.getCMyPos())
                 .setCMic(comment.getCMic())
+                .setSummonerName(comment.getSummonerName())
                 .setCMemo(comment.getCMemo());
     }
 }

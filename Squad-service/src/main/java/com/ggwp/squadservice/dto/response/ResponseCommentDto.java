@@ -9,5 +9,7 @@ public class ResponseCommentDto {
 
     private Boolean cMic;
 
+    private String summonerName;
+
     private String cMemo;
 }
