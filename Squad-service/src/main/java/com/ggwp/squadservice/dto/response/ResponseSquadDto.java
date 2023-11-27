@@ -17,6 +17,7 @@ public class ResponseSquadDto {
     private Position wantPos;
     private QType qType;
     private Boolean sMic;
+    private String summonerName;
     private String sMemo;
     private List<ResponseCommentDto> commentList;
     private LocalDateTime updatedAt;
@@ -28,6 +29,7 @@ public class ResponseSquadDto {
                 .setWantPos(squad.getWantPos())
                 .setQType(squad.getQType())
                 .setSMic(squad.getSMic())
+                .setSummonerName(squad.getSummonerName())
                 .setSMemo(squad.getSMemo())
                 .setUpdatedAt(squad.getUpdatedAt());
     }
