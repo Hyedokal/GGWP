@@ -20,11 +20,14 @@ public class RequestCommentDto {
     @NotBlank(message = "반드시 마이크 사용 여부를 체크하셔야 합니다.")
     public Boolean cMic;
 
+    @NotBlank(message = "Riot ID를 반드시 입력해야 합니다.")
+    public String summonerName;
+
     @Length(max = 100, message = "댓글은 최대 100자까지 작성할 수 있습니다.")
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
     public String cMemo;
 
     public Comment toEntity() {
-        return Comment.CREATE(this.sId, this.cMyPos, this.cMic, this.cMemo);
+        return Comment.CREATE(this.sId, this.cMyPos, this.cMic, this.summonerName, this.cMemo);
     }
 }

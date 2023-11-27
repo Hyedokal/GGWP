@@ -1,6 +1,5 @@
 package com.ggwp.squadservice.dto.response;
 
-import com.ggwp.squadservice.domain.Comment;
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
@@ -18,8 +17,9 @@ public class ResponseSquadDto {
     private Position wantPos;
     private QType qType;
     private Boolean sMic;
+    private String summonerName;
     private String sMemo;
-    private List<Comment> commentList;
+    private List<ResponseCommentDto> commentList;
     private LocalDateTime updatedAt;
 
     public static ResponseSquadDto fromEntity(Squad squad) {
@@ -29,6 +29,7 @@ public class ResponseSquadDto {
                 .setWantPos(squad.getWantPos())
                 .setQType(squad.getQType())
                 .setSMic(squad.getSMic())
+                .setSummonerName(squad.getSummonerName())
                 .setSMemo(squad.getSMemo())
                 .setUpdatedAt(squad.getUpdatedAt());
     }

@@ -34,6 +34,9 @@ public class Squad {
     @Column(columnDefinition = "BIT(1)", nullable = false)
     private Boolean sMic = false;
 
+    @Column(nullable = false)
+    private String summonerName;
+
     @Column(columnDefinition = "varchar(100)", nullable = false)
     private String sMemo;
 
@@ -46,12 +49,13 @@ public class Squad {
 
     //생성자를 담당하는 정적 메서드
     public static Squad CREATE(Position myPos, Position wantPos, QType qType,
-                               Boolean sMic, String sMemo) {
+                               Boolean sMic, String summonerName, String sMemo) {
         return new Squad()
                 .setMyPos(myPos)
                 .setWantPos(wantPos)
                 .setQType(qType)
                 .setSMic(sMic)
+                .setSummonerName(summonerName)
                 .setSMemo(sMemo)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now());

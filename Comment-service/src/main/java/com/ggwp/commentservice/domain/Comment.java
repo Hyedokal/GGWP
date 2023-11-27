@@ -26,11 +26,14 @@ public class Comment {
     @Enumerated(EnumType.STRING)
     private Position cMyPos;
 
-    @Column(columnDefinition = "varchar(100)", nullable = false)
-    private String cMemo;
-
     @Column(columnDefinition = "BIT(1)", nullable = false)
     private Boolean cMic;
+
+    @Column(nullable = false)
+    private String summonerName;
+
+    @Column(columnDefinition = "varchar(100)", nullable = false)
+    private String cMemo;
 
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
@@ -41,11 +44,12 @@ public class Comment {
     private LocalDateTime updatedAt;
 
     //생성자 호출을 대신할 정적 메서드 선언
-    public static Comment CREATE(Long sId, Position cMyPos, Boolean cMic, String cMemo) {
+    public static Comment CREATE(Long sId, Position cMyPos, Boolean cMic, String summonerName, String cMemo) {
         return new Comment()
                 .setSId(sId)
                 .setCMyPos(cMyPos)
                 .setCMic(cMic)
+                .setSummonerName(summonerName)
                 .setCMemo(cMemo)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now());
