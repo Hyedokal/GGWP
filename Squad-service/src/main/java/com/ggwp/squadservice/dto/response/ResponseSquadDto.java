@@ -1,6 +1,5 @@
 package com.ggwp.squadservice.dto.response;
 
-import com.ggwp.squadservice.domain.Comment;
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
@@ -19,7 +18,7 @@ public class ResponseSquadDto {
     private QType qType;
     private Boolean sMic;
     private String sMemo;
-    private List<Comment> commentList;
+    private List<ResponseCommentDto> commentList;
     private LocalDateTime updatedAt;
 
     public static ResponseSquadDto fromEntity(Squad squad) {

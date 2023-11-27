@@ -1,8 +1,8 @@
 package com.ggwp.squadservice.service.impl;
 
-import com.ggwp.squadservice.domain.Comment;
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
+import com.ggwp.squadservice.dto.response.ResponseCommentDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
@@ -66,7 +66,7 @@ public class SquadServiceImpl implements SquadService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.SQUAD_ID_NOT_FOUND));
         ResponseSquadDto.fromEntity(squad);
         //Feign으로 댓글 리스트 가져오기
-        List<Comment> commentList = commentFeignClient.getCommentList(sId);
+        List<ResponseCommentDto> commentList = commentFeignClient.getCommentList(sId);
         ResponseSquadDto dto = ResponseSquadDto.fromEntity(squad);
         dto.setCommentList(commentList);
         return dto;
