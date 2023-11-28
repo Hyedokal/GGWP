@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ggwp.searchservice.match.domain.Match;
 import com.ggwp.searchservice.match.domain.Participant;
 import com.ggwp.searchservice.match.domain.Team;
+import com.ggwp.searchservice.summoner.dto.RequestCreateSummonerDto;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,92 @@ public class MatchDto {
     @JsonProperty("metadata")
     private MetadataDto metadataDto;
 
-    private List<Participant> participantEntities;
+    public static MatchDto toDto(Match match) {
+
+        MetadataDto metadataDto = MetadataDto.builder()
+                .matchId(match.getMatchId())
+                .build();
+
+        List<TeamDto> teamDtoList = new ArrayList<>();
+        List<ParticipantDto> participantDtoList = new ArrayList<>();
+
+        List<Team> teamList = match.getTeams();
+        for (Team team : teamList) {
+            TeamDto teamDto = TeamDto.builder()
+                    .teamId(team.getTeamId())
+                    .win(team.isWin())
+                    .build();
+            teamDtoList.add(teamDto);
+
+            List<Participant> participantList = team.getParticipants();
+            for (Participant participant : participantList) {
+
+                PerkStyleDto primaryPerkStyleDto = PerkStyleDto.builder()
+                        .description("Primary Style Description")
+                        .style(participant.getPrimaryStyle())
+                        .build();
+
+                PerkStyleDto subPerkStyleDto = PerkStyleDto.builder()
+                        .description("Sub Style Description")
+                        .style(participant.getSubStyle())
+                        .build();
+
+                PerksDto perksDto = PerksDto.builder()
+                        .styles(Arrays.asList(primaryPerkStyleDto, subPerkStyleDto))
+                        .build();
+
+                ParticipantDto participantDto = ParticipantDto.builder()
+                        .participantId(participant.getParticipantId())
+                        .summonerId(participant.getSummonerId())
+                        .profileIcon(participant.getProfileIcon())
+                        .puuid(participant.getPuuid())
+                        .summmonerLevel(participant.getChampLevel())
+                        .summonerName(participant.getSummonerName())
+                        .kills(participant.getKills())
+                        .assists(participant.getAssists())
+                        .deaths(participant.getDeaths())
+                        .champExperience(participant.getChampExperience())
+                        .champLevel(participant.getChampLevel())
+                        .championId(participant.getChampionId())
+                        .championName(participant.getChampionName())
+                        .item0(participant.getItem0())
+                        .item1(participant.getItem1())
+                        .item2(participant.getItem2())
+                        .item3(participant.getItem3())
+                        .item4(participant.getItem4())
+                        .item5(participant.getItem5())
+                        .item6(participant.getItem6())
+                        .summoner1Id(participant.getSummoner1Id())
+                        .summoner2Id(participant.getSummoner2Id())
+                        .neutralMinionsKilled(participant.getNeutralMinionsKilled())
+                        .totalMinionsKilled(participant.getTotalMinionsKilled())
+                        .totalDamageDealtToChampions(participant.getTotalDamageDealtToChampions())
+                        .totalDamageTaken(participant.getTotalDamageTaken())
+                        .teamId(participant.getTeam().getTeamId())
+                        .perks(perksDto)
+                        .teamPosition(participant.getTeamPosition())
+                        .build();
+
+                participantDtoList.add(participantDto);
+            }
+        }
+
+        InfoDto infoDto = InfoDto.builder()
+                .gameCreation(match.getGameCreation())
+                .gameDuration(match.getGameDuration())
+                .gameStartTimestamp(match.getGameStartTimestamp())
+                .gameEndTimestamp(match.getGameEndTimestamp())
+                .platformId(match.getPlatformId())
+                .queueId(match.getQueueId())
+                .teams(teamDtoList)
+                .participants(participantDtoList)
+                .build();
+
+        return MatchDto.builder()
+                .info(infoDto)
+                .metadataDto(metadataDto)
+                .build();
+    }
 
     public Match toEntity() {
 
@@ -35,32 +122,27 @@ public class MatchDto {
                 .gameDuration(info.getGameDuration())
                 .gameStartTimestamp(info.getGameStartTimestamp())
                 .gameEndTimestamp(info.getGameEndTimestamp())
-                .teams(new ArrayList<>())
+                .teams(new ArrayList<>())  // teams는 null 이다.
                 .build();
-        // teams는 null 이다.
 
         List<Team> teamEntities = info.getTeams().stream()
                 .map(teamDto -> {
                     Team team = teamDto.toEntity();
+
+                    // 이 부분에서 Team에 Participant를 추가
+                    List<Participant> participantEntities = info.getParticipants().stream()
+                            .filter(participantDto -> participantDto.getTeamId() == team.getTeamId())
+                            .map(participantDto -> {
+                                Participant participant = participantDto.toEntity(team);
+                                team.addParticipant(participant);
+                                return participant;
+                            })
+                            .collect(Collectors.toList());
+                    team.setMatch(match);
                     return team;
                 })
                 .collect(Collectors.toList());
-        // team 값이 들어있다.
 
-        participantEntities = info.getParticipants().stream()
-                .map(participantDto -> {
-                    int teamId = participantDto.getTeamId();
-
-                    Team matchingTeam = teamEntities.stream()
-                            .filter(team -> team.getTeamId() == teamId)
-                            .findFirst()
-                            .orElseThrow(() -> new RuntimeException("Team not found for teamId: " + teamId));
-
-                    Participant participant = participantDto.toEntity(matchingTeam);
-                    matchingTeam.addParticipant(participant); // 해당 Team에 Participant 추가
-                    return participant;
-                })
-                .collect(Collectors.toList());
         match.addTeams(teamEntities);
 
         return match;
@@ -84,8 +166,6 @@ public class MatchDto {
     public static class InfoDto {
         @JsonProperty("participants")
         List<ParticipantDto> participants;
-        @JsonProperty("gameId")
-        private Long gameId;
         @JsonProperty("gameCreation")
         private Long gameCreation;
         @JsonProperty("gameDuration")
@@ -102,6 +182,7 @@ public class MatchDto {
 
         @JsonProperty("teams")
         private List<TeamDto> teams;
+
     }
 
     @Getter
@@ -194,7 +275,7 @@ public class MatchDto {
         private String teamPosition;
         /////////////////////////////////////////////////////////
 
-        Participant toEntity(Team team) {
+        public Participant toEntity(Team team) {
             return Participant.builder()
                     .participantId(this.participantId)
                     .summonerId(this.summonerId)
@@ -226,6 +307,16 @@ public class MatchDto {
                     .subStyle(this.perks.getStyles().get(1).style)
                     .teamPosition(this.teamPosition)
                     .team(team)
+                    .build();
+        }
+
+        public RequestCreateSummonerDto createSummonerDto() {
+            return RequestCreateSummonerDto.builder()
+                    .id(this.summonerId)
+                    .profileIconId(this.profileIcon)
+                    .name(this.summonerName)
+                    .summonerLevel(this.summmonerLevel)
+                    .puuid(this.puuid)
                     .build();
         }
     }
@@ -266,7 +357,7 @@ public class MatchDto {
         @JsonProperty("win")
         private boolean win;
 
-        Team toEntity() {
+        public Team toEntity() {
             return Team.builder()
                     .teamId(this.teamId)
                     .win(this.win)

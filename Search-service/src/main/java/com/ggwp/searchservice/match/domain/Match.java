@@ -1,11 +1,11 @@
 package com.ggwp.searchservice.match.domain;
 
-import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +39,11 @@ public class Match {
     @Column(name = "game_start_timestamp")
     private long gameStartTimestamp; // 게임 시작 시각
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
-    private List<Team> teams = new ArrayList<>(); // 매치 1 팀 2
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Team> teams = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "match_summoner",
-            joinColumns = @JoinColumn(name = "match_id"),
-            inverseJoinColumns = @JoinColumn(name = "summoner_id"))
-    private List<Summoner> summoners = new ArrayList<>();
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MatchSummoner> matchSummoners = new ArrayList<>();
 
     public void addTeams(List<Team> teams) {
         this.teams.addAll(teams);
@@ -56,12 +52,13 @@ public class Match {
         }
     }
 
-    public void addSummoners(List<Summoner> summonerList) {
-        if (this.summoners == null) {
-            this.summoners = new ArrayList<>();
+    public void addMatchSummoners(List<MatchSummoner> matchSummoners) {
+        Hibernate.initialize(this.matchSummoners);
+
+        if (this.matchSummoners == null) {
+            this.matchSummoners = new ArrayList<>();
         }
-        // 명시적으로 로딩
-        this.summoners.size(); // 또는 다른 메서드 호출을 통한 로딩
-        this.summoners.addAll(summonerList);
+
+        this.matchSummoners.addAll(matchSummoners);
     }
 }

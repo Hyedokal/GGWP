@@ -1,29 +1,28 @@
 package com.ggwp.searchservice.match.domain;
 
 import com.ggwp.searchservice.summoner.domain.Summoner;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 public class MatchSummoner {
 
     @Id
-    private String matchId;
-
-    @Id
-    private String summonerId;
+    @GeneratedValue
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "match_id", insertable = false, updatable = false)
+    @JoinColumn(name = "match_id")
     private Match match;
 
     @ManyToOne
-    @JoinColumn(name = "summoner_id", insertable = false, updatable = false)
+    @JoinColumn(name = "summoner_id")
     private Summoner summoner;
-
 }
