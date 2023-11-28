@@ -1,13 +1,14 @@
 package com.ggwp.searchservice.summoner.domain;
 
 import com.ggwp.searchservice.league.domain.League;
-import com.ggwp.searchservice.match.domain.Match;
+import com.ggwp.searchservice.match.domain.MatchSummoner;
 import com.ggwp.searchservice.summoner.dto.ResponseGetSummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,8 @@ public class Summoner {
     @OneToMany(mappedBy = "summoner")
     private List<League> leagues;
 
-    @ManyToMany(mappedBy = "summoners")
-    private List<Match> matches = new ArrayList<>();
+    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MatchSummoner> matchSummoners = new ArrayList<>();
 
     // 소환사 Entity를 -> DTO로 변경
     public ResponseGetSummonerDto toDto(Summoner summoner) {
@@ -55,11 +56,18 @@ public class Summoner {
                 .build();
     }
 
-    public void addMatch(Match match) {
-        if (this.matches == null) {
-            this.matches = new ArrayList<>();
+    public void addMatchSummoner(MatchSummoner matchSummoner) {
+        // Hibernate.initialize를 통해 matchSummoners 필드 초기화
+        Hibernate.initialize(this.matchSummoners);
+
+        // this.matchSummoners가 null이면 새로운 ArrayList를 생성하여 할당
+        if (this.matchSummoners == null) {
+            this.matchSummoners = new ArrayList<>();
         }
-        this.matches.size(); // Lazy 때문에 해야함
-        this.matches.add(match);
+
+        // this.matchSummoners에 새로운 MatchSummoner 추가
+        this.matchSummoners.add(matchSummoner);
+
+        // 이미 값이 담겨있다고 가정하고, 따로 연관관계 설정이 필요하지 않음
     }
 }

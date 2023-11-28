@@ -15,6 +15,10 @@ import lombok.NoArgsConstructor;
 public class Participant {
 
     @Id
+    @GeneratedValue
+    @Column(name = "participant_pk")
+    private Long participantPk;
+
     @Column(name = "participant_id")
     private int participantId; // participant의 PK
 
@@ -69,14 +73,10 @@ public class Participant {
     @Column(name = "sub_style")
     private int subStyle;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_pk")
     private Team team;
 
-    @ManyToOne(cascade = CascadeType.ALL)  // 이 부분 추가
-    @JoinColumn(name = "match_id")
-    private Match match;
-    
     public RequestCreateSummonerDto createSummoner() {
         return RequestCreateSummonerDto.builder()
                 .id(this.summonerId)
