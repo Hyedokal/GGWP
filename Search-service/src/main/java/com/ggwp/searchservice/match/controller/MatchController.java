@@ -16,8 +16,8 @@ public class MatchController {
 
     private final MatchService matchService;
 
-    @PostMapping("matchlist/{puuid}/save") // 매치 5개 api 불러와서 저장
-    public ResponseEntity<?> createMatch(@PathVariable String puuid) {
+    @PostMapping("/matchlist/{puuid}/save") // 매치 5개 api 불러와서 저장
+    public ResponseEntity<?> createMatch(@PathVariable String puuid) throws InterruptedException {
         matchService.createMatch(puuid);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

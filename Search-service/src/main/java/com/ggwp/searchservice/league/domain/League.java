@@ -1,6 +1,5 @@
 package com.ggwp.searchservice.league.domain;
 
-import com.ggwp.searchservice.enums.GameMode;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,6 +15,10 @@ import lombok.NoArgsConstructor;
 public class League {
 
     @Id
+    @GeneratedValue
+    @Column(name = "league_pk")
+    private Long id;
+
     private String leagueId; // 리그 아이디 encrypted
 
     private String queueType; // 게임 모드
@@ -31,7 +34,7 @@ public class League {
     private int losses; // 패배
 
     // 다대일 연결 ( 리그 2 : 소환사 1)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "summoner_id")
     private Summoner summoner;
 

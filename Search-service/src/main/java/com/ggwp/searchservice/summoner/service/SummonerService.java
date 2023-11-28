@@ -16,19 +16,18 @@ public class SummonerService {
     @Value("${LOL.apikey}")
     private String apiKey;
 
-    // 롤 api를 통해서 소환사 정보 가져오기 및 DB 저장
-    public ResponseGetSummonerDto getSummonerAndSave(String name) {
-        ResponseGetSummonerDto summonerDto = summonerFeign.getSummoner(name, apiKey);
+    // 롤 api를 통해서 소환사 정보 가져오기 및 DB 저장 USE API
+    public ResponseGetSummonerDto getSummonerAndSave(String puuid) {
+        ResponseGetSummonerDto summonerDto = summonerFeign.getSummonerByPuuid(puuid, apiKey);
         Summoner summoner = summonerDto.toEntity();
         summonerRepository.save(summoner);
         return summonerDto;
     }
 
-    // DB에 저장한 소환사 정보 가져오기
-    public ResponseGetSummonerDto getSummonerNoApi(String name) {
-        Summoner summoner = summonerRepository.findSummonerByName(name);
-        ResponseGetSummonerDto summonerDto = summoner.toDto(summoner);
-        return summonerDto;
+    // DB에 저장한 소환사 정보 가져오기 No-API
+    public ResponseGetSummonerDto getSummonerNoApi(String puuid) {
+        Summoner summoner = summonerRepository.findSummonerByPuuid(puuid);
+        return summoner.toDto(summoner);
     }
 
 }

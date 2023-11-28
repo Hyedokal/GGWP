@@ -1,6 +1,7 @@
 package com.ggwp.searchservice.match.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ggwp.searchservice.account.dto.AccountDto;
 import com.ggwp.searchservice.match.domain.Match;
 import com.ggwp.searchservice.match.domain.Participant;
 import com.ggwp.searchservice.match.domain.Team;
@@ -210,6 +211,9 @@ public class MatchDto {
         @JsonProperty("summonerName")
         private String summonerName;
 
+        //// Account////////////
+        @JsonProperty("riotIdTagline")
+        private String riotIdTagline;
         ////////////////////////////////////////////////////////////
 
         ///////////////////////kda /////////////////////////////////
@@ -317,6 +321,14 @@ public class MatchDto {
                     .name(this.summonerName)
                     .summonerLevel(this.summmonerLevel)
                     .puuid(this.puuid)
+                    .build();
+        }
+
+        public AccountDto createAccountDto() {
+            return AccountDto.builder()
+                    .puuid(this.puuid)
+                    .gameName(this.summonerName)
+                    .tagLine(this.riotIdTagline)
                     .build();
         }
     }
