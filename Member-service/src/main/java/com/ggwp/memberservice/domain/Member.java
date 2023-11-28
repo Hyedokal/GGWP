@@ -30,6 +30,9 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "varchar(16)", nullable = false)
     private String tag;
 
+    @Column
+    private Boolean agreedPersonal;
+
     // mhlee :: 어디에 어떤 용도로 사용하는 값일까??
     @Column(unique = true)
     private String uuid; //이 필드가 유일한 값임을 보장
@@ -40,7 +43,7 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(Long id, String email, String password, String lolNickname,
-                  String uuid, UserRole role, String tag) {
+                  String uuid, UserRole role, String tag, Boolean agreedPersonal) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -48,6 +51,8 @@ public class Member extends BaseEntity {
         this.tag = tag;
         this.uuid = uuid;
         this.role = role != null ? role : UserRole.USER;
+        this.agreedPersonal = agreedPersonal;
+
     }
 
     @PrePersist
