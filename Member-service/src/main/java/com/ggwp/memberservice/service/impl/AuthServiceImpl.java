@@ -57,10 +57,7 @@ public class AuthServiceImpl implements AuthService {
             // 패스워드 정책 체크
             validatePasswordPolicy(signUpRequestDto.getPassword());
 
-            // 비밀번호 체크
-            if (!signUpRequestDto.getPassword().equals(signUpRequestDto.getUserPasswordCheck())) {
-                return SignUpResponseDto.unCheckPassword();
-            }
+
 
             String email = signUpRequestDto.getEmail();
 

@@ -12,6 +12,7 @@ public interface ResponseMessage {
     String SIGN_IN_FAILED = "Login information mismatch.";
 
     String NO_PERMISSION = "Do not have permission.";
+    String NOT_EXIST_USER = "This user does not exist.";
 
     String DATABASE_ERROR = "Database error.";
 

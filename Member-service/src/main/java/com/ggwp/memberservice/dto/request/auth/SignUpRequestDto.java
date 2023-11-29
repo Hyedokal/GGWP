@@ -1,10 +1,8 @@
 package com.ggwp.memberservice.dto.request.auth;
 
 import com.ggwp.memberservice.domain.Member;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,8 +22,6 @@ public class SignUpRequestDto {
     @NotEmpty
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{6,}$", message = "비밀번호는 영문, 숫자, 특수문자를 포함해야 하며, 6자 이상이어야 합니다.")
     private String password;
-    @NotEmpty
-    private String userPasswordCheck;
 
     @Size(min = 3, max = 16, message = "닉네임은 3~16자 사이여야 합니다.")
     @NotEmpty
@@ -35,6 +31,9 @@ public class SignUpRequestDto {
     @NotEmpty
     private String tag;
 
+    @Column(nullable = false) // = 할필요가있으까요?
+    @AssertTrue //트루값 통과
+    private Boolean agreedPersonal;
 
     public Member toEntity() {
         // 암호화 비번을 저장하기 위해 필요한 암호화 라이브러리
@@ -45,6 +44,7 @@ public class SignUpRequestDto {
                 .password(passwordEncoder.encode(password)) // todo: 시큐리티 적용하면 패스워드 인코더 적용
                 .lolNickname(lolNickname)
                 .tag(tag)
+                .agreedPersonal(agreedPersonal)
                 .build();
     }
 }
