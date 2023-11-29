@@ -16,6 +16,7 @@ public class MatchSummoner {
 
     @Id
     @GeneratedValue
+    @Column(name = "match_summoner_pk")
     private Long id;
 
     @ManyToOne

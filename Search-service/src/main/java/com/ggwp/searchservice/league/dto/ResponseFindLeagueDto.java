@@ -1,7 +1,7 @@
 package com.ggwp.searchservice.league.dto;
 
-import com.ggwp.searchservice.enums.GameMode;
 import com.ggwp.searchservice.league.domain.League;
+import com.ggwp.searchservice.summoner.domain.Summoner;
 import lombok.*;
 
 @Getter
@@ -25,7 +25,7 @@ public class ResponseFindLeagueDto {
 
     private int losses;
 
-    private String summonerId;
+    private Summoner summoner;
 
     public static ResponseFindLeagueDto toDto(League league) {
         return ResponseFindLeagueDto.builder()
@@ -36,7 +36,7 @@ public class ResponseFindLeagueDto {
                 .leaguePoints(league.getLeaguePoints())
                 .wins(league.getWins())
                 .losses(league.getLosses())
-                .summonerId(league.getSummoner().getId())
+                .summoner(league.getSummoner())
                 .build();
     }
 

@@ -1,10 +1,13 @@
 package com.ggwp.searchservice.summoner.controller;
+
 import com.ggwp.searchservice.summoner.dto.ResponseGetSummonerDto;
 import com.ggwp.searchservice.summoner.service.SummonerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,32 +16,15 @@ public class SummonerController {
 
     private final SummonerService summonerService;
 
-    @GetMapping("get/{name}") // 롤 닉네임으로 Summoner 가져오기 USE API
-    public ResponseEntity<?> getSummoner(@PathVariable String name){
-        ResponseGetSummonerDto summonerDto = summonerService.getSummonerAndSave(name);
+    @GetMapping("/get/{puuid}") // 롤 닉네임으로 Summoner 가져오기 USE API
+    public ResponseEntity<?> getSummoner(@PathVariable String puuid) {
+        ResponseGetSummonerDto summonerDto = summonerService.getSummonerAndSave(puuid);
         return ResponseEntity.ok(summonerDto);
     }
 
-    @GetMapping("get/{name}/no-api") // 롤 닉네임으로 Summoner 가져오기 No-API
-    public ResponseEntity<?> getSummonerNoApi(@PathVariable String name){
-        ResponseGetSummonerDto summonerDto = summonerService.getSummonerNoApi(name);
+    @GetMapping("/get/{name}/no-api") // 롤 닉네임으로 Summoner 가져오기 No-API
+    public ResponseEntity<?> getSummonerNoApi(@PathVariable String puuid) {
+        ResponseGetSummonerDto summonerDto = summonerService.getSummonerNoApi(puuid);
         return ResponseEntity.ok(summonerDto);
     }
-
-    // ----------------------------------------------------------------------------
-    // summoner 전체를 가져가서 사용하실지, FK만 가져가서 쓰실 지 몰라서 만들었습니다.
-    // ----------------------------------------------------------------------------
-
-    @GetMapping("get/summoner-id/{name}") // 롤 닉네임으로 Encrypted된 SummonerId 가져오기
-    public ResponseEntity<?> getEncryptedSummonerId(@PathVariable String name){
-        ResponseGetSummonerDto summonerDto = summonerService.getSummonerNoApi(name);
-        return ResponseEntity.ok(summonerDto.getId());
-    }
-
-    @GetMapping("get/puuid/{name}") // 롤 닉네임으로 puuid 가져오기
-    public ResponseEntity<?> getPuuid(@PathVariable String name){
-        ResponseGetSummonerDto summonerDto = summonerService.getSummonerNoApi(name);
-        return ResponseEntity.ok(summonerDto.getPuuid());
-    }
-
 }

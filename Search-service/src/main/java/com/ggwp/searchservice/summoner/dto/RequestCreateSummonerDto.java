@@ -1,5 +1,7 @@
 package com.ggwp.searchservice.summoner.dto;
 
+import com.ggwp.searchservice.account.domain.Account;
+import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import lombok.*;
 
@@ -25,7 +27,9 @@ public class RequestCreateSummonerDto {
 
     private int summonerLevel;
 
-    //    private String accountId;
+    private Account account;
+
+    private League league;
 
     // DTO를 -> Entity 로 변경
     public Summoner toEntity() {

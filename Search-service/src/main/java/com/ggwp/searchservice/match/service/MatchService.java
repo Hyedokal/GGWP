@@ -1,5 +1,12 @@
 package com.ggwp.searchservice.match.service;
 
+import com.ggwp.searchservice.account.domain.Account;
+import com.ggwp.searchservice.account.dto.AccountDto;
+import com.ggwp.searchservice.account.repository.AccountRepository;
+import com.ggwp.searchservice.league.domain.League;
+import com.ggwp.searchservice.league.dto.ResponseGetLeagueDto;
+import com.ggwp.searchservice.league.feign.LoLToLeagueFeign;
+import com.ggwp.searchservice.league.service.LeagueService;
 import com.ggwp.searchservice.match.MatchRepository.MatchRepository;
 import com.ggwp.searchservice.match.MatchRepository.MatchSummonerRepository;
 import com.ggwp.searchservice.match.domain.Match;
@@ -27,11 +34,15 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final SummonerRepository summonerRepository;
     private final MatchSummonerRepository matchSummonerRepository;
+    private final LoLToLeagueFeign leagueFeign;
+    private final LeagueService leagueService;
+
+    private final AccountRepository accountRepository;
 
     @Value("${LOL.apikey}")
     private String apiKey;
 
-    public void createMatch(String puuid) {
+    public void createMatch(String puuid) throws InterruptedException {
         List<String> matchIds = matchFeign.getMatchIds(puuid, apiKey); // matchIds 5개 가져오기
 
         for (String matchId : matchIds) { // 5번 반복한다.
@@ -49,13 +60,29 @@ public class MatchService {
             List<MatchSummoner> matchSummonerList = new ArrayList<>(); // matchSummoner를 한 번에 저장해줄 리스트 선언, db에 저장을 한 번에 하기 위함
             for (MatchDto.ParticipantDto participantDto : participantDtoList) {
                 RequestCreateSummonerDto createSummonerDto = participantDto.createSummonerDto();
+                AccountDto accountDto = participantDto.createAccountDto();
+
                 Summoner summoner = createSummonerDto.toEntity();
+
+                List<ResponseGetLeagueDto> leagueDtoList = leagueFeign.getLeagues(participantDto.getSummonerId(), apiKey);
+                List<League> leagueList = new ArrayList<>();
+                for (ResponseGetLeagueDto responseGetLeagueDto : leagueDtoList) {
+                    League league = responseGetLeagueDto.toEntity(summoner);
+                    leagueList.add(league);
+                }
+                summoner.addLeagues(leagueList);
+
+                Account account = accountDto.toEntity(summoner);
+                summoner.addAccount(account);
+
                 // summoner를 저장 하기 전 MatchSummoner를 만들어 summoner에 넣어줘야 한다.
                 MatchSummoner matchSummoner = MatchSummoner.builder()
                         .summoner(summoner)
                         .match(match)
                         .build();
                 summoner.addMatchSummoner(matchSummoner); // summoner에다가 matchsummoner 넣어주기
+
+
                 summonerRepository.save(summoner); // summoner 저장
                 matchSummonerList.add(matchSummoner); // matchSummoner List에다가 저장
             }
@@ -63,12 +90,13 @@ public class MatchService {
             match.addMatchSummoners(matchSummonerList);
 
             matchSummonerRepository.saveAll(matchSummonerList); // matchSummoner List 저장
+            Thread.sleep(1000);
         }
     }
 
 
     // 소환사의 matchId들 matchSummoner에서 가져오기
-    @Transactional(readOnly = true)
+
     public List<MatchSummonerDto> getMatchSummonerBySummonerId(String summonerId) {
         List<MatchSummoner> matchSummoners = matchSummonerRepository.findBySummonerId(summonerId);
 

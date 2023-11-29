@@ -1,5 +1,6 @@
 package com.ggwp.searchservice.summoner.domain;
 
+import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.match.domain.MatchSummoner;
 import com.ggwp.searchservice.summoner.dto.ResponseGetSummonerDto;
@@ -37,11 +38,14 @@ public class Summoner {
     private int summonerLevel; // 소환사 레벨
 
     // 리그 연결 일대다 ( 소환사 1 : 리그 2)
-    @OneToMany(mappedBy = "summoner")
+    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<League> leagues;
 
     @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MatchSummoner> matchSummoners = new ArrayList<>();
+
+    @OneToOne(mappedBy = "summoner", cascade = CascadeType.ALL)
+    private Account account;
 
     // 소환사 Entity를 -> DTO로 변경
     public ResponseGetSummonerDto toDto(Summoner summoner) {
@@ -69,5 +73,17 @@ public class Summoner {
         this.matchSummoners.add(matchSummoner);
 
         // 이미 값이 담겨있다고 가정하고, 따로 연관관계 설정이 필요하지 않음
+    }
+
+    public void addAccount(Account account) {
+        this.account = account;
+    }
+
+    public void addLeagues(List<League> leagueList) {
+        Hibernate.initialize(this.leagues);
+        if (this.leagues == null) {
+            this.leagues = new ArrayList<>();
+        }
+        this.leagues.addAll(leagueList);
     }
 }

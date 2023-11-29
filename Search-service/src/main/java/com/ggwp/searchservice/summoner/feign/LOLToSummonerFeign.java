@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "lol-summoner", url = "https://kr.api.riotgames.com/lol/")
 public interface LOLToSummonerFeign {
-    // api key를 이용하여 소환사의 정보 가져오기
-    @GetMapping("summoner/v4/summoners/by-name/{summonerName}")
-    ResponseGetSummonerDto getSummoner(
-            @PathVariable String summonerName,
+    @GetMapping("summoner/v4/summoners/by-puuid/{puuid}")
+    ResponseGetSummonerDto getSummonerByPuuid(
+            @PathVariable String puuid,
             @RequestParam("api_key") String apiKey
     );
 }
