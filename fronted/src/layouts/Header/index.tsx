@@ -63,16 +63,6 @@ export default function Header() {
         return (<LoginMyPageButton />);          //          render: 타인 페이지 일 때 버튼 컴포넌트 렌더링          //
 
     }
-
-    useEffect(() => {    //          effect: 마운트시에만 실행될 함수          //
-        if (cookies.email) {
-            const user: LoginUser = { email: cookies.email, nickname: '주코야키', profileImage: null };
-            setUser(user);
-        }
-    }, []);
-
-
-
     return ( // 렌더링 헤더 레이아웃
 
         <div id='header'>
