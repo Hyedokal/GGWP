@@ -38,7 +38,7 @@ public class Squad {
     private String summonerName;
 
     @Column(nullable = false)
-    private String rank;
+    private String summonerRank;
 
     @Column(columnDefinition = "varchar(100)", nullable = false)
     private String sMemo;
@@ -59,7 +59,7 @@ public class Squad {
                 .setQType(qType)
                 .setSMic(sMic)
                 .setSummonerName(summonerName)
-                .setRank(rank)
+                .setSummonerRank(rank)
                 .setSMemo(sMemo)
                 .setCreatedAt(LocalDateTime.now())
                 .setUpdatedAt(LocalDateTime.now());

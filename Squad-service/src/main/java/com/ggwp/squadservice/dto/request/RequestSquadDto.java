@@ -33,11 +33,11 @@ public class RequestSquadDto {
     @Length(max = 100, message = "메모는 최대 100자까지 작성할 수 있습니다.")
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
     public String sMemo;
-    
-    private String rank;
+
+    private String summonerRank;
 
     public Squad toEntity() {
         return Squad.CREATE(this.myPos, this.wantPos, this.qType,
-                this.sMic, this.summonerName, this.rank, this.sMemo);
+                this.sMic, this.summonerName, this.summonerRank, this.sMemo);
     }
 }

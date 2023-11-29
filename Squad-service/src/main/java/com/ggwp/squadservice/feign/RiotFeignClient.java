@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Set;
 
-@FeignClient(name = "lol-league", url = "https://kr.api.riotgames.com/lol/")
+@FeignClient(name = "riotAPI", url = "https://kr.api.riotgames.com/lol/")
 public interface RiotFeignClient {
-    @GetMapping("/lol/summoner/v4/summoners/by-name/{summonerName}")
+    @GetMapping("summoner/v4/summoners/by-name/{summonerName}")
     ResponseGetSummonerDto getSummonerId(
             @PathVariable String summonerName,
             @RequestParam("api_key") String apiKey
     );
 
-    @GetMapping("/lol/league/v4/entries/by-summoner/{encryptedSummonerId}")
+    @GetMapping("league/v4/entries/by-summoner/{encryptedSummonerId}")
     Set<LeagueEntryDTO> getRankInfo(@PathVariable String encryptedSummonerId,
                                     @RequestParam("api_key") String apiKey);
 }

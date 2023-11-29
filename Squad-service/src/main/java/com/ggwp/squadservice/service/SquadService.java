@@ -19,7 +19,7 @@ public interface SquadService {
 
     public ResponseSquadDto getOneSquad(Long sId);
 
-    public List<ResponseSquadDto> getSquadWithFilters(Position myPos, QType qType);
+    public List<ResponseSquadDto> getSquadWithFilters(Position myPos, QType qType, String rank);
 
     public Map<QType, String> getSummonerRank(String summonerName);
 }

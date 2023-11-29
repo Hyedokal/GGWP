@@ -62,9 +62,9 @@ public class SquadServiceImpl implements SquadService {
     //게시글 작성 후 저장하기
     public void writeSquad(RequestSquadDto dto) {
         if (dto.getQType().equals(QType.SOLO_RANK)) {
-            dto.setRank(this.getSummonerRank(dto.getSummonerName()).get(QType.SOLO_RANK));
+            dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.SOLO_RANK));
         } else if (dto.getQType().equals(QType.FLEX_RANK)) {
-            dto.setRank(this.getSummonerRank(dto.getSummonerName()).get(QType.FLEX_RANK));
+            dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.FLEX_RANK));
         }
         Squad squad = dto.toEntity();
         squadRepository.save(squad);

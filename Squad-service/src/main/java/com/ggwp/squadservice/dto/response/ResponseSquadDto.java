@@ -31,7 +31,7 @@ public class ResponseSquadDto {
                 .setQType(squad.getQType())
                 .setSMic(squad.getSMic())
                 .setSummonerName(squad.getSummonerName())
-                .setRank(squad.getRank())
+                .setRank(squad.getSummonerRank())
                 .setSMemo(squad.getSMemo())
                 .setUpdatedAt(squad.getUpdatedAt());
     }
