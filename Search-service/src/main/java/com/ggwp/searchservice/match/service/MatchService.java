@@ -96,7 +96,7 @@ public class MatchService {
 
 
     // 소환사의 matchId들 matchSummoner에서 가져오기
-    @Transactional(readOnly = true)
+
     public List<MatchSummonerDto> getMatchSummonerBySummonerId(String summonerId) {
         List<MatchSummoner> matchSummoners = matchSummonerRepository.findBySummonerId(summonerId);
 

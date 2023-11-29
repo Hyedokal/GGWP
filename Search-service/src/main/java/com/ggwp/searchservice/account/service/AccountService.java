@@ -21,7 +21,7 @@ public class AccountService {
     @Value("${LOL.apikey}")
     private String apiKey;
 
-    public void createAccount(String lol_name, String tagLine) {
+    public void createAccount(String lol_name, String tagLine) { // api 호출
         AccountDto accountDto = accountFeign.getAccount(lol_name, tagLine, apiKey);
 
         if (summonerRepository.existsByPuuid(accountDto.getPuuid())) {
@@ -33,7 +33,7 @@ public class AccountService {
 
     }
 
-    public AccountDto getAccount(String lol_name, String tagLine) {
+    public AccountDto getAccount(String lol_name, String tagLine) { // DB 검색
         Account account = accountRepository.findByGameNameAndTagLine(lol_name, tagLine);
 
         return AccountDto.builder()
