@@ -1,6 +1,7 @@
 package com.ggwp.memberservice.dto.request.auth;
 
 import com.ggwp.memberservice.domain.Member;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +31,7 @@ public class SignUpRequestDto {
     @NotEmpty
     private String tag;
 
-    @NotNull
+    @Column(nullable = false)
     @AssertTrue //트루값 통과
     private Boolean agreedPersonal;
 

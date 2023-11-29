@@ -30,7 +30,7 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "varchar(16)", nullable = false)
     private String tag;
 
-    @Column
+    @Column(nullable = false)
     private Boolean agreedPersonal;
 
     // mhlee :: 어디에 어떤 용도로 사용하는 값일까??
