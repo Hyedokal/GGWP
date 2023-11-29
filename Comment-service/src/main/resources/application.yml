@@ -24,4 +24,5 @@ eureka:
       default-zone: http://127.0.0.1:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-
+server:
+  port: 0

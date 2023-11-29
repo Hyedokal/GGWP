@@ -28,3 +28,5 @@ eureka:
 
 
 apiKey: RGAPI-b5a1b1f6-fb71-412a-9808-3dc7fccfe89a;
+server:
+  port: 0
