@@ -20,6 +20,6 @@ public class RequestAnnounceDto {
     private String aContent;
 
     public Announce toEntity() {
-        return Announce.CREATE(this.aTitle, this.aContent);
+        return Announce.create(this.aTitle, this.aContent);
     }
 }
