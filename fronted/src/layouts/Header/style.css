@@ -1,0 +1,168 @@
+#header {
+    height: 64px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #A0AAC5;
+
+}
+
+.header-container {
+    width: 1200px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-left-box:hover {
+    cursor: pointer;
+}
+
+.header-logo-icon-box {
+    width: 24px;
+    height: 24px;
+}
+
+.logo-dark-icon {
+    width: 100%;
+    height: 100%;
+
+    background-image: url(assets/logo-dark.png);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+}
+
+.header-logo-text {
+    color: rgba(0, 0, 0, 1);
+
+    font-family: 'GimhaeGaya';
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 140%;
+    letter-spacing: -0.4px;
+}
+
+.header-right-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+
+
+
+.mypage-button {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 46px;
+    width: 93px;
+    height: 28px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.mypage-button:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.login-button {
+    border-radius: 46px;
+    width: 95px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 1);
+
+    color: rgba(255, 255, 255, 1);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.login-button:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.upload-button {
+    border-radius: 46px;
+    width: 95px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 1);
+
+    color: rgba(255, 255, 255, 1);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.upload-button:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.upload-button-disable {
+    border-radius: 46px;
+    width: 95px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.4);
+
+    color: rgba(255, 255, 255, 1);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.upload-button-disable:hover {
+    cursor: default;
+}
+
+.logout-button {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 46px;
+    width: 93px;
+    height: 28px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.logout-button:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
+}
