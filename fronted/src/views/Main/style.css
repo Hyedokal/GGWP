@@ -1,0 +1,8 @@
+.banner {
+    background-image: url(assets/banner.png); /* Update with your image path */
+    background-size: cover; /* This will make sure your image covers the entire banner */
+    background-position: center; /* This will center your image in the banner */
+    height: 368px;
+    width: 100%;
+
+}

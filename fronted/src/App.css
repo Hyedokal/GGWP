@@ -1,0 +1,205 @@
+.icon-button {
+  border-radius: 50% 50%;
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-button:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.icon-box {
+  width: 24px;
+  height: 24px;
+}
+
+.eye-off-icon {
+  width: 21px;
+  height: 21px;
+
+  background-image: url(assets/eye-off-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.eye-on-icon {
+  width: 21px;
+  height: 21px;
+
+  background-image: url(assets/eye-on-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.right-arrow-icon {
+  width: 21px;
+  height: 21px;
+
+  background-image: url(assets/right-arrow-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.check-ring-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/check-ring-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.check-round-fill-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/check-round-fill-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.left-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/left-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.right-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/right-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.more-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/more-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.comment-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/comment-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.down-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/down-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.up-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/up-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.favorite-fill-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/favorite-fill-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.favorite-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/favorite-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.edit-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/edit-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.image-box-white-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/image-box-white-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.arrow-right-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/arrow-right-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.close-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/close-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.image-box-light-icon {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(assets/image-box-light-icon.png);
+  background-position: 50% 50%;
+  background-size: 100% 100%;
+}
+
+.word-badge {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 30px;
+
+  padding: 4px 20px;
+
+  display: inline-block;
+}
+
+.word-badge:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.divider {
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.emphasis {
+  font-weight: bolder;
+}
+
