@@ -84,7 +84,7 @@ export default function Authentication() { // component 인증화면 컴포넌�
 
         //          event handler: 로그인 버튼 클릭 이벤트 처리          //
         const onSignInButtonClickHandler = () => {
-            const requestBody: SignInRequestDto = {email, password};
+            const requestBody: SignInRequestDto = {email, password};  // 이게 dto 다
             signInRequest(requestBody).then(signInResponse);
         }
 
@@ -108,7 +108,7 @@ export default function Authentication() { // component 인증화면 컴포넌�
                 <div className='auth-card-bottom'>
                     {error && (
                         <div className='auth-sign-in-error-box'>
-                            <div className='auth-sign-in-error-message'>
+                            <div className='au  th-sign-in-error-message'>
                                 {'이메일 주소 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요.'}
                             </div>
                         </div>
@@ -286,12 +286,13 @@ export default function Authentication() { // component 인증화면 컴포넌�
 
                 if (checkedLolNickname || checkedTag || !consent) return;
 
-                const requestBody: SignUpRequestDto = {
+                const requestBody: SignUpRequestDto = { //DTO 다
+
                     email,
                     password,
                     lolNickname,
                     tag,
-                    agreedPersonal: consent
+                    agreedPersonal: consent  //이건 agreedPersonal: consent로 쓰는 이유는 내 서버엔티티가  agreedPersonal로 되어있어서
                 };
 
                 signUpRequest(requestBody).then(signUpResponse);
