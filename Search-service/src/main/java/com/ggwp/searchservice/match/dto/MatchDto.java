@@ -287,6 +287,7 @@ public class MatchDto {
                     .puuid(this.puuid)
                     .summonerLevel(this.summmonerLevel)
                     .summonerName(this.summonerName)
+                    .riotIdTagline(this.riotIdTagline)
                     .kills(this.kills)
                     .assists(this.assists)
                     .deaths(this.deaths)

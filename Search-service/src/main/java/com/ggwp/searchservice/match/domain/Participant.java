@@ -20,7 +20,7 @@ public class Participant {
     private Long participantPk;
 
     @Column(name = "participant_id")
-    private int participantId; // participant의 PK
+    private int participantId;
 
     ///////////////// summoner ////////////////////////////////////
     @Column(name = "summoner_id")
@@ -36,6 +36,9 @@ public class Participant {
 
     @Column(name = "summoner_level")
     private int summonerLevel;
+
+    @Column(name = "riotIdTagline")
+    private String riotIdTagline;
 
     ////////////////////////////////////////////////////////////
 
