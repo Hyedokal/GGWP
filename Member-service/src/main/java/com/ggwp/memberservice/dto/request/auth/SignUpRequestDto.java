@@ -31,7 +31,7 @@ public class SignUpRequestDto {
     @NotEmpty
     private String tag;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // = 할필요가있으까요?
     @AssertTrue //트루값 통과
     private Boolean agreedPersonal;
 
