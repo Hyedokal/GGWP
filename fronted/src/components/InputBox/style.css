@@ -1,0 +1,51 @@
+.inputbox {
+    margin: 0;
+}
+
+.inputbox-label {
+    margin-bottom: 5px;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+.inputbox-container {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 11px 16px 11px 0;
+
+    display: flex;
+    align-items: center;
+}
+
+.inputbox-container-error {
+    border-bottom: 1px solid rgba(255, 0, 0, 0.7);
+    padding: 11px 16px 11px 0;
+
+    display: flex;
+    align-items: center;
+
+    background-color: rgba(250, 250, 250, 1);
+}
+
+.input {
+    border: none;
+    background: none;
+    outline: none;
+
+    flex: 1;
+
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+.inputbox-message {
+    margin-top: 5px;
+
+    color: rgba(255, 0, 0, 0.7);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 140%;
+}
