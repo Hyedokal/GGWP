@@ -2,7 +2,7 @@ spring:
   application:
     name: announce-service
   datasource:
-    url: jdbc:mysql://127.0.0.1/GGWP_ANNOUNCE_LOCAL?createDatabaseIfNotExist=true&tinyInt1isBit=false&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://127.0.0.1/GGWP_ANNOUNCE?createDatabaseIfNotExist=true&tinyInt1isBit=false&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: hello
     password: world
