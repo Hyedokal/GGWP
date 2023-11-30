@@ -80,8 +80,23 @@ export const getSignInUserRequest = async (token: string) => {  // description: 
 
 
 
+// description: get user API end point //
+const GET_USER_URL = (email: string) => `${API_DOMAIN}/member/${email}`;
 
+// description: get user request //
+export const getUserRequest = async (email: string) => {
+    const result = await axios.get(GET_USER_URL(email))
+        .then(response => {
+            const responseBody: GetUserResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
 
+    return result;
+};
 
 
 
