@@ -17,9 +17,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @GetMapping("")
-    public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(
-            @AuthenticationPrincipal String email
-    ) {
+    public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(@AuthenticationPrincipal String email) {
         ResponseEntity<? super GetSignInUserResponseDto> response = memberService.getSignInUser(email);
         return response;
     }

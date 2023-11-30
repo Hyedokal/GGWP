@@ -24,7 +24,6 @@ class AuthServiceTest {
         SignUpRequestDto request = SignUpRequestDto.builder()
                 .email("test@example.com")
                 .password("Password1!")
-                .userPasswordCheck("Password2!") // intentionally mismatched
                 .lolNickname("TestNick")
                 .tag("TestTag")
                 .build();
