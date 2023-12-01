@@ -1,9 +1,8 @@
 package com.ggwp.searchservice.league.dto;
 
-import com.ggwp.searchservice.enums.GameMode;
 import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.summoner.domain.Summoner;
-import com.ggwp.searchservice.summoner.dto.ResponseGetSummonerDto;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -11,24 +10,28 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseGetLeagueDto {
+public class RequestLeagueDto {
 
+    @NotBlank(message = "leagueId는 공백이 될 수 없습니다.")
     private String leagueId;
 
+    @NotBlank(message = "queueType은 공백이 될 수 없습니다.")
     private String queueType;
 
+    @NotBlank(message = "tier는 공백이 될 수 없습니다.")
     private String tier;
-
+    @NotBlank(message = "rank는 공백이 될 수 없습니다.")
     private String rank;
-
+    @NotBlank(message = "leaguePoints는 공백이 될 수 없습니다.")
     private int leaguePoints;
-
+    @NotBlank(message = "wins는 공백이 될 수 없습니다.")
     private int wins;
-
+    @NotBlank(message = "losses는 공백이 될 수 없습니다.")
     private int losses;
 
-    private ResponseGetSummonerDto summoner;
-    public League toEntity(Summoner summoner){
+    private Summoner summoner;
+
+    public League toEntity(Summoner summoner) {
         return League.builder()
                 .leagueId(this.leagueId)
                 .queueType(this.queueType)
@@ -40,5 +43,4 @@ public class ResponseGetLeagueDto {
                 .summoner(summoner)
                 .build();
     }
-
 }

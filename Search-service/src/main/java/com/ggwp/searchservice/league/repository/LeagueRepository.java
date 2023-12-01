@@ -5,8 +5,11 @@ import com.ggwp.searchservice.league.domain.League;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface LeagueRepository extends JpaRepository<League,Long> {
+public interface LeagueRepository extends JpaRepository<League, Long> {
 
-    List<League> findLeaguesBySummonerId(String summonerId);
+    Optional<List<League>> findLeaguesBySummonerId(String summonerId);
+
+    boolean existsByQueueTypeAndSummoner_Puuid(String queueType, String puuid);
 }

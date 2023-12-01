@@ -3,7 +3,8 @@ package com.ggwp.searchservice.summoner.domain;
 import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.match.domain.MatchSummoner;
-import com.ggwp.searchservice.summoner.dto.ResponseGetSummonerDto;
+import com.ggwp.searchservice.summoner.dto.RequestSummonerDto;
+import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,37 +23,39 @@ import java.util.List;
 public class Summoner {
 
     @Id
-    @Column(name = "summoner_id")
+    @Column(name = "suumoner_id", length = 63, unique = true) // varchar(63)
     private String id; // summoner_id encrypted
 
+    @Column(nullable = false)
     private int profileIconId; // 프로필 아이콘 번호
 
-//    private String accountId; // account encrypted 필요없어 보임
-
+    @Column(length = 78, unique = true, nullable = false)
     private String puuid; // summoner의 puuid
 
+    @Column(length = 63, nullable = false)
     private String name; // 롤 닉네임
 
+    @Column(nullable = false)
     private Long revisionDate; // 전적 업데이트 날짜
 
+    @Column(nullable = false)
     private int summonerLevel; // 소환사 레벨
 
     // 리그 연결 일대다 ( 소환사 1 : 리그 2)
-    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<League> leagues;
-
-    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // Summoner(OneToMany) <-> MatchSummoner(ManyToOne) <-> Match(OneToMany)  // ManyToMany 연관관계
+    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MatchSummoner> matchSummoners = new ArrayList<>();
-
+    // 계정 연결 일대일 (소환사 1 : 계정 1)
     @OneToOne(mappedBy = "summoner", cascade = CascadeType.ALL)
     private Account account;
 
     // 소환사 Entity를 -> DTO로 변경
-    public ResponseGetSummonerDto toDto(Summoner summoner) {
-        return ResponseGetSummonerDto.builder()
+    public ResponseSummonerDto toDto(Summoner summoner) {
+        return ResponseSummonerDto.builder()
                 .id(summoner.getId())
                 .profileIconId(summoner.getProfileIconId())
-//                .accountId(summoner.getAccountId())
                 .puuid(summoner.getPuuid())
                 .name(summoner.getName())
                 .revisionDate(summoner.getRevisionDate())
@@ -60,30 +63,33 @@ public class Summoner {
                 .build();
     }
 
+    // 연관관계 설정 (MatchSummoner)
     public void addMatchSummoner(MatchSummoner matchSummoner) {
-        // Hibernate.initialize를 통해 matchSummoners 필드 초기화
-        Hibernate.initialize(this.matchSummoners);
-
-        // this.matchSummoners가 null이면 새로운 ArrayList를 생성하여 할당
         if (this.matchSummoners == null) {
             this.matchSummoners = new ArrayList<>();
         }
-
-        // this.matchSummoners에 새로운 MatchSummoner 추가
         this.matchSummoners.add(matchSummoner);
-
-        // 이미 값이 담겨있다고 가정하고, 따로 연관관계 설정이 필요하지 않음
     }
 
+    // 연관관계 설정 (Account)
     public void addAccount(Account account) {
         this.account = account;
     }
 
+    // 연관관계 설정 (League)
     public void addLeagues(List<League> leagueList) {
         Hibernate.initialize(this.leagues);
         if (this.leagues == null) {
             this.leagues = new ArrayList<>();
         }
         this.leagues.addAll(leagueList);
+    }
+
+    public void updateSummoner(RequestSummonerDto createSummonerDto) {
+        this.name = createSummonerDto.getName();
+        this.profileIconId = createSummonerDto.getProfileIconId();
+        this.puuid = createSummonerDto.getPuuid();
+        this.revisionDate = createSummonerDto.getRevisionDate();
+        this.summonerLevel = createSummonerDto.getSummonerLevel();
     }
 }

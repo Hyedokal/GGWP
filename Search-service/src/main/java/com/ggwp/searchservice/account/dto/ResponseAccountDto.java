@@ -3,14 +3,12 @@ package com.ggwp.searchservice.account.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.summoner.domain.Summoner;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
-public class AccountDto {
+public class ResponseAccountDto {
 
     @JsonProperty("puuid")
     private String puuid;
@@ -27,4 +25,5 @@ public class AccountDto {
                 .summoner(summoner)
                 .build();
     }
+
 }

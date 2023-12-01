@@ -1,7 +1,7 @@
 package com.ggwp.searchservice.league.feign;
 
 
-import com.ggwp.searchservice.league.dto.ResponseGetLeagueDto;
+import com.ggwp.searchservice.league.dto.RequestLeagueDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +13,7 @@ import java.util.List;
 public interface LoLToLeagueFeign {
 
     @GetMapping("league/v4/entries/by-summoner/{encryptedSummonerId}")
-    List<ResponseGetLeagueDto> getLeagues(
+    List<RequestLeagueDto> getLeagues(
             @PathVariable("encryptedSummonerId") String encryptedSummonerId,
             @RequestParam("api_key") String apiKey
     );

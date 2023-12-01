@@ -1,6 +1,6 @@
 package com.ggwp.searchservice.match.controller;
 
-import com.ggwp.searchservice.match.service.MatchService;
+import com.ggwp.searchservice.match.service.MatchServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MatchController {
 
-    private final MatchService matchService;
+    private final MatchServiceImpl matchService;
 
     @PostMapping("/matchlist/{puuid}/save") // 매치 5개 api 불러와서 저장
     public ResponseEntity<?> createMatch(@PathVariable String puuid) throws InterruptedException {
-        matchService.createMatch(puuid);
+        matchService.createMatchs();
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 

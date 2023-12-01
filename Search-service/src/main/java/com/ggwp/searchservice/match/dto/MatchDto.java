@@ -1,11 +1,11 @@
 package com.ggwp.searchservice.match.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ggwp.searchservice.account.dto.AccountDto;
+import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.match.domain.Match;
 import com.ggwp.searchservice.match.domain.Participant;
 import com.ggwp.searchservice.match.domain.Team;
-import com.ggwp.searchservice.summoner.dto.RequestCreateSummonerDto;
+import com.ggwp.searchservice.summoner.dto.RequestSummonerDto;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -315,8 +315,8 @@ public class MatchDto {
                     .build();
         }
 
-        public RequestCreateSummonerDto createSummonerDto() {
-            return RequestCreateSummonerDto.builder()
+        public RequestSummonerDto createSummonerDto() {
+            return RequestSummonerDto.builder()
                     .id(this.summonerId)
                     .profileIconId(this.profileIcon)
                     .name(this.summonerName)
@@ -325,8 +325,8 @@ public class MatchDto {
                     .build();
         }
 
-        public AccountDto createAccountDto() {
-            return AccountDto.builder()
+        public ResponseAccountDto createAccountDto() {
+            return ResponseAccountDto.builder()
                     .puuid(this.puuid)
                     .gameName(this.summonerName)
                     .tagLine(this.riotIdTagline)
