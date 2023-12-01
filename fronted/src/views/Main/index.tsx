@@ -13,8 +13,9 @@ export default function Main() {
 
             <div>메인화면</div>
 
+
+
+
         </div>
-
-
     )
 }

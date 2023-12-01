@@ -1,4 +1,6 @@
 export default interface LoginUser {
     email: string;
-    nickname: string;
+    lolNickname: string;
+    tag: string;
+    role: string;
 }

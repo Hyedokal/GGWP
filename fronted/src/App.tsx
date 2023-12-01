@@ -46,7 +46,7 @@ function App() {
         <Route element={<Container /> }>
           <Route path={MAIN_PATH} element={<Main />} />
           <Route path={AUTH_PATH} element={<Authentication/>}/>
-          <Route path={USER_PATH(':searchEmail')} element={<User />} />
+          <Route path={USER_PATH} element={<User />} />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>

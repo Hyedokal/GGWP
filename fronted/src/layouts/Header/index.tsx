@@ -28,7 +28,7 @@ export default function Header() {
         const onMyPageButtonClickHandler = () => {         //          event handler: 마이페이지 버튼 클릭 이벤트 처리         //
 
             if (!user) return;
-            navigator(USER_PATH(user.email));
+            navigator(USER_PATH);
         }
         const onLoginButtonClickHandler = () => {         //          event handler: 로그인 버튼 클릭 이벤트 처리         //
             navigator(AUTH_PATH);
