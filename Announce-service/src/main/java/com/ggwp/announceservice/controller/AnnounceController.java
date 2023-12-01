@@ -19,41 +19,41 @@ import java.util.List;
 public class AnnounceController {
 
     @Autowired
-    private final AnnounceService announceServiceImpl;
+    private final AnnounceService announceService;
 
 
     //공지사항 리스트를 페이징처리하여 가져오는 메서드.
     @PostMapping("/search")
     public ResponseEntity<Page<ResponseAnnounceDto>> getPagedAnnounce(@RequestBody RequestPageDto.Search dto) {
-        Page<ResponseAnnounceDto> dtoList = announceServiceImpl.searchPagedAnnounce(dto);
+        Page<ResponseAnnounceDto> dtoList = announceService.searchPagedAnnounce(dto);
         return ResponseEntity.ok().body(dtoList);
     }
 
     //공지사항 하나 가져오는 메서드
     @GetMapping("/{aId}")
     public ResponseEntity<ResponseAnnounceDto> getOneAnnounce(@PathVariable Long aId) {
-        ResponseAnnounceDto dto = announceServiceImpl.getOneAnnounce(aId);
+        ResponseAnnounceDto dto = announceService.getOneAnnounce(aId);
         return ResponseEntity.ok().body(dto);
     }
 
     //공지사항 작성하는 메서드
     @PostMapping
     public ResponseEntity<String> writeAnnounce(@RequestBody RequestAnnounceDto dto) {
-        announceServiceImpl.writeAnnounce(dto);
+        announceService.writeAnnounce(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Saved Successfully");
     }
 
     //공지사항 수정하는 메서드
     @PutMapping("/{aId}")
     public ResponseEntity<String> editAnnounce(@PathVariable Long aId, @RequestBody RequestAnnounceDto dto) {
-        announceServiceImpl.editAnnounce(aId, dto);
+        announceService.editAnnounce(aId, dto);
         return ResponseEntity.ok().body("Modified Successfully");
     }
 
     //공지사항 삭제하는 메서드
     @DeleteMapping("/{aId}")
     public ResponseEntity<String> deleteAnnounce(@PathVariable Long aId) {
-        announceServiceImpl.deleteAnnounce(aId);
+        announceService.deleteAnnounce(aId);
         return ResponseEntity.ok().body("Deleted Successfully");
     }
 }
