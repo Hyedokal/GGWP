@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 // 공지사항 정보를 저장하는 엔티티.
@@ -28,24 +29,25 @@ public class Announce {
     private String aContent;
 
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
 
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
     //생성자를 담당하는 정적 메서드
-    public static Announce CREATE(String aTitle, String aContent) {
+    public static Announce create(String aTitle, String aContent) {
         return new Announce()
                 .setATitle(aTitle)
                 .setAContent(aContent)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now());
+                .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+
     }
 
     //엔티티 수정을 위한 메서드
     public void updateAnnounce(RequestAnnounceDto dto) {
         this.aTitle = dto.getATitle();
         this.aContent = dto.getAContent();
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 }

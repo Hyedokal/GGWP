@@ -1,10 +1,12 @@
 package com.ggwp.announceservice.controller;
 
 import com.ggwp.announceservice.dto.request.RequestAnnounceDto;
+import com.ggwp.announceservice.dto.request.RequestPageDto;
 import com.ggwp.announceservice.dto.response.ResponseAnnounceDto;
 import com.ggwp.announceservice.service.AnnounceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +21,12 @@ public class AnnounceController {
     @Autowired
     private final AnnounceService announceServiceImpl;
 
-    //공지사항 리스트 가져오는 메서드
-    @GetMapping
-    public ResponseEntity<List<ResponseAnnounceDto>> getAnnounceList() {
-        List<ResponseAnnounceDto> announceDtoList = announceServiceImpl.getAllAnnounce();
-        return ResponseEntity.ok().body(announceDtoList);
+
+    //공지사항 리스트를 페이징처리하여 가져오는 메서드.
+    @PostMapping("/search")
+    public ResponseEntity<Page<ResponseAnnounceDto>> getPagedAnnounce(@RequestBody RequestPageDto.Search dto) {
+        Page<ResponseAnnounceDto> dtoList = announceServiceImpl.searchPagedAnnounce(dto);
+        return ResponseEntity.ok().body(dtoList);
     }
 
     //공지사항 하나 가져오는 메서드
