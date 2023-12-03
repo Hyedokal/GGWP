@@ -2,22 +2,18 @@ package com.ggwp.searchservice.summoner.dto;
 
 import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.league.domain.League;
-import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RequestSummonerDto {
+public class CreateSummonerDto {
 
     @NotBlank(message = "Summoner의 ID는 비워 둘 수 없습니다")
     @Size(max = 63, message = "ID는 63자를 초과할 수 없습니다")
@@ -44,15 +40,4 @@ public class RequestSummonerDto {
 
     private League league;
 
-    // DTO를 -> Entity 로 변경
-    public Summoner toEntity() {
-        return Summoner.builder()
-                .id(this.id)
-                .profileIconId(this.profileIconId)
-                .puuid(this.puuid)
-                .name(this.name)
-                .revisionDate(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .summonerLevel(this.summonerLevel)
-                .build();
-    }
 }

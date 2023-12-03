@@ -1,6 +1,5 @@
 package com.ggwp.searchservice.match.domain;
 
-import com.ggwp.searchservice.summoner.dto.RequestSummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,13 +22,13 @@ public class Participant {
     private int participantId;
 
     ///////////////// summoner ////////////////////////////////////
-    @Column(name = "summoner_id", nullable = false, unique = true)
+    @Column(name = "summoner_id", nullable = false)
     private String summonerId;
 
     @Column(nullable = false)
     private int profileIcon;
 
-    @Column(name = "puuid", nullable = false, unique = true)
+    @Column(name = "puuid", nullable = false)
     private String puuid;
 
     @Column(name = "summoner_name", nullable = false)
@@ -95,13 +94,4 @@ public class Participant {
     @JoinColumn(name = "team_pk")
     private Team team;
 
-    public RequestSummonerDto createSummoner() {
-        return RequestSummonerDto.builder()
-                .id(this.summonerId)
-                .profileIconId(this.profileIcon)
-                .puuid(this.puuid)
-                .name(this.summonerName)
-                .summonerLevel(this.summonerLevel)
-                .build();
-    }
 }

@@ -1,8 +1,8 @@
 package com.ggwp.searchservice.account.domain;
 
-import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Account {
 
     @Id
@@ -26,21 +28,4 @@ public class Account {
     @JoinColumn(name = "account")
     private Summoner summoner;
 
-    @Builder
-    public Account(String puuid, String gameName, String tagLine, Summoner summoner) {
-        Account.builder()
-                .puuid(puuid)
-                .gameName(gameName)
-                .tagLine(tagLine)
-                .summoner(summoner)
-                .build();
-    }
-
-    public ResponseAccountDto toDto() { // Dto로 변환
-        return ResponseAccountDto.builder()
-                .puuid(this.puuid)
-                .gameName(this.gameName)
-                .tagLine(this.tagLine)
-                .build();
-    }
 }

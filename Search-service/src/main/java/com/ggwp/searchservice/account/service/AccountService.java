@@ -1,15 +1,26 @@
 package com.ggwp.searchservice.account.service;
 
 import com.ggwp.searchservice.account.domain.Account;
+import com.ggwp.searchservice.account.dto.CreateAccountDto;
+import com.ggwp.searchservice.account.dto.FeignAccountDto;
 import com.ggwp.searchservice.account.dto.ResponseAccountDto;
-import com.ggwp.searchservice.common.dto.ResponseDto;
 import com.ggwp.searchservice.common.dto.TokenDto;
+import com.ggwp.searchservice.summoner.domain.Summoner;
 
 public interface AccountService {
 
-    ResponseDto<String> createAccount(TokenDto tokenDto); // Account 생성
+    ResponseAccountDto getAccount(TokenDto tokenDto);
 
-    ResponseDto<ResponseAccountDto> getAccount(TokenDto tokenDto); // Account DB 조회
+    Account findAccount(TokenDto tokenDto);
 
-    Account findAccount(TokenDto tokenDto); // 토큰으로 Account 찾기
+    Account createAccount(CreateAccountDto createAccountDto, Summoner summoner);
+
+    FeignAccountDto feignAccount(TokenDto tokenDto);
+
+    ResponseAccountDto toDto(Account account);
+
+    Account toEntity(CreateAccountDto createAccountDto, Summoner summoner);
+
+    String existAccount(TokenDto tokenDto);
+
 }

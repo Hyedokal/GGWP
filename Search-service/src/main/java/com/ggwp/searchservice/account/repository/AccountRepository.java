@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByGameNameAndTagLine(String gameName, String tagLine);
+
+    boolean existsByGameNameAndTagLine(String gameName, String tagLine);
 }

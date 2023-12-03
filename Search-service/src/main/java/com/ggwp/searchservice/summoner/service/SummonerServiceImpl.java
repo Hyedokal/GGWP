@@ -7,6 +7,7 @@ import com.ggwp.searchservice.common.dto.TokenDto;
 import com.ggwp.searchservice.common.exception.CustomException;
 import com.ggwp.searchservice.common.exception.ErrorCode;
 import com.ggwp.searchservice.summoner.domain.Summoner;
+import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
 import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
 import com.ggwp.searchservice.summoner.repository.SummonerRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SummonerServiceImpl implements SummonerService {
+
     private final SummonerRepository summonerRepository;
     private final AccountService accountService;
 
@@ -30,4 +32,19 @@ public class SummonerServiceImpl implements SummonerService {
         Summoner summoner = findSummoner(account);
         return ResponseDto.success(summoner.toDto(summoner));
     }
+
+    public boolean existSummoner(CreateSummonerDto createSummonerDto) {
+        return summonerRepository.existsByPuuid(createSummonerDto.getPuuid());
+    }
+
+    @Override
+    public Summoner findSummonerByPuuid(CreateSummonerDto createSummonerDto) {
+        return summonerRepository.findSummonerByPuuid(createSummonerDto.getPuuid());
+    }
+
+    @Override
+    public void saveSummoner(Summoner summoner) {
+        summonerRepository.save(summoner);
+    }
+
 }

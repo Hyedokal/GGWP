@@ -3,6 +3,7 @@ package com.ggwp.searchservice.league.service;
 import com.ggwp.searchservice.common.dto.ResponseDto;
 import com.ggwp.searchservice.common.dto.TokenDto;
 import com.ggwp.searchservice.league.domain.League;
+import com.ggwp.searchservice.league.dto.CreateLeagueDto;
 import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 
@@ -14,4 +15,12 @@ public interface LeagueService {
     List<League> findLeagues(Summoner summoner); // 리그 엔티티 가져오기
 
     List<ResponseLeagueDto> leagueToDto(List<League> leagueList); // 리그 엔티티 -> DTO로 바꾸기
+
+    List<CreateLeagueDto> leagueFeign(Summoner summoner);
+
+    League LeaguetoEntity(CreateLeagueDto leagueDto, Summoner summoner);
+
+    List<League> createLeague(Summoner summoner);
+
+    void updateLeagues(Summoner summoner);
 }

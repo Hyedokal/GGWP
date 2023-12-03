@@ -3,7 +3,7 @@ package com.ggwp.searchservice.summoner.domain;
 import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.match.domain.MatchSummoner;
-import com.ggwp.searchservice.summoner.dto.RequestSummonerDto;
+import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
 import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -62,15 +62,7 @@ public class Summoner {
                 .summonerLevel(summoner.getSummonerLevel())
                 .build();
     }
-
-    // 연관관계 설정 (MatchSummoner)
-    public void addMatchSummoner(MatchSummoner matchSummoner) {
-        if (this.matchSummoners == null) {
-            this.matchSummoners = new ArrayList<>();
-        }
-        this.matchSummoners.add(matchSummoner);
-    }
-
+    
     // 연관관계 설정 (Account)
     public void addAccount(Account account) {
         this.account = account;
@@ -85,7 +77,7 @@ public class Summoner {
         this.leagues.addAll(leagueList);
     }
 
-    public void updateSummoner(RequestSummonerDto createSummonerDto) {
+    public void updateSummoner(CreateSummonerDto createSummonerDto) {
         this.name = createSummonerDto.getName();
         this.profileIconId = createSummonerDto.getProfileIconId();
         this.puuid = createSummonerDto.getPuuid();

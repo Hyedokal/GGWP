@@ -1,17 +1,14 @@
 package com.ggwp.searchservice.match.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.match.domain.Match;
 import com.ggwp.searchservice.match.domain.Participant;
 import com.ggwp.searchservice.match.domain.Team;
-import com.ggwp.searchservice.summoner.dto.RequestSummonerDto;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -113,48 +110,13 @@ public class MatchDto {
                 .build();
     }
 
-    public Match toEntity() {
-
-        Match match = Match.builder()
-                .matchId(metadataDto.getMatchId())
-                .platformId(info.getPlatformId())
-                .queueId(info.getQueueId())
-                .gameCreation(info.getGameCreation())
-                .gameDuration(info.getGameDuration())
-                .gameStartTimestamp(info.getGameStartTimestamp())
-                .gameEndTimestamp(info.getGameEndTimestamp())
-                .teams(new ArrayList<>())  // teams는 null 이다.
-                .build();
-
-        List<Team> teamEntities = info.getTeams().stream()
-                .map(teamDto -> {
-                    Team team = teamDto.toEntity();
-
-                    // 이 부분에서 Team에 Participant를 추가
-                    List<Participant> participantEntities = info.getParticipants().stream()
-                            .filter(participantDto -> participantDto.getTeamId() == team.getTeamId())
-                            .map(participantDto -> {
-                                Participant participant = participantDto.toEntity(team);
-                                team.addParticipant(participant);
-                                return participant;
-                            })
-                            .collect(Collectors.toList());
-                    team.setMatch(match);
-                    return team;
-                })
-                .collect(Collectors.toList());
-
-        match.addTeams(teamEntities);
-
-        return match;
-    }
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    private static class MetadataDto {
+    public static class MetadataDto {
         @JsonProperty("matchId")
         private String matchId;
     }
@@ -315,23 +277,6 @@ public class MatchDto {
                     .build();
         }
 
-        public RequestSummonerDto createSummonerDto() {
-            return RequestSummonerDto.builder()
-                    .id(this.summonerId)
-                    .profileIconId(this.profileIcon)
-                    .name(this.summonerName)
-                    .summonerLevel(this.summmonerLevel)
-                    .puuid(this.puuid)
-                    .build();
-        }
-
-        public ResponseAccountDto createAccountDto() {
-            return ResponseAccountDto.builder()
-                    .puuid(this.puuid)
-                    .gameName(this.summonerName)
-                    .tagLine(this.riotIdTagline)
-                    .build();
-        }
     }
 
     @Getter

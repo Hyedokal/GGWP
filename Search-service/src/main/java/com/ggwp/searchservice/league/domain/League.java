@@ -1,5 +1,6 @@
 package com.ggwp.searchservice.league.domain;
 
+import com.ggwp.searchservice.league.dto.CreateLeagueDto;
 import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.persistence.*;
@@ -49,6 +50,15 @@ public class League {
                 .wins(league.getWins())
                 .losses(league.getLosses())
                 .build();
+    }
+
+    public void updateLeague(CreateLeagueDto createLeagueDto) {
+        this.leagueId = createLeagueDto.getLeagueId();
+        this.leaguePoints = createLeagueDto.getLeaguePoints();
+        this.wins = createLeagueDto.getWins();
+        this.losses = createLeagueDto.getLosses();
+        this.ranks = createLeagueDto.getRank();
+        this.tier = createLeagueDto.getTier();
     }
 }
 
