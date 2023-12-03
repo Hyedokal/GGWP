@@ -165,3 +165,136 @@
     top:10%;
     left:85%;
 }
+
+.adminbox{
+    width: 80vw;
+    height: 6vh;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+    display: flex;
+
+    align-items: center;
+    position:absolute;
+    top:50%;
+    left:10%;
+
+}
+
+.adminlistbox{
+    width: 80vw;
+    height: 50vh;
+    background-color: #8FCBCF;
+    border-radius: 10px;
+    display: flex;
+
+    align-items: center;
+    position:absolute;
+    top:65%;
+    left:10%;
+}
+.header {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.mainbox1 {
+    width: 15vw;
+    height: 30vh;
+    background-color: #f0f0f0;
+    border-radius:20px;
+    border: 0.2rem solid #8CC1F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.0rem;
+    font-weight: bold;
+    color:#626F9F;
+    position:absolute;
+    top:70%;
+    left:20%;
+
+}
+.mainbox2 {
+    width: 15vw;
+    height: 30vh;
+    background-color: #f0f0f0;
+    border-radius:20px;
+    border: 0.2rem solid #8CC1F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.0rem;
+    color:#626F9F;
+    font-weight: bold;
+    position:absolute;
+    top:70%;
+    left:40%;
+
+}
+.mainbox3 {
+    width: 15vw;
+    height: 30vh;
+    background-color: #f0f0f0;
+    border-radius:20px;
+    border: 0.2rem solid #8CC1F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.0rem;
+    color:#626F9F;
+    font-weight: bold;
+    position:absolute;
+    top:70%;
+    left:60%;
+
+}
+.number-box {
+    width: 5vw;
+    height: 10vh;
+    background-color: #f0f0f0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    position: absolute;
+    top:62%;
+    left :24.5%;
+}
+.number-box2 {
+    width: 5vw;
+    height: 10vh;
+    background-color: #f0f0f0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    position: absolute;
+    top:62%;
+    left :44.5%;
+}
+.number-box3 {
+    width: 5vw;
+    height: 10vh;
+    background-color: #f0f0f0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    position: absolute;
+    top:62%;
+    left :64.5%;
+}

@@ -2,13 +2,15 @@ package com.ggwp.memberservice.repository;
 
 import com.ggwp.memberservice.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-     Optional<Member> findByUserId(String userId);
+    Member findByEmail (String email);
 
-    Optional<Member> findByRefreshToken(String refreshToken);
-
+    boolean existsByEmail(String email); // 이메일 중복검사
 }
+

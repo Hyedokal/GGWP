@@ -5,21 +5,8 @@ spring:
   application:
     name: member-service
   profiles:
-    active: db,jwt
-  datasource:
-    driver-class-name: ${driver-class-name}
-    url: ${url}
-    username: ${username_}
-    password: ${password}
+    active: local,db,jwt
 
-
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
 
 #
 #eureka:

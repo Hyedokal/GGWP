@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface AnnounceRepository extends JpaRepository<Announce, Long> {
     //공지사항 수정을 위한 메서드
-    Optional<Announce> findByaId(Long aId);
+    Optional<Announce> findById(Long aId);
 
 }

@@ -1,5 +1,6 @@
 package com.ggwp.memberservice.domain;
 
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
