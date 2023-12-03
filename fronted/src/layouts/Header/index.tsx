@@ -14,6 +14,11 @@ export default function Header() {
     const [cookies, setCookies] = useCookies();   //          state: cookie 상태          //
     const isAuthPage = pathname === AUTH_PATH;   //          variable: 인증 페이지 논리 변수          //
     const isMainPage = pathname === MAIN_PATH;   //          variable: 메인 페이지 논리 변수          //
+    const isUserPage = pathname === USER_PATH;   //          variable: 유저 페이지 논리 변수          //
+    //모든 페이지 논리변수
+    const allPage = isAuthPage || isMainPage || isUserPage;
+
+
     const navigator = useNavigate();     //          function: 네비게이트 함수          //
 
 
@@ -44,25 +49,26 @@ export default function Header() {
         );
     };
 
+        //컴포넌트 로그인상태 일시  로그아웃 버튼 컴포넌트
+    const LogoutButton = () => {   //          component: 로그인 상태에 따라 로그인 혹은 마이페이지 버튼 컴포넌트          //
 
-    const UserPageButtons = () => { //          component: 유저 페이지 버튼 컴포넌트          //
+            const onLogoutButtonClickHandler = () => {         //          event handler: 로그아웃 버튼 클릭 이벤트 처리         //
+                setCookies('accessToken', '', { path: '/', expires: new Date() });
+                setUser(null);
+                alert('You have been logged out.'); // Show an alert message
+                navigator(MAIN_PATH); // Navigate to the main page
 
-        const { searchEmail } = useParams();         //          state: path variable의 email 상태          //
-
-
-
-        const isMyPage = user && user.email === searchEmail;   //          variable: 마이페이지 여부 논리 변수          //
-
-        const onLogoutButtonClickHandler = () => {         //          event handler: 로그아웃 버튼 클릭 이벤트 처리          //
-            setCookies('accessToken', '', { path: '/', expires: new Date() });
-            setUser(null);
+            }
+        if (!cookies.accessToken) {
+            return null;
         }
-
-        if (isMyPage)          //          render: 본인 페이지 일 때 버튼 컴포넌트 렌더링          //
-            return (<div className='logout-button' onClick={onLogoutButtonClickHandler}>로그아웃</div>);
-        return (<LoginMyPageButton />);          //          render: 타인 페이지 일 때 버튼 컴포넌트 렌더링          //
-
+            return (
+                <div className='logout-button' onClick={onLogoutButtonClickHandler}>로그아웃</div>         //          render: 로그아웃 버튼 컴포넌트 렌더링 (로그인 상태일 때)         //
+            );
     }
+
+
+
     return ( // 렌더링 헤더 레이아웃
 
         <div id='header'>
@@ -77,6 +83,7 @@ export default function Header() {
                 <div>검색 해요</div>
                 <div className='header-right-box'>
                     { isMainPage && (<LoginMyPageButton />) }
+                    { allPage && (<LogoutButton />) }
                 </div>
             </div>
         </div>

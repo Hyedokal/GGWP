@@ -18,7 +18,6 @@ public class GetUserResponseDto extends ResponseDto{
             this.lolNickname = member.getLolNickname();
         }
 
-
     public static ResponseEntity<GetUserResponseDto> success(Member member) {
         GetUserResponseDto result = new GetUserResponseDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, member);
         return ResponseEntity.status(HttpStatus.OK).body(result);
