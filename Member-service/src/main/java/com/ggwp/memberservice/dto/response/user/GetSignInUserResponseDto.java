@@ -1,5 +1,6 @@
 package com.ggwp.memberservice.dto.response.user;
 
+
 import com.ggwp.memberservice.domain.Member;
 import com.ggwp.memberservice.domain.UserRole;
 import com.ggwp.memberservice.dto.response.ResponseCode;

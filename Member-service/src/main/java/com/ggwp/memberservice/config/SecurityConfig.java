@@ -32,9 +32,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizationHttpRequests -> authorizationHttpRequests
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll() //swagger
                         .requestMatchers(
-                                "/", "/v1/auth/**"
+                                "/", "member-service/v1/auth/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/member/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "member-service/v1/member/*").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
