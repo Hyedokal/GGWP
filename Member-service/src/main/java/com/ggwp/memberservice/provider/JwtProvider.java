@@ -1,5 +1,6 @@
 package com.ggwp.memberservice.provider;
 
+import com.ggwp.memberservice.domain.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,14 +17,15 @@ public class JwtProvider {
     @Value("${spring.jwt.secret-key}")
     private String secretKey;
 
-    public String create(String email) {
+    public String create(String email,String lolNickname, String tag, UserRole role) {
         Date expiration = Date.from(Instant.now().plus(5, ChronoUnit.HOURS));
-
         String jwt = Jwts.builder()
                         .signWith(SignatureAlgorithm.HS256, secretKey)
                         .setSubject(email).setIssuedAt(new Date()).setExpiration(expiration)
-                        .compact();
-
+                        .claim("lolNickname", lolNickname)
+                        .claim("tag", tag)
+                        .claim("role", role.getKey())
+                .compact();
         return jwt;
     }
 

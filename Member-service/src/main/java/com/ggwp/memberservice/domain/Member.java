@@ -3,6 +3,7 @@ package com.ggwp.memberservice.domain;
 
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,5 +62,7 @@ public class Member extends BaseEntity {
             uuid = UUID.randomUUID().toString(); // UUID 자동 생성
         }
     }
+
+
 
 }

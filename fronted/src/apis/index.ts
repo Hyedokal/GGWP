@@ -6,7 +6,7 @@ import {GetSignInUserResponseDto, GetUserResponseDto} from "./dto/response/user"
 
 
 
-
+// 포트번호 노출시키지 마세요, .env 파일에 저장해서 환경변수로 불러오세요
 const DOMAIN = 'http://localhost:8080'; // description: 내 URL // 나중엔 gateway주소 //
 
 const API_DOMAIN = `${DOMAIN}/v1`; // description: API Domain 주소 //
@@ -80,8 +80,23 @@ export const getSignInUserRequest = async (token: string) => {  // description: 
 
 
 
+// description: get user API end point //
+const GET_USER_URL = (email: string) => `${API_DOMAIN}/member/${email}`;
 
+// description: get user request //
+export const getUserRequest = async (email: string) => {
+    const result = await axios.get(GET_USER_URL(email))
+        .then(response => {
+            const responseBody: GetUserResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
 
+    return result;
+};
 
 
 
