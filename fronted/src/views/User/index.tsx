@@ -1,10 +1,12 @@
     import { useUserStore } from 'stores';
-    import {ChangeEvent, useState} from "react";
+    import {ChangeEvent, useEffect, useState} from "react";
     import {useNavigate} from "react-router-dom";
-    import {AUTH_PATH} from "../../constant";
+    import {AUTH_PATH, MAIN_PATH} from "../../constant";
     import {useCookies} from "react-cookie";
     import PatchEmailRequestDto from "../../apis/dto/request/user/patch-email-request.dto";
-    import {patchUserEmailRequest} from "../../apis";
+    import {getSignInUserRequest, getUserRequest, patchUserEmailRequest} from "../../apis";
+    import ResponseDto from "../../apis/dto/response";
+    import {GetSignInUserResponseDto, GetUserResponseDto} from "../../apis/dto/response/user";
 
 
     //          component: 유저 페이지          //
@@ -18,6 +20,9 @@
 
         //          function: 네비게이트 함수          //
         const navigator = useNavigate();
+
+
+
 
         const UserInfo = () => {
 
@@ -34,6 +39,19 @@
             //이메일 변경 상태
             const [showChangeEmail, setShowChangeEmail] = useState<boolean>(false);
 
+            //get user info response 처리
+            const getUserResponse = (responseBody: GetUserResponseDto | ResponseDto) => {
+                const {code} = responseBody;
+                if (code === 'NU') alert('존재하지 않는 유저입니다.');
+                if (code === 'DBE') alert('데이터베이스 오류입니다.');
+                if (code !== 'SU') {
+                    navigator(MAIN_PATH);
+                    return;
+                }
+                const { email } = responseBody as GetUserResponseDto;
+                setEmail(email);
+
+            }
 
             // 이메일 변경 response
             const PatchEmailResponse = (code: string) => {
@@ -47,13 +65,28 @@
                 if (code === 'DBE') alert('데이터베이스 오류입니다.');
 
                 if (code !== 'SU') {
-                    alert('오류가 발생했습니다.'); // 이메일이 중복될확률이있음. 나중에 이메일중복되었다고 추가
+                    setEmail(existingEmail);
                     return;
                 }
-                setShowChangeEmail(false);
+                //로그인 유저 이메일 아니면 리턴
+                if (!user) return;
+                //로그인 유저 이메일 변경
+                getUserRequest(user.email).then(getUserResponse);
 
-            }
+                const accessToken = cookies.accessToken;
+                if (!accessToken) return;
+                getSignInUserRequest(accessToken).then(getSignInUserResponse);
+            };
+            const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
+                const { code } = responseBody;
+                if (code !== 'SU') {
+                    setCookie('accessToken', '', { expires: new Date(), path: MAIN_PATH });
+                    setUser(null);
+                    return;
+                }
 
+                setUser({ ...responseBody as GetSignInUserResponseDto });
+            };
 
             //          event handler: 이메일 변경 버튼 클릭 이벤트 처리          //
             const onChangeEmailButtonClickHandler = () => {
@@ -81,6 +114,13 @@
                 const email = event.target.value;
                 setEmail(email);
             };
+
+
+            //          effect: 조회하는 유저의 이메일이 변경될 때 마다 실행할 함수 //
+            useEffect(() => {
+                const isMyPage = user?.email === user?.email;
+                setMyPage(isMyPage);
+            } , [user?.email, user]);
 
             return (
                 <div id='user-info-wrapper'>
