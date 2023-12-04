@@ -1,9 +1,11 @@
 package com.ggwp.memberservice.service.impl;
 
 import com.ggwp.memberservice.domain.Member;
+import com.ggwp.memberservice.dto.request.user.PatchEmailRequestDto;
 import com.ggwp.memberservice.dto.response.ResponseDto;
 import com.ggwp.memberservice.dto.response.user.GetSignInUserResponseDto;
 import com.ggwp.memberservice.dto.response.user.GetUserResponseDto;
+import com.ggwp.memberservice.dto.response.user.PatchEmailResponseDto;
 import com.ggwp.memberservice.repository.MemberRepository;
 import com.ggwp.memberservice.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+
     @Override
     public ResponseEntity<? super GetUserResponseDto> getUser(String email) {
 
@@ -51,6 +54,44 @@ public class MemberServiceImpl implements MemberService {
         return GetUserResponseDto.success(member);
 
     }
+    @Override
+    public ResponseEntity<? super PatchEmailResponseDto> patchEmail(PatchEmailRequestDto dto, String email) {
+        try{
+           String mail =  dto.getEmail();
+           boolean existEmail = memberRepository.existsByEmail(mail);
+             if(existEmail){
+                return PatchEmailResponseDto.duplicateEmail();
+              }
+            Member member = memberRepository.findByEmail(email);
+            if(member == null){
+                return PatchEmailResponseDto.notExistUser();
+            }
+            member.patchEmail(dto);
+
+            memberRepository.save(member);
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return PatchEmailResponseDto.success();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

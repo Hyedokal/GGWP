@@ -1,5 +1,4 @@
 
-
 import { KeyboardEvent, useRef, useState } from 'react';
 import './style.css';
 import InputBox from 'components/InputBox';

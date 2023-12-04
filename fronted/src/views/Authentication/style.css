@@ -1,9 +1,7 @@
 #auth-wrapper {
     padding: 100px 0 150px;
     min-width: 1440px;
-    height: calc(100vh - 64px - 100px - 150px);
-    min-height: 250px;
-
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

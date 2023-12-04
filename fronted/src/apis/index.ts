@@ -2,12 +2,13 @@ import axios from 'axios';
 import { SignInRequestDto, SignUpRequestDto } from './dto/request/auth';
 import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
-import {GetSignInUserResponseDto, GetUserResponseDto} from "./dto/response/user";
+import {GetSignInUserResponseDto, GetUserResponseDto, PatchEmailResponseDto} from "./dto/response/user";
+import PatchEmailRequestDto from "./dto/request/user/patch-email-request.dto";
 
 
 
 // 포트번호 노출시키지 마세요, .env 파일에 저장해서 환경변수로 불러오세요
-const DOMAIN = 'http://localhost:8000'; // description: 내 URL // 나중엔 gateway주소 //
+const DOMAIN = 'http://localhost:8080'; // description: 내 URL // 나중엔 gateway주소 //
 
 const API_DOMAIN = `${DOMAIN}/member-service/v1`; // description: API Domain 주소 //
 
@@ -83,7 +84,7 @@ export const getSignInUserRequest = async (token: string) => {  // description: 
 // description: get user API end point //
 const GET_USER_URL = (email: string) => `${API_DOMAIN}/member/${email}`;
 
-// description: get user request //
+// // description: get user request //
 export const getUserRequest = async (email: string) => {
     const result = await axios.get(GET_USER_URL(email))
         .then(response => {
@@ -101,4 +102,24 @@ export const getUserRequest = async (email: string) => {
 
 
 
+// description: patch user email API end point //
+
+const PATCH_EMAIL_URL = () => `${API_DOMAIN}/member/email`;
+
+export const patchUserEmailRequest = async (requestBody: PatchEmailRequestDto, token:string) => {
+const result = await axios.patch(PATCH_EMAIL_URL(), requestBody, authorization(token))
+    .then(response =>{
+        const responseBody: PatchEmailResponseDto = response.data;
+        const{code}= responseBody;
+        const result = code;
+        //추후에 message도 받아와서 처리해야함
+        return code;
+    })
+    .catch(error => {
+    const responseBody:ResponseDto= error.response.data;
+    const {code}= responseBody;
+    return code;
+    });
+    return result;
+}
 

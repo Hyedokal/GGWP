@@ -1,6 +1,7 @@
 package com.ggwp.memberservice.domain;
 
 
+import com.ggwp.memberservice.dto.request.user.PatchEmailRequestDto;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -64,5 +65,7 @@ public class Member extends BaseEntity {
     }
 
 
-
+    public void patchEmail(PatchEmailRequestDto dto) {
+        this.email = dto.getEmail();
+    }
 }

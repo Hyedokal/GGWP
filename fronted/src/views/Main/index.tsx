@@ -1,6 +1,5 @@
 import './style.css';
 import { useNavigate } from 'react-router-dom';
-import { FaBell } from "react-icons/fa";
 import {MATCH_PATH, MY_PATH, SEARCH_PATH} from "../../constant";
 
 // component 인증화면 컴포넌트
@@ -32,7 +31,7 @@ export default function Main() {
                     <div className='beggwwp'>{'GGWP에서 할 수 있어요'}</div>
                 </div>
                 <div className='logo-container'>
-                    <div> <FaBell className="FaBell" /></div>
+                    {/*<div> <FaBell className="FaBell" /></div>*/}
                 </div>
             </div>
             <div className='function-container'>
