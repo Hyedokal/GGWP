@@ -16,6 +16,7 @@ spring:
 
   profiles:
     include: db
+
 eureka:
   client:
     register-with-eureka: true
@@ -24,3 +25,8 @@ eureka:
       default-zone: http://127.0.0.1:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+apiKey: RGAPI-edb61b90-0573-4f94-baa4-ddbdf0ddd58e;
+server:
+  port: 0

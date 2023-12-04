@@ -6,6 +6,7 @@ import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SquadService {
     public void writeSquad(RequestSquadDto dto);
@@ -18,5 +19,7 @@ public interface SquadService {
 
     public ResponseSquadDto getOneSquad(Long sId);
 
-    public List<ResponseSquadDto> getSquadWithFilters(Position myPos, QType qType);
+    public List<ResponseSquadDto> getSquadWithFilters(Position myPos, QType qType, String rank);
+
+    public Map<QType, String> getSummonerRank(String summonerName);
 }

@@ -34,8 +34,10 @@ public class RequestSquadDto {
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
     public String sMemo;
 
+    private String summonerRank;
+
     public Squad toEntity() {
         return Squad.CREATE(this.myPos, this.wantPos, this.qType,
-                this.sMic, this.summonerName, this.sMemo);
+                this.sMic, this.summonerName, this.summonerRank, this.sMemo);
     }
 }

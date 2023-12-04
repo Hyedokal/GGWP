@@ -4,7 +4,7 @@ import com.ggwp.announceservice.entity.Announce;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 //공지사항 조회 DTO
 @Data
@@ -15,7 +15,7 @@ public class ResponseAnnounceDto {
 
     private String aContent;
 
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 
     public static ResponseAnnounceDto fromEntity(Announce announce) {
         return new ResponseAnnounceDto()

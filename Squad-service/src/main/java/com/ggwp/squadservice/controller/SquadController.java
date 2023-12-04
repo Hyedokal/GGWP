@@ -60,9 +60,10 @@ public class SquadController {
     @GetMapping("/filter")
     public ResponseEntity<List<ResponseSquadDto>> filterSquads(
             @RequestParam(required = false) Position myPos,
-            @RequestParam(required = false) QType qType
+            @RequestParam(required = false) QType qType,
+            @RequestParam(required = false) String rank
     ) {
-        List<ResponseSquadDto> filteredSquads = squadServiceImpl.getSquadWithFilters(myPos, qType);
+        List<ResponseSquadDto> filteredSquads = squadServiceImpl.getSquadWithFilters(myPos, qType, rank);
         return ResponseEntity.ok(filteredSquads);
     }
 
