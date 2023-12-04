@@ -110,9 +110,7 @@ export const patchUserEmailRequest = async (requestBody: PatchEmailRequestDto, t
 const result = await axios.patch(PATCH_EMAIL_URL(), requestBody, authorization(token))
     .then(response =>{
         const responseBody: PatchEmailResponseDto = response.data;
-        const{code}= responseBody;
-        const result = code;
-        //추후에 message도 받아와서 처리해야함
+        const { code } = responseBody;
         return code;
     })
     .catch(error => {

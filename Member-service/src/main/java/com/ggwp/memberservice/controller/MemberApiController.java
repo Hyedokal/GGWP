@@ -19,28 +19,28 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @GetMapping("")
-    public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(@AuthenticationPrincipal String email) {
-        ResponseEntity<? super GetSignInUserResponseDto> response = memberService.getSignInUser(email);
+    public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(@AuthenticationPrincipal String uuid) {
+        ResponseEntity<? super GetSignInUserResponseDto> response = memberService.getSignInUser(uuid);
         return response;
     }
 
 
-    @GetMapping("{email}")
-    public ResponseEntity<? super GetUserResponseDto> getUser(
-            @PathVariable("email") String email
-    ) {
-        ResponseEntity<? super GetUserResponseDto> response = memberService.getUser(email);
-        return response;
-    }
+        @GetMapping("{email}")
+        public ResponseEntity<? super GetUserResponseDto> getUser(
+                @PathVariable("email") String email
+        ) {
+            ResponseEntity<? super GetUserResponseDto> response = memberService.getUser(email);
+            return response;
+        }
 
 
 
     @PatchMapping("/email")
     public ResponseEntity<? super PatchEmailResponseDto> patchEmail(
             @RequestBody @Valid PatchEmailRequestDto requestBody,
-            @AuthenticationPrincipal String email
+            @AuthenticationPrincipal String uuid
             ){
-        ResponseEntity<? super PatchEmailResponseDto> response = memberService.patchEmail(requestBody, email);
+        ResponseEntity<? super PatchEmailResponseDto> response = memberService.patchEmail(requestBody, uuid);
         return response;
     }
 

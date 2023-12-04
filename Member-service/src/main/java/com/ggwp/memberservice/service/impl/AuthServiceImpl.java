@@ -124,7 +124,6 @@ public class AuthServiceImpl implements AuthService {
         try {
 
             String email = signInRequestDto.getEmail();
-
             Member member = memberRepository.findByEmail(email);
             if (member == null) return SignInResponseDto.signInFailed();
 
@@ -134,7 +133,7 @@ public class AuthServiceImpl implements AuthService {
             boolean isMatched = passwordEncoder.matches(password, encodedPassword);
             if (!isMatched) return SignInResponseDto.signInFailed();
 
-            token = jwtProvider.create(email, member.getLolNickname(), member.getTag(), member.getRole());
+            token = jwtProvider.create(member.getUuid(), member.getLolNickname(), member.getTag(), member.getRole());
 
         } catch(Exception exception) {
             exception.printStackTrace();

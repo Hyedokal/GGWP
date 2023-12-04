@@ -66,6 +66,7 @@ public class Member extends BaseEntity {
 
 
     public void patchEmail(PatchEmailRequestDto dto) {
+        //
         this.email = dto.getEmail();
     }
 }

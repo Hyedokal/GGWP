@@ -15,6 +15,7 @@ public class GetSignInUserResponseDto extends ResponseDto {
 
     private String email;
     private  String lolNickname;
+
     private  String tag;
     private UserRole userRole;
     private GetSignInUserResponseDto(String code, String message, Member member) {

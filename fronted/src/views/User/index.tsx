@@ -39,19 +39,7 @@
             //이메일 변경 상태
             const [showChangeEmail, setShowChangeEmail] = useState<boolean>(false);
 
-            //get user info response 처리
-            const getUserResponse = (responseBody: GetUserResponseDto | ResponseDto) => {
-                const {code} = responseBody;
-                if (code === 'NU') alert('존재하지 않는 유저입니다.');
-                if (code === 'DBE') alert('데이터베이스 오류입니다.');
-                if (code !== 'SU') {
-                    navigator(MAIN_PATH);
-                    return;
-                }
-                const { email } = responseBody as GetUserResponseDto;
-                setEmail(email);
 
-            }
 
             // 이메일 변경 response
             const PatchEmailResponse = (code: string) => {
@@ -68,15 +56,14 @@
                     setEmail(existingEmail);
                     return;
                 }
-                //로그인 유저 이메일 아니면 리턴
-                if (!user) return;
-                //로그인 유저 이메일 변경
-                getUserRequest(user.email).then(getUserResponse);
 
                 const accessToken = cookies.accessToken;
                 if (!accessToken) return;
                 getSignInUserRequest(accessToken).then(getSignInUserResponse);
             };
+
+
+
             const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
                 const { code } = responseBody;
                 if (code !== 'SU') {
@@ -116,11 +103,6 @@
             };
 
 
-            //          effect: 조회하는 유저의 이메일이 변경될 때 마다 실행할 함수 //
-            useEffect(() => {
-                const isMyPage = user?.email === user?.email;
-                setMyPage(isMyPage);
-            } , [user?.email, user]);
 
             return (
                 <div id='user-info-wrapper'>

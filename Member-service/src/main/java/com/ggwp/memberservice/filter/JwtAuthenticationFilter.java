@@ -37,14 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String email = jwtProvider.validate(token);
-            if (email == null) {
+            String uuid = jwtProvider.validate(token);
+            if (uuid  == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
-
             AbstractAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.NO_AUTHORITIES);
+                    = new UsernamePasswordAuthenticationToken(uuid , null, AuthorityUtils.NO_AUTHORITIES);
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();

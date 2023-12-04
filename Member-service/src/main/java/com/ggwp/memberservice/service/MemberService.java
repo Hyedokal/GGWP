@@ -7,9 +7,9 @@ import com.ggwp.memberservice.dto.response.user.PatchEmailResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface MemberService {
-    ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String email);
+    ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String uuid);
     ResponseEntity<? super GetUserResponseDto> getUser(String email);
 
 
-    ResponseEntity<? super PatchEmailResponseDto> patchEmail(PatchEmailRequestDto dto , String email);
+    ResponseEntity<? super PatchEmailResponseDto> patchEmail(PatchEmailRequestDto dto , String uuid);
 }

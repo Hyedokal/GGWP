@@ -19,11 +19,11 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     @Override
-    public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String email) {
+    public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String uuid) {
         Member member = null;
         try {
 
-            member = memberRepository.findByEmail(email);
+            member = memberRepository.findByUuid(uuid);
             if (member == null) return GetSignInUserResponseDto.notExistUser();
 
         } catch(Exception exception) {
@@ -55,14 +55,14 @@ public class MemberServiceImpl implements MemberService {
 
     }
     @Override
-    public ResponseEntity<? super PatchEmailResponseDto> patchEmail(PatchEmailRequestDto dto, String email) {
+    public ResponseEntity<? super PatchEmailResponseDto> patchEmail(PatchEmailRequestDto dto, String uuid) {
         try{
            String mail =  dto.getEmail();
            boolean existEmail = memberRepository.existsByEmail(mail);
              if(existEmail){
                 return PatchEmailResponseDto.duplicateEmail();
               }
-            Member member = memberRepository.findByEmail(email);
+            Member member = memberRepository.findByUuid(uuid);
             if(member == null){
                 return PatchEmailResponseDto.notExistUser();
             }
@@ -70,13 +70,13 @@ public class MemberServiceImpl implements MemberService {
 
             memberRepository.save(member);
 
+
         }catch (Exception exception){
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
         return PatchEmailResponseDto.success();
     }
-
 
 
 
