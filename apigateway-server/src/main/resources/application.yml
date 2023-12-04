@@ -12,6 +12,28 @@ spring:
           uri: lb://SQUAD-SERVICE
           predicates:
             - Path=/Squad-service/**
+
+        - id: Member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowCredentials: true
+
+
+
 eureka:
   client:
     register-with-eureka: true

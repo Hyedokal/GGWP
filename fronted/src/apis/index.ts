@@ -7,9 +7,9 @@ import {GetSignInUserResponseDto, GetUserResponseDto} from "./dto/response/user"
 
 
 // 포트번호 노출시키지 마세요, .env 파일에 저장해서 환경변수로 불러오세요
-const DOMAIN = 'http://localhost:8080'; // description: 내 URL // 나중엔 gateway주소 //
+const DOMAIN = 'http://localhost:8000'; // description: 내 URL // 나중엔 gateway주소 //
 
-const API_DOMAIN = `${DOMAIN}/v1`; // description: API Domain 주소 //
+const API_DOMAIN = `${DOMAIN}/member-service/v1`; // description: API Domain 주소 //
 
 
 const authorization = (token: string) => {// description: Authorizaition Header //
