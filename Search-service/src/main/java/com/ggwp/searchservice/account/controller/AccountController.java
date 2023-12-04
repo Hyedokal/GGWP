@@ -1,29 +1,35 @@
 package com.ggwp.searchservice.account.controller;
 
+import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.account.service.AccountService;
+import com.ggwp.searchservice.common.dto.ResponseDto;
+import com.ggwp.searchservice.common.dto.TokenDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("v1/account")
 @RequiredArgsConstructor
+@Tag(name = "Account", description = "Account API")
 public class AccountController {
 
     private final AccountService accountService;
 
-    @PostMapping("/{lol_name}/{tagLine}")
-    public ResponseEntity<?> createAccount(@PathVariable String lol_name, @PathVariable String tagLine) { // 토큰에서 닉네임과 태그를 받는다. (토큰 받으면 수정)
-        accountService.createAccount(lol_name, tagLine);
-        return ResponseEntity.ok(HttpStatus.CREATED);
-    }
+//    @PostMapping("/create")
+//    @Operation(summary = "Account 생성", description = "lol api 호출")
+//    public ResponseDto<String> createAccount(@Valid @RequestBody TokenDto tokenDto) { // 토큰에서 닉네임과 태그를 받는다. (토큰 받으면 수정)
+//        return accountService.createAccount(tokenDto);
+//    }
 
-    @PostMapping("/{lol_name}/{tagLine}/getAccount")
-    public ResponseEntity<?> getAccount(@PathVariable String lol_name, @PathVariable String tagLine) { // DB에서 조회
-        return ResponseEntity.ok(accountService.getAccount(lol_name, tagLine));
+    @PostMapping("/get")
+    @Operation(summary = "Account 조회", description = "DB에서 조회")
+    public ResponseDto<ResponseAccountDto> getAccount(@Valid @RequestBody TokenDto tokenDto) { // DB에서 조회
+        return ResponseDto.success(accountService.getAccount(tokenDto));
     }
 }

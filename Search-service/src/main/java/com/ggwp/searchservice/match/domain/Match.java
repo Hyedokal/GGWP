@@ -19,30 +19,30 @@ import java.util.List;
 public class Match {
 
     @Id
-    @Column(name = "match_id")
+    @Column(name = "match_id", nullable = false, unique = true)
     private String matchId;
-    @Column(name = "platform_id")
+    @Column(name = "platform_id", nullable = false)
     private String platformId; // KR
 
-    @Column(name = "queue_id")
+    @Column(name = "queue_id", nullable = false)
     private int queueId; // 게임 모드
 
-    @Column(name = "game_creation")
+    @Column(name = "game_creation", nullable = false)
     private long gameCreation; // 게임 생성 시각
 
-    @Column(name = "game_duration")
+    @Column(name = "game_duration", nullable = false)
     private long gameDuration; // 게임 지속 시각
 
-    @Column(name = "game_end_timestamp")
+    @Column(name = "game_end_timestamp", nullable = false)
     private long gameEndTimestamp; // 게임 종료 시각
 
-    @Column(name = "game_start_timestamp")
+    @Column(name = "game_start_timestamp", nullable = false)
     private long gameStartTimestamp; // 게임 시작 시각
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Team> teams = new ArrayList<>();
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MatchSummoner> matchSummoners = new ArrayList<>();
 
     public void addTeams(List<Team> teams) {

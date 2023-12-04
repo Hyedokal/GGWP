@@ -1,14 +1,16 @@
 package com.ggwp.searchservice.league.controller;
 
 
-import com.ggwp.searchservice.league.dto.ResponseFindLeagueDto;
-import com.ggwp.searchservice.league.dto.ResponseGetLeagueDto;
-import com.ggwp.searchservice.league.service.LeagueService;
+import com.ggwp.searchservice.common.dto.ResponseDto;
+import com.ggwp.searchservice.common.dto.TokenDto;
+import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
+import com.ggwp.searchservice.league.service.LeagueServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,22 +19,15 @@ import java.util.List;
 @RestController
 @RequestMapping("v1/league")
 @RequiredArgsConstructor
+@Tag(name = "League", description = "League API")
 public class LeagueController {
 
-    private final LeagueService leagueService;
+    private final LeagueServiceImpl leagueService;
 
-    @GetMapping("/get/{summonerid}") // summoner_id
-    @Operation(summary = "League (랭크 조회)", description = "encrypted된 id로 랭크 조회")
-    public ResponseEntity<?> getLeagues(@PathVariable String summonerid) {
-        List<ResponseGetLeagueDto> leagueDto = leagueService.getLeaguesAndSave(summonerid);
-        return ResponseEntity.ok(leagueDto);
-    }
-
-    @GetMapping("/get/{summonerId}/no-api")
+    @PostMapping("/get")
     @Operation(summary = "League (랭크 조회)", description = "DB로 조회")
-    public ResponseEntity<?> getLeaguesNoApi(@PathVariable String summonerId) {
-        List<ResponseFindLeagueDto> leagueDto = leagueService.getLeaguesNoApi(summonerId);
-        return ResponseEntity.ok(leagueDto);
+    public ResponseDto<List<ResponseLeagueDto>> getLeague(@Valid @RequestBody TokenDto tokenDto) {
+        return leagueService.getLeague(tokenDto);
     }
 
 }

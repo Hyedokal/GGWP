@@ -3,7 +3,10 @@ package com.ggwp.searchservice.account.repository;
 import com.ggwp.searchservice.account.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountRepository extends JpaRepository<Account, Long> {
+import java.util.Optional;
 
-    Account findByGameNameAndTagLine(String gameName, String tagLine);
+public interface AccountRepository extends JpaRepository<Account, Long> {
+    Optional<Account> findByGameNameAndTagLine(String gameName, String tagLine);
+
+    boolean existsByGameNameAndTagLine(String gameName, String tagLine);
 }

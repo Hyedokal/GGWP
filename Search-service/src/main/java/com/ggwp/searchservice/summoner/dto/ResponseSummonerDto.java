@@ -8,13 +8,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseGetSummonerDto {
+public class ResponseSummonerDto {
 
     private String id;
 
     private int profileIconId;
-
-//    private String accountId;
 
     private String puuid;
 
@@ -29,7 +27,6 @@ public class ResponseGetSummonerDto {
         return Summoner.builder()
                 .id(this.id)
                 .profileIconId(this.profileIconId)
-//                .accountId(this.accountId)
                 .puuid(this.puuid)
                 .name(this.name)
                 .revisionDate(this.revisionDate)

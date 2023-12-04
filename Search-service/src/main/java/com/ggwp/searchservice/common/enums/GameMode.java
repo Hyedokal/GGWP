@@ -1,4 +1,4 @@
-package com.ggwp.searchservice.enums;
+package com.ggwp.searchservice.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

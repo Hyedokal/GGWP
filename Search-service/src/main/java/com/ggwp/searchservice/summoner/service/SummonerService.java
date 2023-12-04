@@ -1,33 +1,21 @@
 package com.ggwp.searchservice.summoner.service;
 
+import com.ggwp.searchservice.account.domain.Account;
+import com.ggwp.searchservice.common.dto.ResponseDto;
+import com.ggwp.searchservice.common.dto.TokenDto;
 import com.ggwp.searchservice.summoner.domain.Summoner;
-import com.ggwp.searchservice.summoner.dto.ResponseGetSummonerDto;
-import com.ggwp.searchservice.summoner.feign.LOLToSummonerFeign;
-import com.ggwp.searchservice.summoner.repository.SummonerRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
+import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
 
-@Service
-@RequiredArgsConstructor
-public class SummonerService {
-    private final SummonerRepository summonerRepository;
-    private final LOLToSummonerFeign summonerFeign;
-    @Value("${LOL.apikey}")
-    private String apiKey;
+public interface SummonerService {
+    ResponseDto<ResponseSummonerDto> getSummoner(TokenDto tokenDto); // DB 조회하여 소환사 정보 가져오기
 
-    // 롤 api를 통해서 소환사 정보 가져오기 및 DB 저장 USE API
-    public ResponseGetSummonerDto getSummonerAndSave(String puuid) {
-        ResponseGetSummonerDto summonerDto = summonerFeign.getSummonerByPuuid(puuid, apiKey);
-        Summoner summoner = summonerDto.toEntity();
-        summonerRepository.save(summoner);
-        return summonerDto;
-    }
+    Summoner findSummoner(Account account); // Optional<Summoner> 찾기
 
-    // DB에 저장한 소환사 정보 가져오기 No-API
-    public ResponseGetSummonerDto getSummonerNoApi(String puuid) {
-        Summoner summoner = summonerRepository.findSummonerByPuuid(puuid);
-        return summoner.toDto(summoner);
-    }
+    boolean existSummoner(CreateSummonerDto createSummonerDto);
+
+    Summoner findSummonerByPuuid(CreateSummonerDto createSummonerDto);
+
+    void saveSummoner(Summoner summoner);
 
 }

@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class MatchSummoner {
 
     @Id
-    @GeneratedValue
-    @Column(name = "match_summoner_pk")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "match_summoner_pk", nullable = false, unique = true)
     private Long id;
 
     @ManyToOne

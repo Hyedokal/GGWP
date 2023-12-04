@@ -4,16 +4,12 @@ package com.ggwp.searchservice.summoner.repository;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface SummonerRepository extends JpaRepository<Summoner, Long> {
-
-    // 닉네임으로 Summoner 찾기
-    Summoner findSummonerByName(String name);
-
-    Summoner findSummonerById(String id);
-
     boolean existsByPuuid(String puuid);
 
-    boolean existsById(String id);
-
     Summoner findSummonerByPuuid(String puuid);
+
+    Optional<Summoner> findByPuuid(String puuid);
 }

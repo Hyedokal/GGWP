@@ -17,19 +17,20 @@ import java.util.List;
 public class Team {
 
     @Id
-    @GeneratedValue
-    @Column(name = "team_pk")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "team_pk", nullable = false, unique = true)
     private Long teamPk;
 
+    @Column(nullable = false)
     private int teamId; // teamId 100 = BLUE 200 = RED
-
+    @Column(nullable = false)
     private boolean win; // 승리
 
     @ManyToOne
     @JoinColumn(name = "match_id")
     private Match match; // match와 연관관계
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Participant> participants = new ArrayList<>(); // 참가자들 5명 씩 팀 1, 팀 2
 
     public void setMatch(Match match) {
