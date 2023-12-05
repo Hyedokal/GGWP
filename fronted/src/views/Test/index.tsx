@@ -1,16 +1,53 @@
+import axios from "axios";
 import {useCookies} from "react-cookie";
+import PatchLolNickNameRequestDto from "../../apis/dto/request/user/patch-lol-nickName-request.dto";
+import {PatchLolNickNameResponseDto} from "../../apis/dto/response/user";
+import ResponseDto from "../../apis/dto/response";
 import UserInfoStore from "../../stores/userInfo.store";
 import {useState} from "react";
-import {patchLolNicknameRequest} from "../../apis";
+
+// Define the DTO for the request body
+interface PatchLolNickNameRequestDto1 {
+    lolNickName: string;
+}
+
+interface PatchLolNickNameResponseDto1 extends ResponseDto1{
+
+}
+interface ResponseDto1 {
+    code: string;
+    message: string;
+}
+const BASE_URL =()=> 'http://localhost:8080/member-service/v1/member/lolNickname';
+
+const authorization = (token: string) => {// description: Authorizaition Header //
+    return { headers: { Authorization: `Bearer ${token}` } };
+};
 
 
-export default function User() {
+const sendPatchRequest = async (requestBody: PatchLolNickNameRequestDto1, token: string): Promise<string> => {
+    try {
+        const response = await axios.patch<PatchLolNickNameResponseDto1>(BASE_URL(), requestBody, authorization(token));
+        const responseBody: PatchLolNickNameResponseDto1 = response.data;
+        return responseBody.code; // Assuming you want to return the 'code' from the response
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const responseBody: ResponseDto1 = error.response.data;
+            return responseBody.code; // Return the 'code' from the error response
+        } else {
+            // Handle non-Axios errors
+            throw error;
+        }
+    }
+};
 
 
-        const [cookies] = useCookies();
-        const { userInfo, setUserInfo } = UserInfoStore();
-        const [editMode, setEditMode] = useState(false);
-        const [newLolNickname, setNewLolNickname] = useState(userInfo?.lolNickname || '');
+export default function Test() {
+
+    const [cookies] = useCookies();
+    const { userInfo, setUserInfo } = UserInfoStore();
+    const [editMode, setEditMode] = useState(false);
+    const [newLolNickname, setNewLolNickname] = useState(userInfo?.lolNickname || '');
 
 
     //닉네임을 업데이트하는 handler 함수
@@ -20,7 +57,7 @@ export default function User() {
             return;
         }
 
-        const result = await patchLolNicknameRequest({ lolNickName: newLolNickname }, cookies.accessToken);
+        const result = await sendPatchRequest({ lolNickName: newLolNickname }, cookies.accessToken);
         if (result === 'SU') { // Assuming 'SU' is the success code
             if (userInfo) {
                 console.log(`닉네임 바뀌기 전후  ${userInfo.lolNickname} to ${newLolNickname}`);
@@ -110,9 +147,6 @@ export default function User() {
 
         </div>
     )
+}
 
 
-
-
-
-    }

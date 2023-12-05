@@ -2,7 +2,7 @@ package com.ggwp.memberservice.dto.response;
 
 public interface ResponseMessage {
     
-    String SUCCESS = "Success."; // 성공
+    String SUCCESS = "Success.1"; // 성공
 
     String VALIDATION_FAILED = "Validation failed.";
 

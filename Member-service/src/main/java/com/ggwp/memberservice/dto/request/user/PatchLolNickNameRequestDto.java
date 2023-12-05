@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchEmailRequestDto {
+public class PatchLolNickNameRequestDto {
     @NotBlank
-    String email;
+    String lolNickName;
 }

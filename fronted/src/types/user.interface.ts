@@ -1,4 +1,6 @@
-export default interface User {
+export default interface UserInfo {
     email: string;
-    nickname: string;
+    lolNickname: string;
+    tag: string;
+    userRole: string;
 }

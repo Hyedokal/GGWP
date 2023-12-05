@@ -1,8 +1,7 @@
-import User from './user.interface';
 import LoginUser from './login-user.interface';
-
+import UserInfo from './user.interface';
 export type {
-    User,
 
+    UserInfo,
     LoginUser
 };

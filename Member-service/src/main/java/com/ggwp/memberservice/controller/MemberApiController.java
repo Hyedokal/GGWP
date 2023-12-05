@@ -1,10 +1,10 @@
 package com.ggwp.memberservice.controller;
 
 
-import com.ggwp.memberservice.dto.request.user.PatchEmailRequestDto;
+import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
 import com.ggwp.memberservice.dto.response.user.GetSignInUserResponseDto;
 import com.ggwp.memberservice.dto.response.user.GetUserResponseDto;
-import com.ggwp.memberservice.dto.response.user.PatchEmailResponseDto;
+import com.ggwp.memberservice.dto.response.user.PatchLolNickNameResponseDto;
 import com.ggwp.memberservice.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,22 +25,22 @@ public class MemberApiController {
     }
 
 
-        @GetMapping("{email}")
+        @GetMapping("/userInfo")
         public ResponseEntity<? super GetUserResponseDto> getUser(
-                @PathVariable("email") String email
+                @AuthenticationPrincipal String uuid
         ) {
-            ResponseEntity<? super GetUserResponseDto> response = memberService.getUser(email);
+            ResponseEntity<? super GetUserResponseDto> response = memberService.getUser(uuid);
             return response;
         }
 
 
 
-    @PatchMapping("/email")
-    public ResponseEntity<? super PatchEmailResponseDto> patchEmail(
-            @RequestBody @Valid PatchEmailRequestDto requestBody,
+    @PatchMapping("/lolNickname")
+    public ResponseEntity<? super PatchLolNickNameResponseDto> patchLolNickName(
+            @RequestBody @Valid PatchLolNickNameRequestDto requestBody,
             @AuthenticationPrincipal String uuid
             ){
-        ResponseEntity<? super PatchEmailResponseDto> response = memberService.patchEmail(requestBody, uuid);
+        ResponseEntity<? super PatchLolNickNameResponseDto> response = memberService.patchLolNickName(requestBody, uuid);
         return response;
     }
 

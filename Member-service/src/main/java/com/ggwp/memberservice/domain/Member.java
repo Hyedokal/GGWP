@@ -1,10 +1,9 @@
 package com.ggwp.memberservice.domain;
 
 
-import com.ggwp.memberservice.dto.request.user.PatchEmailRequestDto;
+import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,8 +64,8 @@ public class Member extends BaseEntity {
     }
 
 
-    public void patchEmail(PatchEmailRequestDto dto) {
-        //
-        this.email = dto.getEmail();
+
+    public void patchLolNickName(PatchLolNickNameRequestDto dto) {
+        this.lolNickname = dto.getLolNickName();
     }
 }
