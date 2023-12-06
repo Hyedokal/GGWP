@@ -41,7 +41,7 @@ public class SignUpRequestDto {
 
         return Member.builder()
                 .email(email)
-                .password(passwordEncoder.encode(password)) // todo: 시큐리티 적용하면 패스워드 인코더 적용
+                .password(passwordEncoder.encode(password))
                 .lolNickname(lolNickname)
                 .tag(tag)
                 .agreedPersonal(agreedPersonal)

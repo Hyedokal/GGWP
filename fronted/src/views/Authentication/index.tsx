@@ -255,7 +255,19 @@ export default function Authentication() { // component 인증화면 컴포넌�
                     setPasswordCheckErrorMessage('비밀번호가 일치하지않습니다.');
                 }
 
-                if (checkedEmail || checkedPassword || checkedPasswordCheck) return;
+
+                // Check for alphabetic, numeric, and special characters in the password
+                const hasAlphabet = /[a-zA-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+                if (!hasAlphabet || !hasNumber || !hasSpecialChar) {
+                    setPasswordError(true);
+                    setPasswordErrorMessage('비밀번호는 문자, 숫자, 특수문자를 포함해야 합니다.');
+                }
+
+
+                if (checkedEmail || checkedPassword || checkedPasswordCheck|| !hasAlphabet || !hasNumber || !hasSpecialChar) return;
 
                 setPage(2);
             }
