@@ -1,7 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import {AUTH_PATH, MAIN_PATH, USER_PATH} from 'constant';
-import Test from 'views/Test';
 
 import Main from 'views/Main';
 import Authentication from 'views/Authentication';
@@ -15,6 +14,7 @@ import {getSignInUserRequest, getUserRequest} from 'apis';
 import {GetSignInUserResponseDto, GetUserResponseDto} from 'apis/dto/response/user';
 import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
+import Test from "./views/Test";
 
 function App() {
 
