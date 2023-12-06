@@ -19,7 +19,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "varchar(16)", unique = true, nullable = false)
+    @Column(columnDefinition = "varchar(35)", unique = true, nullable = false)
     private String email; // 이멜
 
     @Column(columnDefinition = "varchar(255)", nullable = false)
