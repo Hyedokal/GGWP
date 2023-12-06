@@ -16,6 +16,7 @@ import com.ggwp.squadservice.repository.SquadRepository;
 import com.ggwp.squadservice.service.SquadService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +31,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SquadServiceImpl implements SquadService {
 
     @Autowired
@@ -41,21 +43,33 @@ public class SquadServiceImpl implements SquadService {
     private String apiKey;
 
     //롤 닉네임을 통해 티어값을 받아오는 메서드
+    // Method to receive tier value through summoner name
     public Map<QType, String> getSummonerRank(String summonerName) {
         Map<QType, String> rankMap = new HashMap<>();
         String summonerId = riotFeignClient.getSummonerId(summonerName, apiKey).getId();
         Set<LeagueEntryDTO> rankInfo = riotFeignClient.getRankInfo(summonerId, apiKey);
+
         for (LeagueEntryDTO dto : rankInfo) {
-            if (dto.getQueueType().equals("RANKED_SOLO_5x5")) {
-                rankMap.put(QType.SOLO_RANK,
-                        Tier.getAbbreviationByFullName(dto.getRank())
-                                + RomanNum.getValueByRomanNum(dto.getTier())); //ex: "D1" 로 저장됨
-            } else if (dto.getQueueType().equals("RANKED_FLEX_SR")) {
-                rankMap.put(QType.FLEX_RANK,
-                        Tier.getAbbreviationByFullName(dto.getRank())
-                                + RomanNum.getValueByRomanNum(dto.getTier())); //ex: "G3" 로 저장됨
+            String queueType = dto.getQueueType();
+            String rank = dto.getRank();
+            String tier = dto.getTier();
+
+            // Print statements for debugging
+            System.out.println("Queue Type: " + queueType);
+            System.out.println("Rank: " + rank);
+            System.out.println("Tier: " + tier);
+
+            if (queueType.equals("RANKED_SOLO_5x5")) {
+                String rankString = Tier.getAbbreviationByFullName(tier) + RomanNum.getValueByRomanNum(rank);
+                System.out.println("Computed Rank String for Solo Queue: " + rankString);
+                rankMap.put(QType.SOLO_RANK, rankString);
+            } else if (queueType.equals("RANKED_FLEX_SR")) {
+                String rankString = Tier.getAbbreviationByFullName(tier) + RomanNum.getValueByRomanNum(rank);
+                System.out.println("Computed Rank String for Flex Queue: " + rankString);
+                rankMap.put(QType.FLEX_RANK, rankString);
             }
         }
+
         return rankMap;
     }
 
@@ -130,5 +144,7 @@ public class SquadServiceImpl implements SquadService {
         List<Squad> squadList = squadRepository.findAll(spec);
         return squadList.stream().map(ResponseSquadDto::fromEntity).toList();
     }
+
+
 
 }
