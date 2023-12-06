@@ -1,5 +1,6 @@
 package com.ggwp.memberservice.dto.response.user;
 import com.ggwp.memberservice.domain.Member;
+import com.ggwp.memberservice.domain.UserRole;
 import com.ggwp.memberservice.dto.response.ResponseCode;
 import com.ggwp.memberservice.dto.response.ResponseDto;
 import com.ggwp.memberservice.dto.response.ResponseMessage;
@@ -11,11 +12,14 @@ import org.springframework.http.ResponseEntity;
 public class GetUserResponseDto extends ResponseDto{
     private String email;
     private String lolNickname;
-
+    private String tag;
+    private UserRole role;
         private GetUserResponseDto(String code, String message, Member member) {
             super(code, message);
             this.email = member.getEmail();
             this.lolNickname = member.getLolNickname();
+            this.tag = member.getTag();
+            this.role = member.getRole();
         }
 
     public static ResponseEntity<GetUserResponseDto> success(Member member) {

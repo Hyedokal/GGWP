@@ -2,10 +2,9 @@ package com.ggwp.memberservice.dto.response;
 
 public interface ResponseMessage {
     
-    String SUCCESS = "Success."; // 성공
+    String SUCCESS = "Success.1"; // 성공
 
     String VALIDATION_FAILED = "Validation failed.";
-    String DUPLICATED_EMAIL = "Duplicate email.";
 
     String UNCHECK_PASSWORD ="비밀번호 불일치";
 
@@ -16,4 +15,5 @@ public interface ResponseMessage {
 
     String DATABASE_ERROR = "Database error.";
 
+    String DUPLICATED_EMAIL = "유저가 중복됩니다." ;
 }

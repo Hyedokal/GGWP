@@ -2,7 +2,8 @@ import axios from 'axios';
 import { SignInRequestDto, SignUpRequestDto } from './dto/request/auth';
 import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
-import {GetSignInUserResponseDto, GetUserResponseDto} from "./dto/response/user";
+import {GetSignInUserResponseDto, GetUserResponseDto, PatchLolNickNameResponseDto} from "./dto/response/user";
+import PatchLolNickNameRequestDto from "./dto/request/user/patch-lol-nickName-request.dto";
 
 
 
@@ -81,11 +82,11 @@ export const getSignInUserRequest = async (token: string) => {  // description: 
 
 
 // description: get user API end point //
-const GET_USER_URL = (email: string) => `${API_DOMAIN}/member/${email}`;
+const GET_USER_URL = () => `${API_DOMAIN}/member/userInfo`;
 
-// description: get user request //
-export const getUserRequest = async (email: string) => {
-    const result = await axios.get(GET_USER_URL(email))
+// // description: get user request //
+export const getUserRequest = async (token: string) => {
+    const result = await axios.get(GET_USER_URL(), authorization(token))
         .then(response => {
             const responseBody: GetUserResponseDto = response.data;
             return responseBody;
@@ -101,4 +102,25 @@ export const getUserRequest = async (email: string) => {
 
 
 
+// description: patch user email API end point //
+
+const PATCH_LOLNAME_URL = () => `${API_DOMAIN}/member/lolNickname`;
+
+export const patchLolNicknameRequest = async (requestBody: PatchLolNickNameRequestDto, token:string): Promise<string> => {
+    try {
+        const response = await axios.patch(PATCH_LOLNAME_URL(), requestBody, authorization(token))
+        const responseBody: PatchLolNickNameResponseDto = response.data;
+        const { code } = responseBody;
+        return code;
+
+    }catch(error){
+        if (axios.isAxiosError(error) && error.response) {
+            const responseBody:ResponseDto= error.response.data;
+            const {code}= responseBody;
+            return code;
+        }else{
+        throw error;
+    }
+    }
+};
 

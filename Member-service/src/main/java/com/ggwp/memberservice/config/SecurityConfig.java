@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 "/", "member-service/v1/auth/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "member-service/v1/member/*").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "member-service/v1/member/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

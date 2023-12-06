@@ -1,9 +1,9 @@
 package com.ggwp.memberservice.domain;
 
 
+import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "varchar(16)", unique = true, nullable = false)
+    @Column(columnDefinition = "varchar(35)", unique = true, nullable = false)
     private String email; // 이멜
 
     @Column(columnDefinition = "varchar(255)", nullable = false)
@@ -65,4 +65,7 @@ public class Member extends BaseEntity {
 
 
 
+    public void patchLolNickName(PatchLolNickNameRequestDto dto) {
+        this.lolNickname = dto.getLolNickName();
+    }
 }
