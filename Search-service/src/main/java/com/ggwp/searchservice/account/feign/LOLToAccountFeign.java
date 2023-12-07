@@ -17,4 +17,9 @@ public interface LOLToAccountFeign {
             @RequestParam("api_key") String apiKey
     );
 
+    @GetMapping("account/v1/accounts/by-puuid/{puuid}")
+    Optional<FeignAccountDto> getAccountByPuuid(
+            @PathVariable String puuid,
+            @RequestParam("api_key") String apiKey
+    );
 }

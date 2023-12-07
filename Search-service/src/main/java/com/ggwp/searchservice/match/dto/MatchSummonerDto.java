@@ -10,7 +10,5 @@ import lombok.*;
 public class MatchSummonerDto {
     private String matchId;
     private String summonerId;
-    // 기타 필요한 필드 추가
-
 }
 

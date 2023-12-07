@@ -17,4 +17,13 @@ public enum RuneEnums {
     private final String icon;
     private final String name;
 
+    public static RuneEnums getById(int id) {
+        for (RuneEnums rune : RuneEnums.values()) {
+            if (rune.getId() == id) {
+                return rune;
+            }
+        }
+        throw new IllegalArgumentException("No matching constant for id: " + id);
+    }
+
 }
