@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
-import {AUTH_PATH, MAIN_PATH, USER_PATH} from 'constant';
+import {AUTH_PATH, MAIN_PATH, MATCH_PATH, USER_PATH} from 'constant';
 
 import Main from 'views/Main';
 import Authentication from 'views/Authentication';
@@ -14,7 +14,8 @@ import {getSignInUserRequest, getUserRequest} from 'apis';
 import {GetSignInUserResponseDto, GetUserResponseDto} from 'apis/dto/response/user';
 import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
-import Test from "./views/Test";
+import Match from "./views/Match";
+import Test from "./views/Tests";
 
 function App() {
 
@@ -65,6 +66,7 @@ function App() {
           <Route path={MAIN_PATH} element={<Main />} />
           <Route path={AUTH_PATH} element={<Authentication/>}/>
           <Route path={USER_PATH} element={<User />} />
+          <Route path={MATCH_PATH} element={<Match/>}/>
           <Route path='/test' element={<Test/>} />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>

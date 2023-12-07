@@ -1,40 +1,56 @@
-import React, {useState} from 'react';
-import axios from 'axios';
+import React, {ChangeEvent, useState} from 'react';
+import InputBox from "../InputBox";
+import SquadRequestDto from "../../apis/dto/request/squad/SquadRequestDto";
+import {sendSquadRequest} from "../../apis";
 
-// Define the type for your request data
-interface SquadRequestData {
-    myPos: string;
-    wantPos: string;
-    qType: string;
-    sMic: boolean;
-    summonerName: string;
-    sMemo: string;
-}
-// Define the base URL
-const BASE_URL = 'http://localhost:8000';
-// Define the endpoint path
-const SQUAD_ENDPOINT = '/v1/squads';
 
-// Define the base response structure
- interface ResponseDto1 {
-    code: string;
-    message: string;
-}
- interface SquadResponseData extends ResponseDto1 {
-}
+ interface ModalProps {
+        onClose: () => void;
+    }
+    const Modal : React.FC<ModalProps>  = ({ onClose }) => {
+        const [myPos, setMyPos] = useState('');
+        const [wantPos, setWantPos] = useState('');
+        const [qType, setQType] = useState('');
+        const [sMic, setSMic] = useState(false);
+        const [summonerName, setSummonerName] = useState('');
+        const [sMemo, setSMemo] = useState('');
+        const [sMemoError, setSMemoError] = useState<boolean>(false);
+        const [sMemoErrorMessage, setSMemoErrorMessage] = useState<string>('');
 
-// Define the response structure for Squad requests, extending ResponseDto
 
-export default function Test() {
-    // State for each field in the form
-    const [myPos, setMyPos] = useState('');
-    const [wantPos, setWantPos] = useState('');
-    const [qType, setQType] = useState('');
-    const [sMic, setSMic] = useState(false);
-    const [summonerName, setSummonerName] = useState('');
-    const [sMemo, setSMemo] = useState('');
 
-    const Modal = ({ onClose }: { onClose: () => void }) => {
+
+        const sendPostRequest = async () => {
+            let hasError = false;
+
+            if (sMemo.includes("fuck")) {
+                setSMemoError(true);
+                setSMemoErrorMessage("비속어를 쓰면 안된다고");
+                hasError = true;
+            }
+            if (hasError) return;
+
+
+            const requestBody: SquadRequestDto = {
+                myPos,
+                wantPos,
+                qType,
+                sMic,
+                summonerName,
+                sMemo,
+            };
+            try {
+                const response = await sendSquadRequest(requestBody);
+                console.log(response); // Handle the response as needed
+                onClose();
+
+            } catch (error) {
+                console.error('Error sending POST request:', error);
+                // Handle error here
+            }
+
+        };
+
         return (
 
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -103,20 +119,24 @@ export default function Test() {
                             />
                         </div>
                         <div className="mb-4">
-                            <input
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            <InputBox
+                                label="Memo"
                                 type="text"
-                                value={sMemo}
-                                onChange={(e) => setSMemo(e.target.value)}
+                                error={sMemoError}
+                                errorMessage={sMemoErrorMessage}
                                 placeholder="메모"
+                                value={sMemo}
+                                setValue={setSMemo}
                             />
                         </div>
                         <div className="flex justify-end">
                             <button   className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 mr-2" onClick={onClose}>
-                                취소</button>
+                                취소
+                            </button>
+
                             <button
                                 onClick={sendPostRequest}
-                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 mr-2">
                                 등록
                             </button>
                         </div>
@@ -126,39 +146,7 @@ export default function Test() {
         );
     };
 
-    const [isModalOpen, setModalOpen] = useState(false);
+export default Modal;
 
-    const openModal = () => setModalOpen(true);
-    const closeModal = () => setModalOpen(false);
 
-    const sendPostRequest = async () => {
-        const requestData: SquadRequestData = {
-            myPos,
-            wantPos,
-            qType,
-            sMic,
-            summonerName,
-            sMemo,
 
-        };
-
-        try {
-            const response = await axios.post<SquadResponseData>(BASE_URL + SQUAD_ENDPOINT, requestData);
-            console.log(response.data);
-            // Handle response here
-        } catch (error) {
-            console.error('Error sending POST request:', error);
-            // Handle error here
-        }
-    };
-
-    return(
-        <div>
-            <div>
-                <button onClick={openModal}>Write</button>
-                {isModalOpen && <Modal onClose={closeModal} />}
-            </div>
-
-        </div>
-    );
-}
