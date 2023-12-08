@@ -23,7 +23,13 @@ export default function Header() {
 
     const navigator = useNavigate();     //          function: 네비게이트 함수          //
 
-
+    const onMatchingClickHandler = () => {  //          event handler: 매칭 클릭 이벤트 처리          //
+        if (!cookies.accessToken) {
+            alert('Please register and log in');
+        } else {
+            navigator(MATCH_PATH);
+        }
+    }
     const onLogoClickHanlder = () => {       //          event handler: 로고 클릭 이벤트 처리          //
 
         navigator(MAIN_PATH);
@@ -81,7 +87,9 @@ export default function Header() {
                     </div>
                     <div className='header-logo-text'>{'GGWP'}</div>
                 </div>
-                <div>매칭 해요</div>
+               <div className="match-button" onClick={onMatchingClickHandler}>
+                <div >매칭해요</div>
+               </div>
                 <div>검색 해요</div>
                 <div className='header-right-box'>
                     { isMainPage && (<LoginMyPageButton />) }

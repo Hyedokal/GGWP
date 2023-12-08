@@ -115,7 +115,7 @@ public class SquadServiceImpl implements SquadService {
     }
 
     //게시글 전체 조회하기
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)  //todo: DESC 하는게어떨까요 ㅎㅎ - 종하
     public List<ResponseSquadDto> getAllSquad() {
         List<Squad> squadList = squadRepository.findAll();
         return squadList.stream()

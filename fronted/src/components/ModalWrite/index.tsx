@@ -2,12 +2,15 @@ import React, {ChangeEvent, useState} from 'react';
 import InputBox from "../InputBox";
 import SquadRequestDto from "../../apis/dto/request/squad/SquadRequestDto";
 import {sendSquadRequest} from "../../apis";
+import UserInfoStore from "../../stores/userInfo.store";
 
 
  interface ModalProps {
         onClose: () => void;
     }
-    const Modal : React.FC<ModalProps>  = ({ onClose }) => {
+
+
+const Modal : React.FC<ModalProps>  = ({ onClose  }) => {
         const [myPos, setMyPos] = useState('');
         const [wantPos, setWantPos] = useState('');
         const [qType, setQType] = useState('');
@@ -16,6 +19,7 @@ import {sendSquadRequest} from "../../apis";
         const [sMemo, setSMemo] = useState('');
         const [sMemoError, setSMemoError] = useState<boolean>(false);
         const [sMemoErrorMessage, setSMemoErrorMessage] = useState<string>('');
+        const {userInfo} = UserInfoStore();
 
 
 
@@ -36,7 +40,7 @@ import {sendSquadRequest} from "../../apis";
                 wantPos,
                 qType,
                 sMic,
-                summonerName,
+                summonerName: userInfo?.lolNickname || '',// || ' ' 를 사용해서 소환사 이름을 안전하게 할당
                 sMemo,
             };
             try {
@@ -58,10 +62,14 @@ import {sendSquadRequest} from "../../apis";
                     <div className="bg-white rounded-lg p-8 w-full max-w-lg mx-auto">
                         <h2 className="text-xl font-semibold mb-4">글쓰고 등록하기</h2>
                         <div className="grid grid-cols-2 gap-4 mb-4">
-                            <input
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                placeholder="kim@gmail.com"
-                            />
+                            <div className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                <div className="mr-3">소환사 이름:</div>
+                                {userInfo?.lolNickname}
+                            </div>
+                            <div className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                <div className="mr-3">배틀 태그:</div>
+                                {userInfo?.tag}
+                            </div>
                             <select
                                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 value={myPos}
@@ -110,13 +118,6 @@ import {sendSquadRequest} from "../../apis";
                         </span>
                             </label>
 
-                            <input
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                type="text"
-                                value={summonerName}
-                                onChange={(e) => setSummonerName(e.target.value)}
-                                placeholder="소환사 이름"
-                            />
                         </div>
                         <div className="mb-4">
                             <InputBox
