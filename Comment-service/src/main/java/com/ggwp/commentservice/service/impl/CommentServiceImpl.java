@@ -7,31 +7,31 @@ import com.ggwp.commentservice.exception.ErrorMsg;
 import com.ggwp.commentservice.repository.CommentRepository;
 import com.ggwp.commentservice.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
-    public CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     //댓글 작성 후 저장하기
-    public void writeComment(RequestCommentDto dto) {
+    public Comment writeComment(RequestCommentDto dto) {
         Comment comment = dto.toEntity();
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     //댓글 수정하기
-    public void editComment(Long cId, RequestCommentDto dto) {
+    public Comment editComment(Long cId, RequestCommentDto dto) {
         Comment comment = commentRepository.findById(cId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.COMMENT_NOT_FOUND));
         comment.updateComment(dto);
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     //댓글 삭제하기
@@ -46,5 +46,12 @@ public class CommentServiceImpl implements CommentService {
     public List<ResponseCommentDto> getCommentList(Long sId) {
         List<Comment> commentList = commentRepository.findAllBysId(sId);
         return commentList.stream().map(ResponseCommentDto::fromEntity).toList();
+    }
+
+    //댓글 상세 조회하기
+    public ResponseCommentDto getOneComment(Long cId) {
+        Comment comment = commentRepository.findById(cId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.COMMENT_NOT_FOUND));
+        return ResponseCommentDto.fromEntity(comment);
     }
 }

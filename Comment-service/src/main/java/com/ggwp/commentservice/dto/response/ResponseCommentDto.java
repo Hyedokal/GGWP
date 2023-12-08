@@ -9,19 +9,22 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ResponseCommentDto {
 
-    private Position cMyPos;
+    private Position myPos;
 
-    private Boolean cMic;
+    private Boolean useMic;
 
     private String summonerName;
 
-    private String cMemo;
+    private String tagLine;
+
+    private String memo;
 
     public static ResponseCommentDto fromEntity(Comment comment) {
         return new ResponseCommentDto()
-                .setCMyPos(comment.getCMyPos())
-                .setCMic(comment.getCMic())
+                .setMyPos(comment.getMyPos())
+                .setUseMic(comment.isUseMic())
                 .setSummonerName(comment.getSummonerName())
-                .setCMemo(comment.getCMemo());
+                .setTagLine(comment.getTagLine())
+                .setMemo(comment.getMemo());
     }
 }
