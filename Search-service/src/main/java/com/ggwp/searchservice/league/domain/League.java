@@ -8,12 +8,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
+@DynamicInsert
 public class League {
 
     @Id
@@ -34,6 +38,9 @@ public class League {
     private int wins; // 승리
     @Column(nullable = false)
     private int losses; // 패배
+
+    @Version
+    private int version;
 
     // 다대일 연결 ( 리그 2 : 소환사 1)
     @ManyToOne

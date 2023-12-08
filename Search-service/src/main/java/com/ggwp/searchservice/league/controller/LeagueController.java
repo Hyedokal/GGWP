@@ -1,8 +1,8 @@
 package com.ggwp.searchservice.league.controller;
 
 
+import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.dto.ResponseDto;
-import com.ggwp.searchservice.common.dto.TokenDto;
 import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
 import com.ggwp.searchservice.league.service.LeagueServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,8 +26,8 @@ public class LeagueController {
 
     @PostMapping("/get")
     @Operation(summary = "League (랭크 조회)", description = "DB로 조회")
-    public ResponseDto<List<ResponseLeagueDto>> getLeague(@Valid @RequestBody TokenDto tokenDto) {
-        return leagueService.getLeague(tokenDto);
+    public ResponseDto<List<ResponseLeagueDto>> getLeague(@Valid @RequestBody FrontDto frontDto) {
+        return ResponseDto.success(leagueService.getLeague(frontDto));
     }
 
 }

@@ -15,4 +15,13 @@ public enum GameMode {
     private final int queueId;
     private final String description;
 
+    public static GameMode getByQueueId(int queueId) {
+        for (GameMode gameMode : GameMode.values()) {
+            if (gameMode.queueId == queueId) {
+                return gameMode;
+            }
+        }
+        throw new IllegalArgumentException("No matching constant for queueId: " + queueId);
+    }
+
 }

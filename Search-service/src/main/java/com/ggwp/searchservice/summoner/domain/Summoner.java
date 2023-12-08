@@ -1,6 +1,7 @@
 package com.ggwp.searchservice.summoner.domain;
 
 import com.ggwp.searchservice.account.domain.Account;
+import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.match.domain.MatchSummoner;
 import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
@@ -11,7 +12,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +25,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
+@DynamicInsert
 public class Summoner {
 
     @Id
-    @Column(name = "suumoner_id", length = 63, unique = true) // varchar(63)
+    @Column(name = "summoner_id", length = 63, unique = true) // varchar(63)
     private String id; // summoner_id encrypted
 
     @Column(nullable = false)
@@ -41,12 +48,15 @@ public class Summoner {
     @Column(nullable = false)
     private int summonerLevel; // 소환사 레벨
 
+    @Version
+    private int version;
+
     // 리그 연결 일대다 ( 소환사 1 : 리그 2)
     @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<League> leagues;
     // Summoner(OneToMany) <-> MatchSummoner(ManyToOne) <-> Match(OneToMany)  // ManyToMany 연관관계
     @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<MatchSummoner> matchSummoners = new ArrayList<>();
+    private List<MatchSummoner> matchSummoners;
     // 계정 연결 일대일 (소환사 1 : 계정 1)
     @OneToOne(mappedBy = "summoner", cascade = CascadeType.ALL)
     private Account account;
@@ -62,7 +72,7 @@ public class Summoner {
                 .summonerLevel(summoner.getSummonerLevel())
                 .build();
     }
-    
+
     // 연관관계 설정 (Account)
     public void addAccount(Account account) {
         this.account = account;
@@ -77,11 +87,11 @@ public class Summoner {
         this.leagues.addAll(leagueList);
     }
 
-    public void updateSummoner(CreateSummonerDto createSummonerDto) {
-        this.name = createSummonerDto.getName();
+    public void updateSummoner(CreateSummonerDto createSummonerDto, ResponseAccountDto accountDto) {
+        this.name = accountDto.getGameName();
         this.profileIconId = createSummonerDto.getProfileIconId();
         this.puuid = createSummonerDto.getPuuid();
-        this.revisionDate = createSummonerDto.getRevisionDate();
+        this.revisionDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli(); // 업데이트
         this.summonerLevel = createSummonerDto.getSummonerLevel();
     }
 }

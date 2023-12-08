@@ -1,11 +1,13 @@
 package com.ggwp.searchservice.match.domain;
 
+import com.ggwp.searchservice.common.enums.GameMode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @Builder
 @Getter
 @Table(name = "matches")
+@DynamicInsert
 public class Match {
 
     @Id
@@ -24,8 +27,12 @@ public class Match {
     @Column(name = "platform_id", nullable = false)
     private String platformId; // KR
 
+//    @Column(name = "queue_id", nullable = false)
+//    private int queueId; // 게임 모드
+
     @Column(name = "queue_id", nullable = false)
-    private int queueId; // 게임 모드
+    @Enumerated(EnumType.STRING)
+    private GameMode queueId; // 게임 모드
 
     @Column(name = "game_creation", nullable = false)
     private long gameCreation; // 게임 생성 시각
@@ -40,10 +47,10 @@ public class Match {
     private long gameStartTimestamp; // 게임 시작 시각
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Team> teams = new ArrayList<>();
+    private List<Team> teams;
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<MatchSummoner> matchSummoners = new ArrayList<>();
+    private List<MatchSummoner> matchSummoners;
 
     public void addTeams(List<Team> teams) {
         this.teams.addAll(teams);

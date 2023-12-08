@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class TokenDto {
+public class FrontDto {
 
     @NotBlank(message = "이름은 비워 둘 수 없습니다")
     @Size(max = 63, message = "이름은 63자를 초과할 수 없습니다")

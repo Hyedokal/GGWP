@@ -6,15 +6,17 @@ import com.ggwp.searchservice.account.dto.FeignAccountDto;
 import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.account.feign.LOLToAccountFeign;
 import com.ggwp.searchservice.account.repository.AccountRepository;
-import com.ggwp.searchservice.common.dto.TokenDto;
+import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.exception.CustomException;
 import com.ggwp.searchservice.common.exception.ErrorCode;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
@@ -24,37 +26,44 @@ public class AccountServiceImpl implements AccountService {
     @Value("${LOL.apikey}")
     private String apiKey;
 
+
     // Account 얻기
-    public ResponseAccountDto getAccount(TokenDto tokenDto) {
-        return toDto(findAccount(tokenDto));
+    @Transactional(readOnly = true)
+    @Override
+    public ResponseAccountDto getAccount(FrontDto frontDto) {
+        return acccountToDto(findAccount(frontDto));
     }
 
-    public Account findAccount(TokenDto tokenDto) { // Account 엔티티 찾기
-        return accountRepository.findByGameNameAndTagLine(tokenDto.getGameName(), tokenDto.getTagLine())
+    @Override
+    public Account findAccount(FrontDto frontDto) { // Optional Account 엔티티 찾기
+        return accountRepository.findAccountByGameNameAndTagLine(frontDto.getGameName(), frontDto.getTagLine())
                 .orElseThrow(() -> new CustomException(ErrorCode.NotFindAccount));
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    @Override
+    @Transactional
     public Account createAccount(CreateAccountDto createAccountDto, Summoner summoner) {
-        Account account = Account.builder()
-                .puuid(createAccountDto.getPuuid())
-                .gameName(createAccountDto.getGameName())
-                .tagLine(createAccountDto.getTagLine())
-                .summoner(summoner)
-                .build();
+        Account account = accountToEntity(createAccountDto, summoner);
         accountRepository.save(account);
         System.out.println("Account 생성!");
         return account;
     }
 
-    public FeignAccountDto feignAccount(TokenDto tokenDto) { // 롤 API Feign
+    private FeignAccountDto feignAccountByNameAndTag(FrontDto frontDto) { // 롤 API Feign
         return accountFeign.getAccount(
-                tokenDto.getGameName(),
-                tokenDto.getTagLine(),
-                apiKey).orElseThrow(() -> new CustomException(ErrorCode.NotFeignAccount));
+                frontDto.getGameName(),
+                frontDto.getTagLine(),
+                apiKey).orElseThrow(() -> new CustomException(ErrorCode.NotfeignAccountByNameAndTag));
     }
 
-    public ResponseAccountDto toDto(Account account) { // Dto로 변환
+    private FeignAccountDto feignAccountByPuuid(CreateAccountDto createAccountDto) { // 롤 API Feign
+        return accountFeign.getAccountByPuuid(
+                createAccountDto.getPuuid(),
+                apiKey).orElseThrow(() -> new CustomException(ErrorCode.NotfeignAccountByPuuid));
+    }
+
+    private ResponseAccountDto acccountToDto(Account account) { // Dto로 변환
         return ResponseAccountDto.builder()
                 .puuid(account.getPuuid())
                 .gameName(account.getGameName())
@@ -62,7 +71,8 @@ public class AccountServiceImpl implements AccountService {
                 .build();
     }
 
-    public Account toEntity(CreateAccountDto createAccountDto, Summoner summoner) { // 엔티티로 변환
+
+    private Account accountToEntity(CreateAccountDto createAccountDto, Summoner summoner) { // 엔티티로 변환
         return Account.builder()
                 .puuid(createAccountDto.getPuuid())
                 .gameName(createAccountDto.getGameName())
@@ -71,13 +81,29 @@ public class AccountServiceImpl implements AccountService {
                 .build();
     }
 
+    private Account findAccountByPuuid(CreateAccountDto createAccountDto) {
+        return accountRepository.findAccountByPuuid(createAccountDto.getPuuid());
+    }
+
+
     @Override
-    public String existAccount(TokenDto tokenDto) {
-        if (accountRepository.existsByGameNameAndTagLine(tokenDto.getGameName(), tokenDto.getTagLine())) {
-            return findAccount(tokenDto).getPuuid();
+    @Transactional
+    public String existAccount(FrontDto frontDto) {
+        if (accountRepository.existsByGameNameAndTagLine(frontDto.getGameName(), frontDto.getTagLine())) {
+            return findAccount(frontDto).getPuuid();
         } else { // DB에 없다면 롤 API로 Account를 feign으로 가져온다.
-            return feignAccount(tokenDto).getPuuid();
+            return feignAccountByNameAndTag(frontDto).getPuuid();
         }
     }
+
+
+    @Override
+    @Transactional
+    public ResponseAccountDto updateAccount(CreateAccountDto createAccountDto) {
+        Account account = findAccountByPuuid(createAccountDto);
+        account.updateAccount(feignAccountByPuuid(createAccountDto));
+        return acccountToDto(account);
+    }
+
 }
 
