@@ -4,7 +4,7 @@ import com.ggwp.squadservice.enums.Position;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 @Accessors(chain = true)
@@ -12,13 +12,13 @@ public class Comment {
 
     private Long cId;
 
-    private Position cMyPos;
+    private Position myPos;
 
-    private String cMemo;
+    private String memo;
 
-    private Boolean cMic;
+    private Boolean useMic;
 
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 }

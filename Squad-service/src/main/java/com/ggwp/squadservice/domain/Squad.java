@@ -6,12 +6,17 @@ import com.ggwp.squadservice.enums.QType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@DynamicUpdate
+@DynamicInsert
 @Accessors(chain = true)
 public class Squad {
 
@@ -32,37 +37,41 @@ public class Squad {
     private QType qType;
 
     @Column(columnDefinition = "BIT(1)", nullable = false)
-    private Boolean sMic = false;
+    private boolean useMic = false;
 
     @Column(nullable = false)
     private String summonerName;
+
+    @Column(nullable = false)
+    private String tagLine;
 
     @Column(name = "summoner_rank", nullable = false)
     private String summonerRank;
 
     @Column(columnDefinition = "varchar(100)", nullable = false)
-    private String sMemo;
+    private String memo;
 
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
 
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
     //생성자를 담당하는 정적 메서드
-    public static Squad CREATE(Position myPos, Position wantPos, QType qType,
-                               Boolean sMic, String summonerName, String rank, String sMemo) {
+    public static Squad create(Position myPos, Position wantPos, QType qType,
+                               boolean useMic, String summonerName, String tagLine, String rank, String memo) {
         return new Squad()
                 .setMyPos(myPos)
                 .setWantPos(wantPos)
                 .setQType(qType)
-                .setSMic(sMic)
+                .setUseMic(useMic)
                 .setSummonerName(summonerName)
+                .setTagLine(tagLine)
                 .setSummonerRank(rank)
-                .setSMemo(sMemo)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now());
+                .setMemo(memo)
+                .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
     }
 
     //엔티티 수정을 위한 메서드
@@ -70,8 +79,8 @@ public class Squad {
         this.myPos = dto.getMyPos();
         this.wantPos = dto.getWantPos();
         this.qType = dto.getQType();
-        this.sMic = dto.getSMic();
-        this.sMemo = dto.getSMemo();
-        this.updatedAt = LocalDateTime.now();
+        this.useMic = dto.isUseMic();
+        this.memo = dto.getMemo();
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 }

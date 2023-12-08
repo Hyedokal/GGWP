@@ -1,5 +1,6 @@
 package com.ggwp.squadservice.service;
 
+import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
 import com.ggwp.squadservice.enums.Position;
@@ -9,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface SquadService {
-    public void writeSquad(RequestSquadDto dto);
+    public Squad writeSquad(RequestSquadDto dto);
 
-    public void editSquad(Long sId, RequestSquadDto dto);
+    public Squad editSquad(Long sId, RequestSquadDto dto);
 
     public void deleteSquad(Long sId);
 

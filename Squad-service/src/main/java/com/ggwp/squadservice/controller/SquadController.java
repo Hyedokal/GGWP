@@ -6,7 +6,6 @@ import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.service.SquadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,47 +17,47 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SquadController {
 
-    @Autowired
-    private final SquadService squadServiceImpl;
+    private final SquadService squadService;
+
     //헬스 체크
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.ok("Squad Service is Healthy");
+        return ResponseEntity.ok("Squad-service is available");
     }
 
 
     //게시글 전체 조회하는 메서드
     @GetMapping
     public ResponseEntity<List<ResponseSquadDto>> getSquadList() {
-        List<ResponseSquadDto> squadList = squadServiceImpl.getAllSquad();
+        List<ResponseSquadDto> squadList = squadService.getAllSquad();
         return ResponseEntity.ok().body(squadList);
     }
 
     //게시글 하나 가져오는 메서드
     @GetMapping("/{sId}")
     public ResponseEntity<ResponseSquadDto> getOneSquad(@PathVariable Long sId) {
-        ResponseSquadDto dto = squadServiceImpl.getOneSquad(sId);
+        ResponseSquadDto dto = squadService.getOneSquad(sId);
         return ResponseEntity.ok().body(dto);
     }
 
     //게시글 작성하는 메서드
     @PostMapping
     public ResponseEntity<String> writeSquad(@RequestBody RequestSquadDto dto) {
-        squadServiceImpl.writeSquad(dto);
+        squadService.writeSquad(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Saved Successfully");
     }
 
     //게시글 수정하는 메서드
     @PutMapping("/{sId}")
     public ResponseEntity<String> editSquad(@PathVariable Long sId, @RequestBody RequestSquadDto dto) {
-        squadServiceImpl.editSquad(sId, dto);
+        squadService.editSquad(sId, dto);
         return ResponseEntity.ok().body("Modified Successfully");
     }
 
     //게시글 삭제하는 메서드
     @DeleteMapping("/{sId}")
     public ResponseEntity<String> deleteAnnounce(@PathVariable Long sId) {
-        squadServiceImpl.deleteSquad(sId);
+        squadService.deleteSquad(sId);
         return ResponseEntity.ok().body("Deleted Successfully");
     }
 
@@ -69,7 +68,7 @@ public class SquadController {
             @RequestParam(required = false) QType qType,
             @RequestParam(required = false) String rank
     ) {
-        List<ResponseSquadDto> filteredSquads = squadServiceImpl.getSquadWithFilters(myPos, qType, rank);
+        List<ResponseSquadDto> filteredSquads = squadService.getSquadWithFilters(myPos, qType, rank);
         return ResponseEntity.ok(filteredSquads);
     }
 
