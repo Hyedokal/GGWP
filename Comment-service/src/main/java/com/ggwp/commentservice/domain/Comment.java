@@ -5,13 +5,18 @@ import com.ggwp.commentservice.enums.Position;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@DynamicInsert
+@DynamicUpdate
 @Accessors(chain = true)
 public class Comment {
     @Id
@@ -24,42 +29,47 @@ public class Comment {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Position cMyPos;
+    private Position myPos;
 
     @Column(columnDefinition = "BIT(1)", nullable = false)
-    private Boolean cMic;
+    private boolean useMic;
 
     @Column(nullable = false)
     private String summonerName;
 
+    @Column(nullable = false)
+    private String tagLine;
+
     @Column(columnDefinition = "varchar(100)", nullable = false)
-    private String cMemo;
+    private String memo;
 
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
+    private Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
 
     @LastModifiedDate
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
     //생성자 호출을 대신할 정적 메서드 선언
-    public static Comment CREATE(Long sId, Position cMyPos, Boolean cMic, String summonerName, String cMemo) {
+    public static Comment create(Long sId, Position myPos, boolean useMic,
+                                 String summonerName, String tagLine, String cMemo) {
         return new Comment()
                 .setSId(sId)
-                .setCMyPos(cMyPos)
-                .setCMic(cMic)
+                .setMyPos(myPos)
+                .setUseMic(useMic)
                 .setSummonerName(summonerName)
-                .setCMemo(cMemo)
-                .setCreatedAt(LocalDateTime.now())
-                .setUpdatedAt(LocalDateTime.now());
+                .setTagLine(tagLine)
+                .setMemo(cMemo)
+                .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
     }
 
     //엔티티 수정을 위한 메서드
     public void updateComment(RequestCommentDto dto) {
-        this.cMyPos = dto.getCMyPos();
-        this.cMemo = dto.getCMemo();
-        this.cMic = dto.getCMic();
-        this.updatedAt = LocalDateTime.now();
+        this.myPos = dto.getMyPos();
+        this.memo = dto.getMemo();
+        this.useMic = dto.isUseMic();
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 }

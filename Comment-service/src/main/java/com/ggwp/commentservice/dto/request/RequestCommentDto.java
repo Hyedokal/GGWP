@@ -3,6 +3,7 @@ package com.ggwp.commentservice.dto.request;
 import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.enums.Position;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
@@ -11,23 +12,26 @@ import org.hibernate.validator.constraints.Length;
 @Accessors(chain = true)
 public class RequestCommentDto {
 
-    @NotBlank(message = "해당 ID의 게시글이 존재하지 않습니다.")
+    @NotNull(message = "해당 게시글이 존재하지 않습니다.")
     public Long sId;
 
-    @NotBlank(message = "반드시 하나의 포지션을 선택하셔야 합니다.")
-    public Position cMyPos;
+    @NotNull(message = "반드시 하나의 포지션을 선택하셔야 합니다.")
+    public Position myPos;
 
-    @NotBlank(message = "반드시 마이크 사용 여부를 체크하셔야 합니다.")
-    public Boolean cMic;
+    @NotNull(message = "반드시 마이크 사용 여부를 체크하셔야 합니다.")
+    public boolean useMic;
 
-    @NotBlank(message = "Riot ID를 반드시 입력해야 합니다.")
+    @NotBlank(message = "닉네임을 반드시 입력해야 합니다.")
     public String summonerName;
+
+    @NotBlank(message = "Riot 태그를 반드시 입력해야 합니다.")
+    public String tagLine;
 
     @Length(max = 100, message = "댓글은 최대 100자까지 작성할 수 있습니다.")
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
-    public String cMemo;
+    public String memo;
 
     public Comment toEntity() {
-        return Comment.CREATE(this.sId, this.cMyPos, this.cMic, this.summonerName, this.cMemo);
+        return Comment.create(this.sId, this.myPos, this.useMic, this.summonerName, this.tagLine, this.memo);
     }
 }
