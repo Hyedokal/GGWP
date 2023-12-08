@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
 public class MemberApiController {
     private final MemberService memberService;
 
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Member Service is Healthy");
+    }
+
     @GetMapping("")
     public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(@AuthenticationPrincipal String uuid) {
         ResponseEntity<? super GetSignInUserResponseDto> response = memberService.getSignInUser(uuid);

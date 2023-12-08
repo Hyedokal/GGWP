@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 public class PatchLolNickNameResponseDto extends ResponseDto {
 
 
-private PatchLolNickNameResponseDto(String code, String message) {super(code, message);}
+private PatchLolNickNameResponseDto(ResponseCode code, ResponseMessage message) {super(code, message);}
 
 public static ResponseEntity<PatchLolNickNameResponseDto> success() {
 PatchLolNickNameResponseDto result = new PatchLolNickNameResponseDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);

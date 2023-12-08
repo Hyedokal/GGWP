@@ -14,7 +14,7 @@ public class GetUserResponseDto extends ResponseDto{
     private String lolNickname;
     private String tag;
     private UserRole role;
-        private GetUserResponseDto(String code, String message, Member member) {
+        private GetUserResponseDto(ResponseCode code, ResponseMessage message, Member member) {
             super(code, message);
             this.email = member.getEmail();
             this.lolNickname = member.getLolNickname();

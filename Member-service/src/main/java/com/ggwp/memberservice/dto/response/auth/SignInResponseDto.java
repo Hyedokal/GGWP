@@ -15,7 +15,7 @@ public class SignInResponseDto extends ResponseDto {
     private String token;
     private int expirationTime;
 
-    private SignInResponseDto (String code, String message, String token) {
+    private SignInResponseDto (ResponseCode code, ResponseMessage message, String token) {
         super(code, message);
         this.token = token;
         this.expirationTime = 18000;

@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 public class GetSignInUserResponseDto extends ResponseDto {
 
     private String email;
-    private GetSignInUserResponseDto(String code, String message, Member member) {
+    private GetSignInUserResponseDto(ResponseCode code, ResponseMessage message, Member member) {
         super(code, message);
         this.email = member.getEmail();
     }

@@ -20,6 +20,12 @@ public class SquadController {
 
     @Autowired
     private final SquadService squadServiceImpl;
+    //헬스 체크
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Squad Service is Healthy");
+    }
+
 
     //게시글 전체 조회하는 메서드
     @GetMapping
