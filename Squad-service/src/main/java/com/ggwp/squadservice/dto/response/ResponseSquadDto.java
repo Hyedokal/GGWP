@@ -6,7 +6,7 @@ import com.ggwp.squadservice.enums.QType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -16,12 +16,13 @@ public class ResponseSquadDto {
     private Position myPos;
     private Position wantPos;
     private QType qType;
-    private Boolean sMic;
+    private Boolean useMic;
     private String summonerName;
+    private String tagLine;
     private String rank;
-    private String sMemo;
+    private String memo;
     private List<ResponseCommentDto> commentList;
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 
     public static ResponseSquadDto fromEntity(Squad squad) {
         return new ResponseSquadDto()
@@ -29,10 +30,10 @@ public class ResponseSquadDto {
                 .setMyPos(squad.getMyPos())
                 .setWantPos(squad.getWantPos())
                 .setQType(squad.getQType())
-                .setSMic(squad.getSMic())
+                .setUseMic(squad.isUseMic())
                 .setSummonerName(squad.getSummonerName())
                 .setRank(squad.getSummonerRank())
-                .setSMemo(squad.getSMemo())
+                .setMemo(squad.getMemo())
                 .setUpdatedAt(squad.getUpdatedAt());
     }
 }
