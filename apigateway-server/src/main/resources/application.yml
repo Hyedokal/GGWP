@@ -8,10 +8,11 @@ spring:
     gateway:
       routes:
         # 이 밑에 본인의 Microservice 등록하기
-        - id: squad-service
+        # 스쿼드 id, predicate 설정 오류로 수정했습니다. (jong ha)
+        - id: Squad-service
           uri: lb://SQUAD-SERVICE
           predicates:
-            - Path=/Squad-service/**
+            - Path=/v1/squads/**
 
         - id: Member-service
           uri: lb://MEMBER-SERVICE

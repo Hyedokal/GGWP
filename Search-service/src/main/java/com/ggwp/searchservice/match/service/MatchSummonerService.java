@@ -8,10 +8,7 @@ import com.ggwp.searchservice.summoner.domain.Summoner;
 import java.util.List;
 
 public interface MatchSummonerService {
-
     List<MatchSummonerDto> getMatchSummonerBySummonerId(String summonerId);
-
-    MatchSummonerDto toDto(MatchSummoner matchSummoner);
 
     MatchSummoner createMatchSummoner(Match match, Summoner summoner);
 }

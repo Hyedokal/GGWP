@@ -27,6 +27,6 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 
-apiKey: RGAPI-edb61b90-0573-4f94-baa4-ddbdf0ddd58e;
+apiKey: RGAPI-0f4fe136-e32e-45ba-9803-bab36b0612b6
 server:
   port: 0

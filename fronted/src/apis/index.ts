@@ -4,7 +4,8 @@ import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
 import {GetSignInUserResponseDto, GetUserResponseDto, PatchLolNickNameResponseDto} from "./dto/response/user";
 import PatchLolNickNameRequestDto from "./dto/request/user/patch-lol-nickName-request.dto";
-
+import SquadRequestDto from "./dto/request/squad/SquadRequestDto";
+import SquadResponseDto from "./dto/response/squad/SquadResponseDto";
 
 
 // 포트번호 노출시키지 마세요, .env 파일에 저장해서 환경변수로 불러오세요
@@ -124,3 +125,21 @@ export const patchLolNicknameRequest = async (requestBody: PatchLolNickNameReque
     }
 };
 
+
+// Define the endpoint path
+const SQUAD_ENDPOINT = '/v1/squads';
+
+//글쓰기 요청
+export const sendSquadRequest = async (requestBody: SquadRequestDto): Promise<SquadResponseDto | string> => {
+    try {
+        const response = await axios.post(DOMAIN + SQUAD_ENDPOINT, requestBody);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody.message;
+        } else {
+            throw error;
+        }
+    }
+};

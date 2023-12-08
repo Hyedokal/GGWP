@@ -2,7 +2,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import './style.css';
 import { useCookies } from 'react-cookie';
 import {useUserStore} from "../../stores";
-import {AUTH_PATH, MAIN_PATH, USER_PATH} from "../../constant";
+import {AUTH_PATH, MAIN_PATH, MATCH_PATH, USER_PATH} from "../../constant";
 import {LoginUser} from "../../types";
 import {useEffect} from "react";
 
@@ -15,13 +15,21 @@ export default function Header() {
     const isAuthPage = pathname === AUTH_PATH;   //          variable: 인증 페이지 논리 변수          //
     const isMainPage = pathname === MAIN_PATH;   //          variable: 메인 페이지 논리 변수          //
     const isUserPage = pathname === USER_PATH;   //          variable: 유저 페이지 논리 변수          //
+
+    const isMatchPage = pathname=== MATCH_PATH;   //          variable: 매칭 페이지 논리 변수          //
     //모든 페이지 논리변수
-    const allPage = isAuthPage || isMainPage || isUserPage;
+    const allPage = isAuthPage || isMainPage || isUserPage || isMatchPage;
 
 
     const navigator = useNavigate();     //          function: 네비게이트 함수          //
 
-
+    const onMatchingClickHandler = () => {  //          event handler: 매칭 클릭 이벤트 처리          //
+        if (!cookies.accessToken) {
+            alert('Please register and log in');
+        } else {
+            navigator(MATCH_PATH);
+        }
+    }
     const onLogoClickHanlder = () => {       //          event handler: 로고 클릭 이벤트 처리          //
 
         navigator(MAIN_PATH);
@@ -79,7 +87,9 @@ export default function Header() {
                     </div>
                     <div className='header-logo-text'>{'GGWP'}</div>
                 </div>
-                <div>매칭 해요</div>
+               <div className="match-button" onClick={onMatchingClickHandler}>
+                <div >매칭해요</div>
+               </div>
                 <div>검색 해요</div>
                 <div className='header-right-box'>
                     { isMainPage && (<LoginMyPageButton />) }

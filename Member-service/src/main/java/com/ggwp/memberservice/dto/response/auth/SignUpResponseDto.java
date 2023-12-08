@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 @AllArgsConstructor
 public class SignUpResponseDto extends ResponseDto {
 
-    private SignUpResponseDto(String code, String message) {
+    private SignUpResponseDto(ResponseCode code, ResponseMessage message) {
         super(code, message);
     }
 

@@ -37,7 +37,7 @@ public class Squad {
     @Column(nullable = false)
     private String summonerName;
 
-    @Column(nullable = false)
+    @Column(name = "summoner_rank", nullable = false)
     private String summonerRank;
 
     @Column(columnDefinition = "varchar(100)", nullable = false)

@@ -1,22 +1,19 @@
 package com.ggwp.searchservice.match.service;
 
-import com.ggwp.searchservice.common.dto.ResponseDto;
-import com.ggwp.searchservice.common.dto.TokenDto;
-import com.ggwp.searchservice.match.domain.Match;
+import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.match.dto.MatchDto;
+import com.ggwp.searchservice.match.dto.RequestPageDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface MatchService {
-    List<String> getMatchIdsToFeign(TokenDto tokenDto);
 
-    MatchDto getMatchToFegin(String matchId);
+    void createMatches(FrontDto frontDto) throws InterruptedException;
 
-    Match matchToEntity(MatchDto matchDto);
+    List<MatchDto> getMatchList(FrontDto frontDto);
 
-    ResponseDto<String> createMatch(String matchId);
-
-    List<MatchDto> getMatchList(TokenDto tokenDto);
+    Page<MatchDto> pagedMatches(FrontDto frontDto, RequestPageDto.Search dto);
 
 
 }

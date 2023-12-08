@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
+@DynamicInsert
 public class Participant {
 
     @Id
@@ -83,12 +85,16 @@ public class Participant {
     private int totalDamageTaken; // 총 탱량
     @Column(nullable = false)
     private String teamPosition;
+    @Column(name = "primary_description", nullable = false)
+    private String primaryDescription;
+    @Column(name = "sub_description", nullable = false)
+    private String subDescription;
 
     @Column(name = "primary_style", nullable = false)
-    private int primaryStyle;
+    private String primaryStyle;
 
     @Column(name = "sub_style", nullable = false)
-    private int subStyle;
+    private String subStyle;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_pk")

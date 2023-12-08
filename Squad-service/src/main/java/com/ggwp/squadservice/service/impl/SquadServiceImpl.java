@@ -14,8 +14,10 @@ import com.ggwp.squadservice.feign.CommentFeignClient;
 import com.ggwp.squadservice.feign.RiotFeignClient;
 import com.ggwp.squadservice.repository.SquadRepository;
 import com.ggwp.squadservice.service.SquadService;
+import feign.FeignException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +32,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SquadServiceImpl implements SquadService {
 
     @Autowired
@@ -43,29 +46,55 @@ public class SquadServiceImpl implements SquadService {
     //롤 닉네임을 통해 티어값을 받아오는 메서드
     public Map<QType, String> getSummonerRank(String summonerName) {
         Map<QType, String> rankMap = new HashMap<>();
-        String summonerId = riotFeignClient.getSummonerId(summonerName, apiKey).getId();
-        Set<LeagueEntryDTO> rankInfo = riotFeignClient.getRankInfo(summonerId, apiKey);
-        for (LeagueEntryDTO dto : rankInfo) {
-            if (dto.getQueueType().equals("RANKED_SOLO_5x5")) {
-                rankMap.put(QType.SOLO_RANK,
-                        Tier.getAbbreviationByFullName(dto.getRank())
-                                + RomanNum.getValueByRomanNum(dto.getTier())); //ex: "D1" 로 저장됨
-            } else if (dto.getQueueType().equals("RANKED_FLEX_SR")) {
-                rankMap.put(QType.FLEX_RANK,
-                        Tier.getAbbreviationByFullName(dto.getRank())
-                                + RomanNum.getValueByRomanNum(dto.getTier())); //ex: "G3" 로 저장됨
+        try {
+            String summonerId = riotFeignClient.getSummonerId(summonerName, apiKey).getId();
+            Set<LeagueEntryDTO> rankInfo = riotFeignClient.getRankInfo(summonerId, apiKey);
+
+            for (LeagueEntryDTO dto : rankInfo) {
+                String queueType = dto.getQueueType();
+                String rank = dto.getRank();
+                String tier = dto.getTier();
+
+                // Print statements for debugging
+                System.out.println("Queue Type: " + queueType);
+                System.out.println("Rank: " + rank);
+                System.out.println("Tier: " + tier);
+
+                if (queueType.equals("RANKED_SOLO_5x5")) {
+                    String rankString = Tier.getAbbreviationByFullName(tier) + RomanNum.getValueByRomanNum(rank);
+                    System.out.println("Computed Rank String for Solo Queue: " + rankString);
+                    rankMap.put(QType.SOLO_RANK, rankString);
+                } else if (queueType.equals("RANKED_FLEX_SR")) {
+                    String rankString = Tier.getAbbreviationByFullName(tier) + RomanNum.getValueByRomanNum(rank);
+                    System.out.println("Computed Rank String for Flex Queue: " + rankString);
+                    rankMap.put(QType.FLEX_RANK, rankString);
+                }
             }
+        } catch (FeignException e) {
+            System.out.println("Error: " + e.getMessage());
+            rankMap.put(QType.SOLO_RANK, "error-issue");
+            rankMap.put(QType.FLEX_RANK, "error-issue");
         }
+
+
+
         return rankMap;
     }
 
     //게시글 작성 후 저장하기
     public void writeSquad(RequestSquadDto dto) {
-        if (dto.getQType().equals(QType.SOLO_RANK)) {
+        Map<QType, String> summonerRanks = this.getSummonerRank(dto.getSummonerName());// 현재 라이엇 측에서 api 호출 버그가있어 랭크 정보를 가져오지 못하는 경우가 있음 -jongha summoner_rank
+        String summonerRank = summonerRanks.getOrDefault(dto.getQType(), "Unknown Rank");
+
+        if ("error-issue".equals(summonerRank)) {
+            summonerRank = "Unknown Rank";
+        }else if (dto.getQType().equals(QType.SOLO_RANK)) {
             dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.SOLO_RANK));
         } else if (dto.getQType().equals(QType.FLEX_RANK)) {
             dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.FLEX_RANK));
         }
+
+        dto.setSummonerRank(summonerRank);
         Squad squad = dto.toEntity();
         squadRepository.save(squad);
     }
@@ -86,7 +115,7 @@ public class SquadServiceImpl implements SquadService {
     }
 
     //게시글 전체 조회하기
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)  //todo: DESC 하는게어떨까요 ㅎㅎ - 종하
     public List<ResponseSquadDto> getAllSquad() {
         List<Squad> squadList = squadRepository.findAll();
         return squadList.stream()
@@ -130,5 +159,7 @@ public class SquadServiceImpl implements SquadService {
         List<Squad> squadList = squadRepository.findAll(spec);
         return squadList.stream().map(ResponseSquadDto::fromEntity).toList();
     }
+
+
 
 }

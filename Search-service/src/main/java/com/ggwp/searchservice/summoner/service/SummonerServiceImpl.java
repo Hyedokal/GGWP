@@ -2,8 +2,7 @@ package com.ggwp.searchservice.summoner.service;
 
 import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.account.service.AccountService;
-import com.ggwp.searchservice.common.dto.ResponseDto;
-import com.ggwp.searchservice.common.dto.TokenDto;
+import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.exception.CustomException;
 import com.ggwp.searchservice.common.exception.ErrorCode;
 import com.ggwp.searchservice.summoner.domain.Summoner;
@@ -12,8 +11,10 @@ import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
 import com.ggwp.searchservice.summoner.repository.SummonerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class SummonerServiceImpl implements SummonerService {
 
@@ -27,12 +28,15 @@ public class SummonerServiceImpl implements SummonerService {
     }
 
     @Override  //DB에 저장한 소환사 정보 가져오기 No-API
-    public ResponseDto<ResponseSummonerDto> getSummoner(TokenDto tokenDto) {
-        Account account = accountService.findAccount(tokenDto);
+    @Transactional(readOnly = true)
+    public ResponseSummonerDto getSummoner(FrontDto frontDto) {
+        Account account = accountService.findAccount(frontDto);
         Summoner summoner = findSummoner(account);
-        return ResponseDto.success(summoner.toDto(summoner));
+        return summoner.toDto(summoner);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public boolean existSummoner(CreateSummonerDto createSummonerDto) {
         return summonerRepository.existsByPuuid(createSummonerDto.getPuuid());
     }

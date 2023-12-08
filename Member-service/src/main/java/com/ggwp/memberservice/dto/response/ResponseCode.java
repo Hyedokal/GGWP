@@ -1,23 +1,29 @@
 package com.ggwp.memberservice.dto.response;
 
-public interface ResponseCode {
+import com.fasterxml.jackson.annotation.JsonValue;
 
-    String SUCCESS = "SU";  //성공
+public enum ResponseCode {
 
-    String VALIDATION_FAILED = "VF";
-    String DUPLICATED_EMAIL = "DE";
-    String UNCHECK_PASSWORD = "UP"; //패스워드 불일치
+    SUCCESS("SU"),
+    VALIDATION_FAILED("VF"),
+    DUPLICATED_EMAIL("DE"),
+    UNCHECK_PASSWORD("UP"),
+    DUPLICATED_NICKNAME("DN"),
+    DUPLICATED_TEL_NUMBER("DT"),
+    NOT_EXIST_USER("NU"),
+    NOT_EXIST_BOARD("NB"),
+    SIGN_IN_FAILED("SF"),
+    NO_PERMISSION("NP"),
+    DATABASE_ERROR("DBE");
 
+    private final String code;
 
-    String DUPLICATED_NICKNAME = "DN";
-    String DUPLICATED_TEL_NUMBER = "DT";
-    String NOT_EXIST_USER = "NU";
-    String NOT_EXIST_BOARD = "NB";
-
-    String SIGN_IN_FAILED = "SF";
-
-    String NO_PERMISSION = "NP";
-
-    String DATABASE_ERROR = "DBE";
+    ResponseCode(String code) {
+        this.code = code;
+    }
+    @JsonValue  // 이게 있어야 json으로 변환될 때 code로 변환됨
+    public String getCode() {
+        return code;
+    }
 
 }

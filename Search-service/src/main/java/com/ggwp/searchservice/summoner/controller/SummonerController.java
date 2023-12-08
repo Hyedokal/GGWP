@@ -1,7 +1,7 @@
 package com.ggwp.searchservice.summoner.controller;
 
+import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.dto.ResponseDto;
-import com.ggwp.searchservice.common.dto.TokenDto;
 import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
 import com.ggwp.searchservice.summoner.service.SummonerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +23,7 @@ public class SummonerController {
 
     @PostMapping("/get") // 롤 puuid로 Summoner 가져오기 No-API
     @Operation(summary = "Summoner 조회", description = "DB로 조회")
-    public ResponseDto<ResponseSummonerDto> getSummoner(@Valid @RequestBody TokenDto tokenDto) {
-        return summonerService.getSummoner(tokenDto);
+    public ResponseDto<ResponseSummonerDto> getSummoner(@Valid @RequestBody FrontDto frontDto) {
+        return ResponseDto.success(summonerService.getSummoner(frontDto));
     }
 }
