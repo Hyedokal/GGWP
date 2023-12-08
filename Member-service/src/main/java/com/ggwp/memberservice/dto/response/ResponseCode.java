@@ -1,5 +1,7 @@
 package com.ggwp.memberservice.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum ResponseCode {
 
     SUCCESS("SU"),
@@ -19,7 +21,7 @@ public enum ResponseCode {
     ResponseCode(String code) {
         this.code = code;
     }
-
+    @JsonValue  // 이게 있어야 json으로 변환될 때 code로 변환됨
     public String getCode() {
         return code;
     }
