@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 @AllArgsConstructor
 public class ResponseDto {
     
-    private String code;
-    private String message;
+    private ResponseCode code;
+    private ResponseMessage message;
 
     public static ResponseEntity<ResponseDto> databaseError() {
         ResponseDto result = new ResponseDto(ResponseCode.DATABASE_ERROR, ResponseMessage.DATABASE_ERROR);
