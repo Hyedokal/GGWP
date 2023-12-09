@@ -1,13 +1,13 @@
 package com.ggwp.noticeservice.controller;
 
-import com.ggwp.noticeservice.domain.Notice;
-import com.ggwp.noticeservice.dto.RequestCreateMemberDto;
-import com.ggwp.noticeservice.dto.RequestCreateNoticeDto;
+import com.ggwp.noticeservice.common.dto.RequestDto;
+import com.ggwp.noticeservice.common.dto.ResponseDto;
+import com.ggwp.noticeservice.common.dto.RequestFeignDto;
 import com.ggwp.noticeservice.dto.RequestUpdateNoticeDto;
-import com.ggwp.noticeservice.service.NoticeService;
+import com.ggwp.noticeservice.dto.ResponseNoticeDto;
+import com.ggwp.noticeservice.service.NoticeServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoticeController {
 
-    private final NoticeService noticeService;
+    private final NoticeServiceImpl noticeService;
 
     // health-check
     @RequestMapping("/")
@@ -26,59 +26,22 @@ public class NoticeController {
         return "notice-service is available!";
     }
 
-    // 알림 테스트용 MEMBER 생성
-    @PostMapping("member")
-    public ResponseEntity<?> createMember(@RequestBody RequestCreateMemberDto memberDto){
-        noticeService.createMember(memberDto);
-        return ResponseEntity.ok(HttpStatus.CREATED);
-    }
-
     // 알림 생성 post
-    @PostMapping("notice")
-    public ResponseEntity<?> createNotice(@RequestBody RequestCreateNoticeDto noticeDto){
-        noticeService.createNotice(noticeDto);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    @PostMapping("/create") // 매치 5개 api 불러와서 저장
+    public ResponseDto<String> createNotice(@Valid @RequestBody RequestFeignDto requestFeignDto) {
+        noticeService.createNotice(requestFeignDto);
+        return ResponseDto.success("Create Notice!");
     }
 
-    // 알림 조회(찾기) @PathVariable Long id
-    @GetMapping("{id}")
-    public ResponseEntity<?> findNoticeById(@PathVariable Long id){
-        return ResponseEntity.ok(noticeService.findNoticeById(id));
+    @PostMapping("/get")
+    public ResponseDto<List<ResponseNoticeDto>> getNotice(@Valid @RequestBody RequestDto requestDto) {
+        return ResponseDto.success(noticeService.getNoticeList(requestDto));
     }
 
-    // 알림 조회(찾기) sender의 아이디로 알림 찾기
-    @GetMapping("{senderId}/sender")
-    public ResponseEntity<?> findBySenderId(@PathVariable Long senderId){
-        List<Notice> notice = noticeService.findBySenderId(senderId);
-        return ResponseEntity.ok(notice);
-    }
-
-    // 알림 조회(찾기) receiver의 아이디로 알림 찾기
-    @GetMapping("{receiverId}/receiver")
-    public ResponseEntity<?> findByReceiverId(@PathVariable Long receiverId){
-        List<Notice> noticeList = noticeService.findByReceiverId(receiverId);
-        return ResponseEntity.ok(noticeList);
-    }
-
-    // 알림 전체 찾기
-    @GetMapping("findall")
-    public ResponseEntity<?> findAllNotice(){
-        List<Notice> noticeList = noticeService.findAllNotice();
-        return ResponseEntity.ok(noticeList);
-    }
-
-    // 알림 업데이트
-    @PutMapping("update")
-    public ResponseEntity<?> readNotice(@RequestBody RequestUpdateNoticeDto updateNoticeDto){
-        noticeService.updateNotice(updateNoticeDto);
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    // 알림 삭제
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteNotice(@PathVariable Long id){
-        noticeService.deleteNotice(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+    @PutMapping("/update")
+    public ResponseDto<?> updateNotice(@Valid @RequestBody RequestUpdateNoticeDto noticeDto){
+        noticeService.update(noticeDto);
+        return ResponseDto.success("알림이 업데이트 되었습니다.");
     }
 
 }
