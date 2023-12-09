@@ -14,9 +14,8 @@ const Modal : React.FC<ModalProps>  = ({ onClose  }) => {
         const [myPos, setMyPos] = useState('');
         const [wantPos, setWantPos] = useState('');
         const [qType, setQType] = useState('');
-        const [sMic, setSMic] = useState(false);
-        const [summonerName, setSummonerName] = useState('');
-        const [sMemo, setSMemo] = useState('');
+        const [useMic, setUseMic] = useState(false);
+        const [memo, setMemo] = useState('');
         const [sMemoError, setSMemoError] = useState<boolean>(false);
         const [sMemoErrorMessage, setSMemoErrorMessage] = useState<string>('');
         const {userInfo} = UserInfoStore();
@@ -27,7 +26,7 @@ const Modal : React.FC<ModalProps>  = ({ onClose  }) => {
         const sendPostRequest = async () => {
             let hasError = false;
 
-            if (sMemo.includes("fuck")) {
+            if (memo.includes("fuck")) {
                 setSMemoError(true);
                 setSMemoErrorMessage("비속어를 쓰면 안된다고");
                 hasError = true;
@@ -39,9 +38,10 @@ const Modal : React.FC<ModalProps>  = ({ onClose  }) => {
                 myPos,
                 wantPos,
                 qType,
-                sMic,
+                useMic,
                 summonerName: userInfo?.lolNickname || '',// || ' ' 를 사용해서 소환사 이름을 안전하게 할당
-                sMemo,
+                tagLine:userInfo?.tag||'',
+                memo,
             };
             try {
                 const response = await sendSquadRequest(requestBody);
@@ -110,8 +110,8 @@ const Modal : React.FC<ModalProps>  = ({ onClose  }) => {
                                 <input
                                     className="rounded border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                     type="checkbox"
-                                    checked={sMic}
-                                    onChange={(e) => setSMic(e.target.checked)}
+                                    checked={useMic}
+                                    onChange={(e) => setUseMic(e.target.checked)}
                                 />
                                 <span className="text-sm text-muted-foreground">
                             마이크 여부
@@ -126,8 +126,8 @@ const Modal : React.FC<ModalProps>  = ({ onClose  }) => {
                                 error={sMemoError}
                                 errorMessage={sMemoErrorMessage}
                                 placeholder="메모"
-                                value={sMemo}
-                                setValue={setSMemo}
+                                value={memo}
+                                setValue={setMemo}
                             />
                         </div>
                         <div className="flex justify-end">
