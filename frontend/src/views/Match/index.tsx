@@ -1,34 +1,86 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import Modal from "../../components/ModalWrite";
 import UserInfoStore from "../../stores/userInfo.store";
+import {useNavigate} from "react-router-dom";
 
-export default function Match(){
-    //유저 인포
-    const {userInfo} = UserInfoStore();
+interface BoardListResponseDto {
+    myPos: string;
+    wantPos: string;
+    useMic: boolean;
+    summonerName: string;
+    tagLine: string | null;
+    rank: string;
+    memo: string;
+    commentList: any[] | null;
+    updatedAt: string;
+    qtype: string;
+    sid: number;
+}
+export default function Match() {
+    const { userInfo } = UserInfoStore();
 
     const [isModalOpen, setModalOpen] = useState(false);
+    const [currentList, setCurrentList] = useState<BoardListResponseDto[]>([]);
 
     const openModal = () => setModalOpen(true);
-    const closeModal = () => {
-        setModalOpen(false);
-    };
+    const closeModal = () => setModalOpen(false);
 
 
-    //해야할것
-    //1. 모달창에서 글을 쓸떄  유저 이름부분에 로그인한 유저의 이름이 들어가게 하기
-    //2. 옆에 태그도 추가
-    //3. 글을 쓸때마다 화면에 바로바로 뜨게 하기
+    const navigate = useNavigate();
+
+    const handleBoardItemClick = (sId: any) => {
+        navigate(`/board/${sId}`);
+    }
+    useEffect(() => {
+        const fetchSquads = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/v1/squads');
+                setCurrentList(response.data);
+            } catch (error) {
+                console.error('Error fetching squads data:', error);
+                // Handle the error appropriately
+            }
+        };
+        fetchSquads(); // Call immediately on component mount
 
 
+        const intervalId = setInterval(() => {
+            fetchSquads();
+        }, 5000);
 
-    return(
+        return () => clearInterval(intervalId); //
+    }, []); // Empty dependency array ensures this effect runs once after the component mounts
+
+    return (
         <div>
             <div>
-
                 <div>{userInfo?.lolNickname}</div>
                 <button onClick={openModal}>Write</button>
                 {isModalOpen && <Modal onClose={closeModal} />}
+
+                {/* Example of rendering the fetched data */}
+                <div>
+                    <hr />
+
+                    {currentList.map((item, index) => (
+                        <div key={index} onClick={() => handleBoardItemClick(item.sid)}>
+                            <div>Summoner Name: {item.summonerName}</div>
+                            <div>Rank: {item.rank}</div>
+                            <div>My Position: {item.myPos}</div>
+                            <div>Want Position: {item.wantPos}</div>
+                            <div>Use Mic: {item.useMic ? 'Yes' : 'No'}</div>
+                            <div>Qtype: {item.qtype}</div>
+                            <div>TagLine: {item.tagLine}</div>
+                            <div>Memo: {item.memo}</div>
+                            <div>CommentList: {item.commentList}</div>
+                            <div>UpdatedAt: {item.updatedAt}</div>
+                            <div>Sid: {item.sid}</div>
+                            <hr />
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
-    )
+    );
 }

@@ -9,3 +9,10 @@ export const MATCH_PATH= `/match`;
 export const SEARCH_PATH:"/search" = '/search'
 
 export const MY_PATH:"/mypage"='/mypage'
+
+
+
+
+export const BOARD_NUMBER_PATH_VARIABLE = ':boardNumber';
+export const DETAIL_PATH = (boardNumber: number | string) => `detail/${boardNumber}`;
+export const UPDATE_PATH = (boardNumber: number | string) => `update/${boardNumber}`;
