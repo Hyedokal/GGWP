@@ -1,5 +1,4 @@
 ﻿# 간편하게 찾는 게임 친구, GGWP
-[riot.txt](https://github.com/Hyedokal/GGWP/files/13610385/riot.txt)1b74912e-5963-41a5-a0a6-ecb9ccc891a4
 
 
 
