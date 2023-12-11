@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/v1/comments")
 @RequiredArgsConstructor
@@ -19,18 +17,12 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    //게시글별 댓글 가져오는 메서드
-    @GetMapping("/{sId}")
-    public ResponseEntity<List<ResponseCommentDto>> getCommentList(@PathVariable Long sId) {
-        List<ResponseCommentDto> commentList = commentService.getCommentList(sId);
-        return ResponseEntity.ok(commentList);
-    }
 
     //게시글별 댓글 페이징처리하여 가져오는 메서드
     @PostMapping("/search")
-    public ResponseEntity<Page<ResponseCommentDto>> getPagedAnnounce(@RequestBody RequestPageDto.Search dto) {
+    public ResponseEntity<Page<ResponseCommentDto>> getPagedComment(@RequestBody RequestPageDto.Search dto) {
         Page<ResponseCommentDto> dtoList = commentService.searchPagedComment(dto);
-        return ResponseEntity.ok().body(dtoList);
+        return ResponseEntity.ok(dtoList);
     }
 
     //댓글 작성하는 메서드
@@ -59,4 +51,5 @@ public class CommentController {
     public ResponseEntity<ResponseCommentDto> getOneComment(@PathVariable Long cId) {
         return ResponseEntity.ok(commentService.getOneComment(cId));
     }
+
 }

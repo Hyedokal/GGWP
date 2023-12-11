@@ -1,6 +1,7 @@
 package com.ggwp.squadservice.service.impl;
 
 import com.ggwp.squadservice.domain.Squad;
+import com.ggwp.squadservice.dto.request.RequestCommentPageDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.response.ResponseCommentDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
@@ -19,6 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,18 +75,17 @@ public class SquadServiceImpl implements SquadService {
 
     //게시글 작성 후 저장하기
     public Squad writeSquad(RequestSquadDto dto) {
-        Map<QType, String> summonerRanks = this.getSummonerRank(dto.getSummonerName());// 현재 라이엇 측에서 api 호출 버그가있어 랭크 정보를 가져오지 못하는 경우가 있음 -jongha summoner_rank
-        String summonerRank = summonerRanks.getOrDefault(dto.getQType(), "Unknown Rank");
+        Map<QType, String> summonerRanks = this.getSummonerRank(dto.getSummonerName());
+        String summonerRank = summonerRanks.getOrDefault(dto.getQType(), "Unranked");
 
         if ("error-issue".equals(summonerRank)) {
-            summonerRank = "Unknown Rank";
+            dto.setSummonerRank("Unknown Rank");
         } else if (dto.getQType().equals(QType.SOLO_RANK)) {
             dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.SOLO_RANK));
         } else if (dto.getQType().equals(QType.FLEX_RANK)) {
             dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.FLEX_RANK));
         }
 
-        dto.setSummonerRank(summonerRank);
         Squad squad = dto.toEntity();
         return squadRepository.save(squad);
     }
@@ -118,11 +119,10 @@ public class SquadServiceImpl implements SquadService {
     public ResponseSquadDto getOneSquad(Long sId) {
         Squad squad = squadRepository.findById(sId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.SQUAD_ID_NOT_FOUND));
-        ResponseSquadDto.fromEntity(squad);
-        //Feign으로 댓글 리스트 가져오기
-        List<ResponseCommentDto> commentList = commentFeignClient.getCommentList(sId);
         ResponseSquadDto dto = ResponseSquadDto.fromEntity(squad);
-        dto.setCommentList(commentList);
+        //Feign으로 댓글 리스트 가져오기
+        Page<ResponseCommentDto> comments = commentFeignClient.getPagedComment(new RequestCommentPageDto.Search());
+        dto.setCommentList(comments);
         return dto;
     }
 
@@ -143,7 +143,7 @@ public class SquadServiceImpl implements SquadService {
 
         if (rank != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("rank"), rank));
+                    criteriaBuilder.equal(root.get("summonerRank"), rank));
         }
 
         List<Squad> squadList = squadRepository.findAll(spec);

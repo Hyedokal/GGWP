@@ -5,9 +5,9 @@ import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.domain.Page;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @Accessors(chain = true)
@@ -21,7 +21,7 @@ public class ResponseSquadDto {
     private String tagLine;
     private String rank;
     private String memo;
-    private List<ResponseCommentDto> commentList;
+    private Page<ResponseCommentDto> commentList;
     private Timestamp updatedAt;
 
     public static ResponseSquadDto fromEntity(Squad squad) {
