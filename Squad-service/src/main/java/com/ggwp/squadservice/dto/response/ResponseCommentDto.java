@@ -5,11 +5,15 @@ import lombok.Data;
 
 @Data
 public class ResponseCommentDto {
-    private Position cMyPos;
+    private Position myPos;
 
-    private Boolean cMic;
+    private Boolean useMic;
 
     private String summonerName;
 
-    private String cMemo;
+    private String tagLine;
+
+    private String memo;
+
+    private String summonerRank;
 }

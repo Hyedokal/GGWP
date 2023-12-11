@@ -2,6 +2,7 @@ package com.ggwp.commentservice.domain;
 
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.enums.Position;
+import com.ggwp.commentservice.enums.QType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -31,6 +32,11 @@ public class Comment {
     @Enumerated(EnumType.STRING)
     private Position myPos;
 
+    //게시글에서 받아온 QType
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private QType qType;
+
     @Column(columnDefinition = "BIT(1)", nullable = false)
     private boolean useMic;
 
@@ -39,6 +45,9 @@ public class Comment {
 
     @Column(nullable = false)
     private String tag_line;
+
+    @Column(name = "summoner_rank", nullable = false)
+    private String summonerRank;
 
     @Column(columnDefinition = "varchar(100)", nullable = false)
     private String memo;
@@ -52,14 +61,16 @@ public class Comment {
     private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
     //생성자 호출을 대신할 정적 메서드 선언
-    public static Comment create(Long sId, Position myPos, boolean useMic,
-                                 String summonerName, String tag_line, String cMemo) {
+    public static Comment create(Long sId, Position myPos, QType qType, boolean useMic,
+                                 String summonerName, String tag_line, String cMemo, String rank) {
         return new Comment()
                 .setSId(sId)
                 .setMyPos(myPos)
+                .setQType(qType)
                 .setUseMic(useMic)
                 .setSummonerName(summonerName)
                 .setTag_line(tag_line)
+                .setSummonerRank(rank)
                 .setMemo(cMemo)
                 .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));

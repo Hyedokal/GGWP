@@ -2,6 +2,7 @@ package com.ggwp.commentservice.dto.request;
 
 import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.enums.Position;
+import com.ggwp.commentservice.enums.QType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,9 @@ public class RequestCommentDto {
     @NotNull(message = "반드시 하나의 포지션을 선택하셔야 합니다.")
     public Position myPos;
 
+    @NotNull(message = "게시글에서 큐 타입을 받아오지 못했습니다.")
+    public QType qType;
+
     @NotNull(message = "반드시 마이크 사용 여부를 체크하셔야 합니다.")
     public boolean useMic;
 
@@ -33,7 +37,10 @@ public class RequestCommentDto {
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
     public String memo;
 
+    private String summonerRank;
+
     public Comment toEntity() {
-        return Comment.create(this.sId, this.myPos, this.useMic, this.summonerName, this.tag_line, this.memo);
+        return Comment.create(this.sId, this.myPos, this.qType, this.useMic,
+                this.summonerName, this.tag_line, this.memo, this.summonerRank);
     }
 }

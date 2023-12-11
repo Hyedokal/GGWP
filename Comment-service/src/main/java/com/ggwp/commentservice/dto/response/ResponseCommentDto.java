@@ -19,12 +19,15 @@ public class ResponseCommentDto {
 
     private String memo;
 
+    private String summonerRank;
+
     public static ResponseCommentDto fromEntity(Comment comment) {
         return new ResponseCommentDto()
                 .setMyPos(comment.getMyPos())
                 .setUseMic(comment.isUseMic())
                 .setSummonerName(comment.getSummonerName())
                 .setTag_line(comment.getTag_line())
-                .setMemo(comment.getMemo());
+                .setMemo(comment.getMemo())
+                .setSummonerRank(comment.getSummonerRank());
     }
 }
