@@ -4,12 +4,14 @@ import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.enums.Position;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
 @Data
 @Accessors(chain = true)
+@AllArgsConstructor
 public class RequestCommentDto {
 
     @NotNull(message = "해당 게시글이 존재하지 않습니다.")

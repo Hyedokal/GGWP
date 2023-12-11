@@ -1,9 +1,11 @@
 package com.ggwp.commentservice.controller;
 
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
+import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
 import com.ggwp.commentservice.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,13 @@ public class CommentController {
     public ResponseEntity<List<ResponseCommentDto>> getCommentList(@PathVariable Long sId) {
         List<ResponseCommentDto> commentList = commentService.getCommentList(sId);
         return ResponseEntity.ok(commentList);
+    }
+
+    //게시글별 댓글 페이징처리하여 가져오는 메서드
+    @PostMapping("/search")
+    public ResponseEntity<Page<ResponseCommentDto>> getPagedAnnounce(@RequestBody RequestPageDto.Search dto) {
+        Page<ResponseCommentDto> dtoList = commentService.searchPagedComment(dto);
+        return ResponseEntity.ok().body(dtoList);
     }
 
     //댓글 작성하는 메서드
