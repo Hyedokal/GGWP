@@ -13,7 +13,10 @@ spring:
           uri: lb://SQUAD-SERVICE
           predicates:
             - Path=/v1/squads/**
-
+        - id: Comment-service
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/v1/comments/**
         - id: Member-service
           uri: lb://MEMBER-SERVICE
           predicates:
