@@ -1,4 +1,4 @@
-package com.ggwp.noticeservice.enums;
+package com.ggwp.noticeservice.common.enums;
 
 import lombok.Getter;
 
@@ -17,6 +17,7 @@ public enum NoticeEnum {
         this.code = code;
         this.description = description;
     }
+
 
     public static NoticeEnum getByCode(int code) {
         switch (code) {
