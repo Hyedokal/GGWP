@@ -38,7 +38,7 @@ public class Comment {
     private String summonerName;
 
     @Column(nullable = false)
-    private String tagLine;
+    private String tag_line;
 
     @Column(columnDefinition = "varchar(100)", nullable = false)
     private String memo;
@@ -53,13 +53,13 @@ public class Comment {
 
     //생성자 호출을 대신할 정적 메서드 선언
     public static Comment create(Long sId, Position myPos, boolean useMic,
-                                 String summonerName, String tagLine, String cMemo) {
+                                 String summonerName, String tag_line, String cMemo) {
         return new Comment()
                 .setSId(sId)
                 .setMyPos(myPos)
                 .setUseMic(useMic)
                 .setSummonerName(summonerName)
-                .setTagLine(tagLine)
+                .setTag_line(tag_line)
                 .setMemo(cMemo)
                 .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));

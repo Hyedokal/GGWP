@@ -32,7 +32,7 @@ public class RequestSquadDto {
     public String summonerName;
 
     @NotBlank(message = "Riot 태그를 반드시 입력해야 합니다.")
-    public String tagLine;
+    public String tag_line;
 
     @Length(max = 100, message = "메모는 최대 100자까지 작성할 수 있습니다.")
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
@@ -42,6 +42,6 @@ public class RequestSquadDto {
 
     public Squad toEntity() {
         return Squad.create(this.myPos, this.wantPos, this.qType,
-                this.useMic, this.summonerName, this.tagLine, this.summonerRank, this.memo);
+                this.useMic, this.summonerName, this.tag_line, this.summonerRank, this.memo);
     }
 }

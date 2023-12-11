@@ -1,0 +1,11 @@
+/* 테이블을 가운데 정렬 */
+#board {
+    display: flex;
+    justify-content: center;
+}
+
+/* 셀 내용을 가운데 정렬 */
+th, td {
+    text-align: center;
+    padding: 4px;
+}

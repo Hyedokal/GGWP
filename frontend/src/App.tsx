@@ -16,7 +16,6 @@ import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
 import Match from "./views/Match";
 import Test from "./views/Tests";
-import BoardDetail from "./views/Match/Detail";
 
 function App() {
 
@@ -68,8 +67,7 @@ function App() {
           <Route path={AUTH_PATH} element={<Authentication/>}/>
           <Route path={USER_PATH} element={<User />} />
           <Route path={MATCH_PATH} element={<Match/>}/>
-          <Route path='/board/:sId' element={<BoardDetail />} /> {/* New route for board details */}
-
+          <Route path='/test' element={<Test/>} />
           <Route path='/test' element={<Test/>} />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>

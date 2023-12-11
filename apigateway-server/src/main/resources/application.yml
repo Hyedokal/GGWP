@@ -14,10 +14,17 @@ spring:
           predicates:
             - Path=/v1/squads/**
 
+        - id: Comment-service
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/v1/comments/**
+
         - id: Member-service
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/member-service/**
+
+
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:

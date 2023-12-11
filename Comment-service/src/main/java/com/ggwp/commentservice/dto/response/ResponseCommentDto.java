@@ -15,7 +15,7 @@ public class ResponseCommentDto {
 
     private String summonerName;
 
-    private String tagLine;
+    private String tag_line;
 
     private String memo;
 
@@ -24,7 +24,7 @@ public class ResponseCommentDto {
                 .setMyPos(comment.getMyPos())
                 .setUseMic(comment.isUseMic())
                 .setSummonerName(comment.getSummonerName())
-                .setTagLine(comment.getTagLine())
+                .setTag_line(comment.getTag_line())
                 .setMemo(comment.getMemo());
     }
 }

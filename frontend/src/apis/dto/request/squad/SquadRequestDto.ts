@@ -4,6 +4,6 @@ export default interface SquadRequestDto {
     qType: string;
     useMic: boolean;
     summonerName: string;
-    tagLine : string;
+    tag_line : string;
     memo: string;
 }

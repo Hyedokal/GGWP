@@ -43,7 +43,7 @@ public class Squad {
     private String summonerName;
 
     @Column(nullable = false)
-    private String tagLine;
+    private String tag_line;
 
     @Column(name = "summoner_rank", nullable = false)
     private String summonerRank;
@@ -60,14 +60,14 @@ public class Squad {
 
     //생성자를 담당하는 정적 메서드
     public static Squad create(Position myPos, Position wantPos, QType qType,
-                               boolean useMic, String summonerName, String tagLine, String rank, String memo) {
+                               boolean useMic, String summonerName, String tag_line, String rank, String memo) {
         return new Squad()
                 .setMyPos(myPos)
                 .setWantPos(wantPos)
                 .setQType(qType)
                 .setUseMic(useMic)
                 .setSummonerName(summonerName)
-                .setTagLine(tagLine)
+                .setTag_line(tag_line)
                 .setSummonerRank(rank)
                 .setMemo(memo)
                 .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
