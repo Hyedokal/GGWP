@@ -15,7 +15,7 @@ spring:
     show-sql: true
 
   profiles:
-    include: test
+    include: db
 eureka:
   client:
     register-with-eureka: true
