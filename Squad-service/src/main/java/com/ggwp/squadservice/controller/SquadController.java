@@ -35,8 +35,8 @@ public class SquadController {
     }
 
     //페이징처리할 게시글 전체 조회
-    @GetMapping
-    public ResponseEntity<Page<ResponseSquadDto>> getPagedSquads(@RequestBody RequestSquadPageDto.Search search){
+    @PostMapping("/search")
+    public ResponseEntity<Page<ResponseSquadDto>> getPagedSquads(@RequestBody RequestSquadPageDto.Search search) {
         Page<ResponseSquadDto> dtoList = squadService.searchPagedSquad(search);
         return ResponseEntity.ok(dtoList);
     }
