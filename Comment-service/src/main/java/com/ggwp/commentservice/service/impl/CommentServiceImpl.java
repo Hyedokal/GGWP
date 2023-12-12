@@ -137,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
             dtoList = query().select(qComment)
                     .from(qComment)
                     .where(where)
-                    .orderBy(qComment.createdAt.desc()) // 생성일자 내림차순
+                    .orderBy(qComment.cId.desc()) // PK 내림차순
                     .offset((long) dto.getPage() * dto.getSize())
                     .limit(dto.getSize())
                     .fetch()
