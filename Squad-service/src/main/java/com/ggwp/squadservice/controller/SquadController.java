@@ -1,11 +1,13 @@
 package com.ggwp.squadservice.controller;
 
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
+import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.service.SquadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +27,18 @@ public class SquadController {
         return ResponseEntity.ok("Squad-service is available");
     }
 
-
-    //게시글 전체 조회하는 메서드
-    @GetMapping
-    public ResponseEntity<List<ResponseSquadDto>> getSquadList() {
-        List<ResponseSquadDto> squadList = squadService.getAllSquad();
-        return ResponseEntity.ok().body(squadList);
-    }
-
     //게시글 하나 가져오는 메서드
     @GetMapping("/{sId}")
     public ResponseEntity<ResponseSquadDto> getOneSquad(@PathVariable Long sId) {
         ResponseSquadDto dto = squadService.getOneSquad(sId);
         return ResponseEntity.ok().body(dto);
+    }
+
+    //페이징처리할 게시글 전체 조회
+    @PostMapping("/search")
+    public ResponseEntity<Page<ResponseSquadDto>> getPagedSquads(@RequestBody RequestSquadPageDto.Search search) {
+        Page<ResponseSquadDto> dtoList = squadService.searchPagedSquad(search);
+        return ResponseEntity.ok(dtoList);
     }
 
     //게시글 작성하는 메서드
