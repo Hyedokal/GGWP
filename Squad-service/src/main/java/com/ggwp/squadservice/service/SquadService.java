@@ -2,25 +2,27 @@ package com.ggwp.squadservice.service;
 
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
+import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
 
 public interface SquadService {
-    public Squad writeSquad(RequestSquadDto dto);
+    Squad writeSquad(RequestSquadDto dto);
 
-    public Squad editSquad(Long sId, RequestSquadDto dto);
+    Squad editSquad(Long sId, RequestSquadDto dto);
 
-    public void deleteSquad(Long sId);
+    void deleteSquad(Long sId);
 
-    public List<ResponseSquadDto> getAllSquad();
+    ResponseSquadDto getOneSquad(Long sId);
 
-    public ResponseSquadDto getOneSquad(Long sId);
+    List<ResponseSquadDto> getSquadWithFilters(Position myPos, QType qType, String rank);
 
-    public List<ResponseSquadDto> getSquadWithFilters(Position myPos, QType qType, String rank);
+    Map<QType, String> getSummonerRank(String summonerName);
 
-    public Map<QType, String> getSummonerRank(String summonerName);
+    Page<ResponseSquadDto> searchPagedSquad(RequestSquadPageDto.Search dto);
 }

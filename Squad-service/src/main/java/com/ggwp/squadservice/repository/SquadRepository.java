@@ -14,5 +14,4 @@ public interface SquadRepository extends JpaRepository<Squad, Long>, JpaSpecific
 
     List<Squad> findByCreatedAtBeforeAndOutdatedFalse(Timestamp date);
 
-    List<Squad> findAllByOutdatedFalseAndOrderBySIdDesc();
 }
