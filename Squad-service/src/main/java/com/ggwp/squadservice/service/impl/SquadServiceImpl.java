@@ -148,7 +148,9 @@ public class SquadServiceImpl implements SquadService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.SQUAD_ID_NOT_FOUND));
         ResponseSquadDto dto = ResponseSquadDto.fromEntity(squad);
         //Feign으로 댓글 리스트 가져오기
-        Page<ResponseCommentDto> comments = commentFeignClient.getPagedComment(new RequestCommentPageDto.Search());
+        RequestCommentPageDto.Search search = new RequestCommentPageDto.Search();
+        search.setSId(sId);
+        Page<ResponseCommentDto> comments = commentFeignClient.getPagedComment(search);
         dto.setCommentList(comments);
         return dto;
     }
