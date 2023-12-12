@@ -11,7 +11,7 @@ public class ResponseCommentDto {
 
     private Position myPos;
 
-    private Boolean useMic;
+    private boolean useMic;
 
     private String summonerName;
 
