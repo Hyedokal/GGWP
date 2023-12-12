@@ -8,18 +8,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("v1/account")
+@RequestMapping("/search-service/v1/account")
 @RequiredArgsConstructor
 @Tag(name = "Account", description = "Account API")
 public class AccountController {
 
     private final AccountService accountService;
+
+    @GetMapping("/health-check")
+    public String healthcheck() {
+        return "health-check";
+    }
 
     @PostMapping("/get")
     @Operation(summary = "Account 조회", description = "DB에서 조회")

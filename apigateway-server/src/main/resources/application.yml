@@ -21,6 +21,15 @@ spring:
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/member-service/**
+        - id: Notice-service
+          uri: lb://NOTICE-SERVICE
+          predicates:
+            - Path=/notice-service/**
+        - id: Search-service
+          uri: lb://SEARCH-SERVICE
+          predicates:
+            - Path=/search-service/**
+
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:

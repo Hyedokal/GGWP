@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("v1/match")
+@RequestMapping("/search-service/v1/match")
 @RequiredArgsConstructor
 public class MatchController {
 

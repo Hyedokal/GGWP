@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/summoner")
+@RequestMapping("/search-service/v1/summoner")
 @Tag(name = "Summoner", description = "Summoner API")
 public class SummonerController {
 

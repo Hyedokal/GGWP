@@ -1,8 +1,6 @@
 
 # spring
 spring:
-  application:
-    name: Notice-service
   datasource:
     driver-class-name: ${driver-class-name}
     url: ${url}
@@ -26,11 +24,3 @@ spring:
 #    password: guest
 #    port: 5672
 #    eureka
-#  eureka:
-#    instance:
-#      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-#    client:
-#      register-with-eureka: true
-#      fetch-registry: true
-#      service-url:
-#        defaultZone: http://127.0.0.1:8761/eureka
