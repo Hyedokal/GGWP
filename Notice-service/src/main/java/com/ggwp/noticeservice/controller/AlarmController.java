@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/alarm")
+@RequestMapping("/notice-service/v1/alarm")
 public class AlarmController {
 
     private final SimpMessageSendingOperations messagingTemplate;

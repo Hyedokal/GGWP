@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("v1/league")
+@RequestMapping("/search-service/v1/league")
 @RequiredArgsConstructor
 @Tag(name = "League", description = "League API")
 public class LeagueController {
