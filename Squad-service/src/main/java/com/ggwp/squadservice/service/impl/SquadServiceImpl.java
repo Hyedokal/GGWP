@@ -108,7 +108,7 @@ public class SquadServiceImpl implements SquadService {
     //게시글 전체 조회하기
     @Transactional(readOnly = true) //TODO: 내림차순은 완료. 몇 개까지 가져올 건지?
     public List<ResponseSquadDto> getAllSquad() {
-        List<Squad> squadList = squadRepository.findAllOrderByCreatedAtDesc();
+        List<Squad> squadList = squadRepository.findAllByOutdatedFalseAndOrderBySIdDesc();
         return squadList.stream()
                 .map(ResponseSquadDto::fromEntity)
                 .toList();

@@ -51,6 +51,9 @@ public class Squad {
     @Column(columnDefinition = "varchar(100)", nullable = false)
     private String memo;
 
+    @Column(columnDefinition = "BIT(1) DEFAULT 0", nullable = false)
+    private boolean outdated;
+
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
     private Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
