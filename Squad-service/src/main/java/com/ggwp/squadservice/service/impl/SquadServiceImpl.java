@@ -2,10 +2,8 @@ package com.ggwp.squadservice.service.impl;
 
 import com.ggwp.squadservice.domain.QSquad;
 import com.ggwp.squadservice.domain.Squad;
-import com.ggwp.squadservice.dto.request.RequestCommentPageDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
-import com.ggwp.squadservice.dto.response.ResponseCommentDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
 import com.ggwp.squadservice.dto.response.riotapi.LeagueEntryDTO;
 import com.ggwp.squadservice.enums.Position;
@@ -146,13 +144,7 @@ public class SquadServiceImpl implements SquadService {
     public ResponseSquadDto getOneSquad(Long sId) {
         Squad squad = squadRepository.findById(sId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.SQUAD_ID_NOT_FOUND));
-        ResponseSquadDto dto = ResponseSquadDto.fromEntity(squad);
-        //Feign으로 댓글 리스트 가져오기
-        RequestCommentPageDto.Search search = new RequestCommentPageDto.Search();
-        search.setSId(sId);
-        Page<ResponseCommentDto> comments = commentFeignClient.getPagedComment(search);
-        dto.setCommentList(comments);
-        return dto;
+        return ResponseSquadDto.fromEntity(squad);
     }
 
     //게시글 필터 별 조회하기

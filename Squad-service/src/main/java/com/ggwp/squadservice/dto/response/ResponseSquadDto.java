@@ -21,7 +21,7 @@ public class ResponseSquadDto {
     private String tagLine;
     private String rank;
     private String memo;
-    private Page<ResponseCommentDto> commentList;
+    private Page<ResponseCommentDto> commentPage;
     private Timestamp updatedAt;
 
     public static ResponseSquadDto fromEntity(Squad squad) {
