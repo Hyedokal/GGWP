@@ -62,6 +62,7 @@ public class League {
     public void updateLeague(CreateLeagueDto createLeagueDto) {
         this.leagueId = createLeagueDto.getLeagueId();
         this.leaguePoints = createLeagueDto.getLeaguePoints();
+        this.queueType = createLeagueDto.getQueueType();
         this.wins = createLeagueDto.getWins();
         this.losses = createLeagueDto.getLosses();
         this.ranks = createLeagueDto.getRank();

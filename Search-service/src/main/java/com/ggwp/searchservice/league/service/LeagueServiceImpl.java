@@ -41,19 +41,19 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     @Override
-    @Transactional
     public List<League> createLeague(Summoner summoner) {
         List<League> leagueList = new ArrayList<>();
         List<CreateLeagueDto> leagueDtoList = leagueFeign(summoner);
-
         for (CreateLeagueDto createLeagueDto : leagueDtoList) {
+            if (createLeagueDto.getLeagueId() == null) {
+                break; // CHERRY -> 아레나 모드도 전적에 담김. https://github.com/RiotGames/developer-relations/issues/861
+            }
             leagueList.add(leagueRepository.save(leaguetoEntity(createLeagueDto, summoner)));
         }
         return leagueList;
     }
 
     @Override
-    @Transactional
     public void updateLeagues(Summoner summoner) {
         List<League> leagueList = findLeagues(summoner);
         List<CreateLeagueDto> leagueDtoList = leagueFeign(summoner);
@@ -62,6 +62,11 @@ public class LeagueServiceImpl implements LeagueService {
             for (CreateLeagueDto createLeagueDto : leagueDtoList) {
                 if (createLeagueDto.getQueueType().equals(league.getQueueType())) {
                     league.updateLeague(createLeagueDto);
+                } else {
+                    if (createLeagueDto.getLeagueId() == null) {
+                        break; // CHERRY -> 아레나 모드도 전적에 담김. https://github.com/RiotGames/developer-relations/issues/861
+                    }
+                    leagueRepository.save(leaguetoEntity(createLeagueDto, summoner));
                 }
             }
         }

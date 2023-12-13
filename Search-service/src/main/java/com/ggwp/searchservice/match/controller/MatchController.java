@@ -22,7 +22,7 @@ public class MatchController {
 
     private final MatchServiceImpl matchService;
 
-    @PostMapping("/create") // 매치 5개 api 불러와서 저장
+    @PostMapping("/create") // 매치 5개 api 불러와서 저장 (예시: 엘리스바이 KR1)
     public ResponseDto<String> createMatch(@Valid @RequestBody FrontDto frontDto) throws InterruptedException {
         matchService.createMatches(frontDto);
         return ResponseDto.success("Create Matches!");

@@ -6,10 +6,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "sqaud-service",url = "http://localhost:8002/v1/squads")
+@FeignClient(name = "sqaud-service")
 public interface NoticeToSquadFeign {
 
-    @GetMapping("/{sId}") // commentId를 통해 커멘트 가져오기
+    @GetMapping("/v1/squads/{sId}") // commentId를 통해 커멘트 가져오기
     ResponseSquadDto getOneSquad(@PathVariable Long sId);
 }
 

@@ -33,8 +33,8 @@ public class Account {
     @JoinColumn(name = "summoner_id")
     private Summoner summoner;
 
-    @Version
-    private int version;
+//    @Version
+//    private int version;
 
     public void updateAccount(FeignAccountDto accountDto) {
         this.gameName = accountDto.getGameName();

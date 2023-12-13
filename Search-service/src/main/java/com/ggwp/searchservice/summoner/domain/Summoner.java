@@ -48,8 +48,8 @@ public class Summoner {
     @Column(nullable = false)
     private int summonerLevel; // 소환사 레벨
 
-    @Version
-    private int version;
+//    @Version
+//    private int version;
 
     // 리그 연결 일대다 ( 소환사 1 : 리그 2)
     @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

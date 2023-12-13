@@ -36,7 +36,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     public void createNotice(RequestFeignDto requestFeignDto){
         ResponseCommentDto responseCommentDto = commentFeign.getComment(requestFeignDto.getCId());
-        ResponseSquadDto responseSquadDto = squadFeign.getOneSquad(requestFeignDto.getSId());
+        ResponseSquadDto responseSquadDto = squadFeign.getOneSquad(responseCommentDto.getSId());
         Notice notice = Notice.builder()
                 .senderName(responseSquadDto.getSummonerName())
                 .senderTag(responseSquadDto.getTagLine())

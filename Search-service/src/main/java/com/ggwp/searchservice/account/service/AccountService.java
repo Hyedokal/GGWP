@@ -12,10 +12,12 @@ public interface AccountService {
 
     String existAccount(FrontDto frontDto);
 
-    Account createAccount(CreateAccountDto createAccountDto, Summoner summoner);
+    ResponseAccountDto createAccount(CreateAccountDto createAccountDto, Summoner summoner);
 
     Account findAccount(FrontDto frontDto);
 
     ResponseAccountDto getAccount(FrontDto frontDto);
+
+    Account responseToEntity(ResponseAccountDto accountDto);
 
 }

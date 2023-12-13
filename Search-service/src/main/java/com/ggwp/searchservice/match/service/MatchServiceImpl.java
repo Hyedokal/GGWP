@@ -252,8 +252,10 @@ public class MatchServiceImpl implements MatchService {
                 // 소환사가 없으면 새로운 소환사 생성
                 Summoner newSummoner = summonertoEntity(createSummonerDto);
                 summonerService.saveSummoner(newSummoner); // 저장
-                newSummoner.addAccount(accountService.createAccount(createAccountDto, newSummoner)); // Account 생성 및 연관 매핑
                 newSummoner.addLeagues(leagueService.createLeague(newSummoner)); // League 생성 및 연관 매핑
+                ResponseAccountDto accountDto = accountService.createAccount(createAccountDto, newSummoner);
+                newSummoner.updateSummoner(createSummonerDto, accountDto);
+                newSummoner.addAccount(accountService.responseToEntity(accountDto)); // Account 생성 및 연관 매핑
                 summonerList.add(newSummoner);
             }
         }

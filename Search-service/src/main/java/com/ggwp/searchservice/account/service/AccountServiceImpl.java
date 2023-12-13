@@ -43,11 +43,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Account createAccount(CreateAccountDto createAccountDto, Summoner summoner) {
+    public ResponseAccountDto createAccount(CreateAccountDto createAccountDto, Summoner summoner) {
         Account account = accountToEntity(createAccountDto, summoner);
+        account.updateAccount(feignAccountByPuuid(createAccountDto));
         accountRepository.save(account);
         System.out.println("Account 생성!");
-        return account;
+        return acccountToDto(account);
     }
 
     private FeignAccountDto feignAccountByNameAndTag(FrontDto frontDto) { // 롤 API Feign
@@ -96,12 +97,20 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    public Account responseToEntity(ResponseAccountDto accountDto) {
+        return Account.builder()
+                .gameName(accountDto.getGameName())
+                .puuid(accountDto.getPuuid())
+                .tagLine(accountDto.getTagLine())
+                .build();
+    }
 
     @Override
     @Transactional
     public ResponseAccountDto updateAccount(CreateAccountDto createAccountDto) {
         Account account = findAccountByPuuid(createAccountDto);
         account.updateAccount(feignAccountByPuuid(createAccountDto));
+        accountRepository.save(account);
         return acccountToDto(account);
     }
 
