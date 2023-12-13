@@ -1,15 +1,13 @@
-import ResponseDto from "../index";
-
-export default interface SquadResponseDto extends ResponseDto {
+export interface BoardListResponseDto {
     myPos: string;
     wantPos: string;
     useMic: boolean;
     summonerName: string;
-    tagLine: string | null;
+    tag_line: string | null;
     rank: string;
     memo: string;
     commentList: any[] | null;
     updatedAt: string;
-    qType: string;
-    sId: number;
+    qtype: string;
+    sid: number;
 }

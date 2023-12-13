@@ -2,7 +2,8 @@ export default interface SquadRequestDto {
     myPos: string;
     wantPos: string;
     qType: string;
-    sMic: boolean;
+    useMic: boolean;
     summonerName: string;
-    sMemo: string;
+    tag_line : string;
+    memo: string;
 }

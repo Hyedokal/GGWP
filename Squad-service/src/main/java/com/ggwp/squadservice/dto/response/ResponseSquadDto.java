@@ -18,7 +18,7 @@ public class ResponseSquadDto {
     private QType qType;
     private Boolean useMic;
     private String summonerName;
-    private String tagLine;
+    private String tag_line;
     private String rank;
     private String memo;
     private Page<ResponseCommentDto> commentPage;
@@ -32,6 +32,7 @@ public class ResponseSquadDto {
                 .setQType(squad.getQType())
                 .setUseMic(squad.isUseMic())
                 .setSummonerName(squad.getSummonerName())
+                .setTag_line(squad.getTag_line())
                 .setRank(squad.getSummonerRank())
                 .setMemo(squad.getMemo())
                 .setUpdatedAt(squad.getUpdatedAt());

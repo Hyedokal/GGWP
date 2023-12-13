@@ -11,7 +11,6 @@ public class RequestCommentPageDto {
                 .setPage(page)
                 .setSize(size);
     }
-
     @Data
     @Accessors(chain = true)
     public static class Search {

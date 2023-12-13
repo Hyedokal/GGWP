@@ -68,6 +68,7 @@ function App() {
           <Route path={USER_PATH} element={<User />} />
           <Route path={MATCH_PATH} element={<Match/>}/>
           <Route path='/test' element={<Test/>} />
+          <Route path='/test' element={<Test/>} />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>

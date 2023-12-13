@@ -15,7 +15,7 @@ spring:
     show-sql: true
 
   profiles:
-    include: db
+    include: db,lol
 
 eureka:
   client:
@@ -27,6 +27,6 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 
-apiKey: RGAPI-0f4fe136-e32e-45ba-9803-bab36b0612b6
+apiKey: ${lol}
 server:
   port: 0
