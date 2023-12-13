@@ -94,7 +94,6 @@ export default function User() {
                     <div className="mt-8 bg-teal-300 dark:bg-teal-700 rounded-lg p-4">
                         <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">성격:</div>
                         <ViewPersonalities/>
-                        <div className="mt-2 text-lg font-bold text-gray-900 dark:text-gray-100"># 창의적, #적극적, #친절함</div>
                     </div>
                     <RequestSender/>
 

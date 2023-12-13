@@ -37,7 +37,7 @@ const ViewPersonalities: React.FC = () => {
         <div>
             <ul>
                 {personalities.map((personality, index) => (
-                    <li key={index}>{personality}</li>
+                    <li className="mt-2 text-lg font-bold text-gray-900 dark:text-gray-100" key={index}>#{personality}</li>
                 ))}
             </ul>
         </div>
