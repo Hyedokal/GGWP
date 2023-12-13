@@ -31,7 +31,7 @@ public class RequestCommentDto {
     public String summonerName;
 
     @NotBlank(message = "Riot 태그를 반드시 입력해야 합니다.")
-    public String tagLine;
+    public String tag_line;
 
     @Length(max = 100, message = "댓글은 최대 100자까지 작성할 수 있습니다.")
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
@@ -41,6 +41,6 @@ public class RequestCommentDto {
 
     public Comment toEntity() {
         return Comment.create(this.sId, this.myPos, this.qType, this.useMic,
-                this.summonerName, this.tagLine, this.memo, this.summonerRank);
+                this.summonerName, this.tag_line, this.memo, this.summonerRank);
     }
 }

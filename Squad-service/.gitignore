@@ -38,3 +38,4 @@ out/
 ### profile file
 application-db.yml
 application-api.yml
+application-lol .yml

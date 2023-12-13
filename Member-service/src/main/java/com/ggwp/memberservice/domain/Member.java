@@ -2,12 +2,14 @@ package com.ggwp.memberservice.domain;
 
 
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
+import com.ggwp.memberservice.dto.request.user.PatchTag;
 import jakarta.persistence.*;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -34,13 +36,18 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Boolean agreedPersonal;
 
-    // mhlee :: 어디에 어떤 용도로 사용하는 값일까??
     @Column(unique = true)
     private String uuid; //이 필드가 유일한 값임을 보장
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(16)", nullable = false)
     private UserRole role;
+
+
+    @ElementCollection
+    @CollectionTable(name = "member_personalities", joinColumns = @JoinColumn(name = "member_id"))
+    @Column(name = "personality")
+    private List<String> personalities;
 
     @Builder
     public Member(Long id, String email, String password, String lolNickname,
@@ -67,5 +74,15 @@ public class Member extends BaseEntity {
 
     public void patchLolNickName(PatchLolNickNameRequestDto dto) {
         this.lolNickname = dto.getLolNickName();
+    }
+
+
+    public void patchTag(PatchTag patchTagDto) {
+        this.tag = patchTagDto.getTag();
+
+    }
+
+    public void setPersonalities(List<String> personalities) {
+        this.personalities = personalities;
     }
 }

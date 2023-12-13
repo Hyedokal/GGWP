@@ -2,9 +2,9 @@ package com.ggwp.memberservice.controller;
 
 
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
-import com.ggwp.memberservice.dto.response.user.GetSignInUserResponseDto;
-import com.ggwp.memberservice.dto.response.user.GetUserResponseDto;
-import com.ggwp.memberservice.dto.response.user.PatchLolNickNameResponseDto;
+import com.ggwp.memberservice.dto.request.user.PatchTag;
+import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
+import com.ggwp.memberservice.dto.response.user.*;
 import com.ggwp.memberservice.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +49,27 @@ public class MemberApiController {
         return response;
     }
 
+    //tag를 변경하는 메서드
+    @PatchMapping("/tag")
+    public ResponseEntity<String> patchTag(@RequestBody PatchTag patchTagDto, @AuthenticationPrincipal String uuid) {
+
+        memberService.patchTag(uuid, patchTagDto);
+        return ResponseEntity.ok().body("Modified Successfully");
+
+    }
+        @PostMapping("/personalities")
+    public ResponseEntity<? super PersonalitiesResponseDto> addMemberPersonalities(
+            @RequestBody @Valid PersonalitiesRequestDto requestBody,
+            @AuthenticationPrincipal String uuid
+    ){
+        ResponseEntity<? super PersonalitiesResponseDto> response = memberService.addPersonalities(uuid, requestBody);
+        return response;
+    }
+
+
+    @GetMapping("/personalities")
+    public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(@AuthenticationPrincipal String uuid) {
+        return memberService.getPersonalities(uuid);
+    }
 }
 
