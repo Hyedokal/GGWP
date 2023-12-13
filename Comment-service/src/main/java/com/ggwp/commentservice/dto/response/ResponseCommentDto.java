@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class ResponseCommentDto {
+    private Long sId;
 
     private Position myPos;
 
@@ -23,6 +24,7 @@ public class ResponseCommentDto {
 
     public static ResponseCommentDto fromEntity(Comment comment) {
         return new ResponseCommentDto()
+                .setSId(comment.getSId())
                 .setMyPos(comment.getMyPos())
                 .setUseMic(comment.isUseMic())
                 .setSummonerName(comment.getSummonerName())

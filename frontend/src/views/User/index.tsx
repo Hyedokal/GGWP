@@ -2,6 +2,8 @@ import {useCookies} from "react-cookie";
 import UserInfoStore from "../../stores/userInfo.store";
 import {useState} from "react";
 import {patchLolNicknameRequest} from "../../apis";
+import RequestSender from "./personalities/personalitiesSend";
+import ViewPersonalities from "./personalities/ViewPersonalities";
 
 
 export default function User() {
@@ -87,11 +89,15 @@ export default function User() {
                             )}
                         </div>
                         <div className="mt-2 text-lg font-bold text-gray-900 dark:text-gray-100">태그:</div>
+
                     </div>
                     <div className="mt-8 bg-teal-300 dark:bg-teal-700 rounded-lg p-4">
                         <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">성격:</div>
+                        <ViewPersonalities/>
                         <div className="mt-2 text-lg font-bold text-gray-900 dark:text-gray-100"># 창의적, #적극적, #친절함</div>
                     </div>
+                    <RequestSender/>
+
                 </div>
                 <div className="w-3/4 p-8">
                     <div className="grid grid-cols-1 gap-4 font-bold text-lg text-purple-600">

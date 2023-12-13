@@ -17,7 +17,11 @@ public class CommentController {
 
     private final CommentService commentService;
 
-
+    //health check
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Comment-service is available");
+    }
     //게시글별 댓글 페이징처리하여 가져오는 메서드
     @PostMapping("/search")
     public ResponseEntity<Page<ResponseCommentDto>> getPagedComment(@RequestBody RequestPageDto.Search dto) {

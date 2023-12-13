@@ -1,11 +1,15 @@
 package com.ggwp.squadservice.controller;
 
+import com.ggwp.squadservice.dto.request.RequestCommentPageDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
+import com.ggwp.squadservice.dto.response.ResponseCommentDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
 import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
+import com.ggwp.squadservice.feign.CommentFeignClient;
 import com.ggwp.squadservice.service.SquadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,7 @@ import java.util.List;
 public class SquadController {
 
     private final SquadService squadService;
+    private final CommentFeignClient commentFeignClient;
 
     //헬스 체크
     @GetMapping("/health")
@@ -35,10 +40,16 @@ public class SquadController {
 
     //게시글 하나 가져오는 메서드
     @GetMapping("/{sId}")
-    public ResponseEntity<ResponseSquadDto> getOneSquad(@PathVariable Long sId) {
-        ResponseSquadDto dto = squadService.getOneSquad(sId);
-        return ResponseEntity.ok().body(dto);
-    }
+        public ResponseEntity<ResponseSquadDto> getOneSquad(@PathVariable Long sId,
+        @RequestParam int page) {
+            ResponseSquadDto dto = squadService.getOneSquad(sId);
+            RequestCommentPageDto.Search search = new RequestCommentPageDto.Search().setSId(sId)
+                    .setPage(page);
+            Page<ResponseCommentDto> comments = commentFeignClient.getPagedComment(search);
+            dto.setCommentPage(comments);
+
+            return ResponseEntity.ok().body(dto);
+        }
 
     //게시글 작성하는 메서드
     @PostMapping

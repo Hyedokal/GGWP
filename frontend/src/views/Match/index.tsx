@@ -27,7 +27,7 @@
 
         const openViewModal = async (sid: number) => {
             try {
-                const response = await axios.get(`http://localhost:8000/v1/squads/${sid}`);
+                const response = await axios.get(`http://localhost:8000/v1/squads/${sid}?page=0`);
                 setViewablePost(response.data);
                 setViewModalOpen(true);
             } catch (error) {
@@ -38,12 +38,19 @@
 
 
         const handleDeleteClick = async (sid: number) => {
-            try {
-                await axios.delete(`http://localhost:8000/v1/squads/${sid}`);
-                refreshList(); // Refresh the list after successful deletion
-            } catch (error) {
-                console.error('Error deleting squad:', error);
-                // Handle error here
+            // 사용자에게 삭제를 확인하는 메시지를 표시
+            const isConfirmed = window.confirm('해당 항목을 삭제하시겠습니까');
+
+            // 사용자가 '확인'을 클릭했을 경우에만 삭제 진행
+            if (isConfirmed) {
+                try {
+                    await axios.delete(`http://localhost:8000/v1/squads/${sid}`);
+                    setViewablePost(null); // 삭제 후 viewablePost를 null로 설정
+                    refreshList(); // 성공적으로 삭제된 후 목록을 새로고침
+                } catch (error) {
+                    console.error('Error deleting squad:', error);
+                    // 오류 처리
+                }
             }
         };
         const refreshList = async () => {

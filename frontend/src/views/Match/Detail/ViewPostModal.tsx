@@ -1,13 +1,17 @@
 // ViewPostModal.tsx
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {BoardListResponseDto} from "../BoardListResponseDto";
+import CommentSection from "./comment/CommentSection";
+
 
 interface ViewPostModalProps {
     post: BoardListResponseDto;
     onClose: () => void;
 }
 
+
 const ViewPostModal: React.FC<ViewPostModalProps> = ({ post, onClose }) => {
+
     return (
         <div  className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center font-black">
             <div>
@@ -70,10 +74,12 @@ const ViewPostModal: React.FC<ViewPostModalProps> = ({ post, onClose }) => {
                         </div>
                         <div className="py-4 bg-[#2b3442] rounded-lg mx-4">
                             <h2 className="text-lg mb-4 font-bold text-white">메모</h2>
-                            <p className="text-sm text-white">{post.memo}</p>
+                            <p className="text-sm text-white">{post.memo}
+                            </p>
                         </div>
                         <div className="mb-10">
                         </div>
+                        <CommentSection sId={post.sid} />
 
                         <div className="flex justify-end">
                             <button className="text-sm bg-[#3a4253] px-2 py-1 rounded" onClick={onClose}>Close</button>
@@ -82,6 +88,7 @@ const ViewPostModal: React.FC<ViewPostModalProps> = ({ post, onClose }) => {
                 </div>
             </div>
         </div>
+
 
     );
 };
