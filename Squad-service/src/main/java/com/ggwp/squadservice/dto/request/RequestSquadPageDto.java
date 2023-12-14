@@ -8,6 +8,7 @@ public class RequestSquadPageDto {
     @Accessors(chain = true)
     public static class Search {
         private boolean outdated = false;
+        private boolean approved = false;
         private int page = 0;
         private int size = 15;
     }

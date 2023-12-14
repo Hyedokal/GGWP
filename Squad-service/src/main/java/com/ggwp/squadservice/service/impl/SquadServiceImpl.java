@@ -11,7 +11,6 @@ import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.enums.RomanNum;
 import com.ggwp.squadservice.enums.Tier;
 import com.ggwp.squadservice.exception.ErrorMsg;
-import com.ggwp.squadservice.feign.CommentFeignClient;
 import com.ggwp.squadservice.feign.RiotFeignClient;
 import com.ggwp.squadservice.repository.SquadRepository;
 import com.ggwp.squadservice.service.SquadService;
@@ -39,7 +38,6 @@ import java.util.*;
 public class SquadServiceImpl implements SquadService {
 
     private final SquadRepository squadRepository;
-    private final CommentFeignClient commentFeignClient;
     private final EntityManager entityManager;
     private final RiotFeignClient riotFeignClient;
 
@@ -101,6 +99,17 @@ public class SquadServiceImpl implements SquadService {
         return squadRepository.save(squad);
     }
 
+    //게시글 승인 상태 바꾸기
+    @Override
+    public Squad approveSquad(Long sId) {
+        Squad squad = squadRepository.findById(sId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.SQUAD_ID_NOT_FOUND));
+        RequestSquadDto dto = squad.toDto();
+        dto.setApproved(true);
+        squad.updateSquad(dto);
+        return squadRepository.save(squad);
+    }
+
     //게시글 삭제하기
     public void deleteSquad(Long sId) {
         Squad squad = squadRepository.findById(sId)
@@ -113,10 +122,10 @@ public class SquadServiceImpl implements SquadService {
     public Page<ResponseSquadDto> searchPagedSquad(RequestSquadPageDto.Search dto) {
         QSquad qSquad = QSquad.squad;
         BooleanBuilder where = where();
-        //outdated == false 조건을 추가
-        if (!dto.isOutdated()) {
-            where.and(qSquad.outdated.eq(false));
-        }
+        //outdated == false && approved == false 조건을 추가
+        where.and(qSquad.outdated.eq(false));
+        where.and(qSquad.approved.eq(false));
+
         Long total = query().select(qSquad.count())
                 .from(qSquad)
                 .where(where)
@@ -146,6 +155,7 @@ public class SquadServiceImpl implements SquadService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.SQUAD_ID_NOT_FOUND));
         return ResponseSquadDto.fromEntity(squad);
     }
+
 
     //게시글 필터 별 조회하기
     @Transactional(readOnly = true)
