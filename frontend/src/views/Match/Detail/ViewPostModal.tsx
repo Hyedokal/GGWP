@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { BoardListResponseDto } from "../BoardListResponseDto";
 import CommentSection from "./comment/CommentSection";
 
@@ -8,6 +8,40 @@ interface ViewPostModalProps {
 }
 
 const ViewPostModal: React.FC<ViewPostModalProps> = ({ post, onClose }) => {
+
+    // Form state
+    const [formData, setFormData] = useState({
+        sId: 30,
+        myPos: "",
+        qType: "",
+        useMic: true,
+        summonerName: "",
+        tag_line: "",
+        memo: ""
+    });
+
+    // Function to handle form submission
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/v1/comments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Handle the response here
+            console.log('Post created successfully');
+        } catch (error) {
+            console.error('Error while creating post:', error);
+        }
+    };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center font-black">
             <div>
@@ -71,8 +105,11 @@ const ViewPostModal: React.FC<ViewPostModalProps> = ({ post, onClose }) => {
                         <div className="mb-10"></div>
                         <CommentSection sId={post.sid} />
                         <div className="flex justify-end">
+                            <button className="text-sm bg-[#3a4253] px-2 py-1 rounded mr-25" onClick={handleSubmit}>Create Post</button>
+
                             <button className="text-sm bg-[#3a4253] px-2 py-1 rounded" onClick={onClose}>Close</button>
                         </div>
+
                     </div>
                 </div>
             </div>
