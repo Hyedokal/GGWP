@@ -26,6 +26,9 @@ public class MatchDto {
     public static class MetadataDto {
         @JsonProperty("matchId")
         private String matchId;
+
+        @JsonProperty("participants")
+        private List<String> participants;
     }
 
     @Getter

@@ -47,6 +47,9 @@ public class Match {
     private long gameStartTimestamp; // 게임 시작 시각
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Participant> participants;
+
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Team> teams;
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

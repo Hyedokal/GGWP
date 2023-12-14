@@ -151,6 +151,7 @@ public class MatchServiceImpl implements MatchService {
                 .gameDuration(info.getGameDuration())
                 .gameStartTimestamp(info.getGameStartTimestamp())
                 .gameEndTimestamp(info.getGameEndTimestamp())
+                .participants()
                 .teams(new ArrayList<>())
                 .build();
 
@@ -159,12 +160,13 @@ public class MatchServiceImpl implements MatchService {
                     Team team = teamToEntity(teamDto);
 
                     // 이 부분에서 Team에 Participant를 추가
-                    info.getParticipants().stream()
+                    List<Participant> participants = info.getParticipants().stream()
                             .filter(participantDto -> participantDto.getTeamId() == team.getTeamId())
                             .map(participantDto -> {
                                 Participant participant = participantToEntity(participantDto, team);
                                 team.addParticipant(participant);
                                 return participant;
+
                             })
                             .toList();
                     team.setMatch(match); // match 연관 매핑
@@ -174,17 +176,18 @@ public class MatchServiceImpl implements MatchService {
 
         match.addTeams(teamEntities); // team 연관 매핑
 
+
         return match;
     }
 
-    private void createMatch(String matchId) {
+    private void createMatch(String matchId) throws InterruptedException {
 
         MatchDto matchdto = getMatchToFegin(matchId);
 
         Match match = matchToEntity(matchdto);
 
         matchRepository.save(match);
-
+        Thread.sleep(1000);
         // Participant에서 소환사, Account 값 추출해서 저장
         if (matchdto.getInfo().getParticipants().isEmpty()) {
             throw new CustomException(ErrorCode.NotFindParticipants);
@@ -245,7 +248,7 @@ public class MatchServiceImpl implements MatchService {
                 // updateLeagues // 소환사가 있으면 계정이 있고, 계정이 있다는 뜻이니 업데이트
                 leagueService.updateLeagues(existingSummoner);
                 ResponseAccountDto accountDto = accountService.updateAccount(createAccountDto);
-                existingSummoner.updateSummoner(createSummonerDto, accountDto); // 소환사 레벨이라던가, 닉네임이라던가 업데이트
+                existingSummoner.updateSummoner(createSummonerDto, accountDto.getGameName()); // 소환사 레벨이라던가, 닉네임이라던가 업데이트
                 summonerService.saveSummoner(existingSummoner);
                 summonerList.add(existingSummoner);
             } else {
@@ -254,8 +257,9 @@ public class MatchServiceImpl implements MatchService {
                 summonerService.saveSummoner(newSummoner); // 저장
                 newSummoner.addLeagues(leagueService.createLeague(newSummoner)); // League 생성 및 연관 매핑
                 ResponseAccountDto accountDto = accountService.createAccount(createAccountDto, newSummoner);
-                newSummoner.updateSummoner(createSummonerDto, accountDto);
+                newSummoner.updateSummoner(createSummonerDto, accountDto.getGameName());
                 newSummoner.addAccount(accountService.responseToEntity(accountDto)); // Account 생성 및 연관 매핑
+                summonerService.saveSummoner(newSummoner);
                 summonerList.add(newSummoner);
             }
         }

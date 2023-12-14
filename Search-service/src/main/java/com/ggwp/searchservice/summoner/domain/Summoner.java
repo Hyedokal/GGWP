@@ -1,7 +1,6 @@
 package com.ggwp.searchservice.summoner.domain;
 
 import com.ggwp.searchservice.account.domain.Account;
-import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.match.domain.MatchSummoner;
 import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
@@ -87,8 +86,8 @@ public class Summoner {
         this.leagues.addAll(leagueList);
     }
 
-    public void updateSummoner(CreateSummonerDto createSummonerDto, ResponseAccountDto accountDto) {
-        this.name = accountDto.getGameName();
+    public void updateSummoner(CreateSummonerDto createSummonerDto, String gameName) {
+        this.name = gameName;
         this.profileIconId = createSummonerDto.getProfileIconId();
         this.puuid = createSummonerDto.getPuuid();
         this.revisionDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli(); // 업데이트
