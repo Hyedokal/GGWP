@@ -7,13 +7,15 @@ import com.ggwp.commentservice.dto.response.ResponseCommentDto;
 import org.springframework.data.domain.Page;
 
 public interface CommentService {
-    public Comment writeComment(RequestCommentDto dto);
+    Comment writeComment(RequestCommentDto dto);
 
-    public Comment editComment(Long cId, RequestCommentDto dto);
+    Comment editComment(Long cId, RequestCommentDto dto);
 
-    public void deleteComment(Long cId);
+    void deleteComment(Long cId);
 
-    public ResponseCommentDto getOneComment(Long cId);
+    ResponseCommentDto getOneComment(Long cId);
 
     Page<ResponseCommentDto> searchPagedComment(RequestPageDto.Search dto);
+
+    Comment approveComment(Long cId);
 }

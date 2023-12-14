@@ -44,13 +44,16 @@ public class Comment {
     private String summonerName;
 
     @Column(nullable = false)
-    private String tag_line;
+    private String tagLine;
 
     @Column(name = "summoner_rank", nullable = false)
     private String summonerRank;
 
     @Column(columnDefinition = "varchar(100)", nullable = false)
     private String memo;
+
+    @Column(columnDefinition = "BIT(1)", nullable = false)
+    private boolean approved = false;
 
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
@@ -62,16 +65,17 @@ public class Comment {
 
     //생성자 호출을 대신할 정적 메서드 선언
     public static Comment create(Long sId, Position myPos, QType qType, boolean useMic,
-                                 String summonerName, String tag_line, String cMemo, String rank) {
+                                 String summonerName, String tagLine, String memo, String rank, boolean approved) {
         return new Comment()
                 .setSId(sId)
                 .setMyPos(myPos)
                 .setQType(qType)
                 .setUseMic(useMic)
                 .setSummonerName(summonerName)
-                .setTag_line(tag_line)
+                .setTagLine(tagLine)
                 .setSummonerRank(rank)
-                .setMemo(cMemo)
+                .setMemo(memo)
+                .setApproved(approved)
                 .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
     }
@@ -82,5 +86,18 @@ public class Comment {
         this.memo = dto.getMemo();
         this.useMic = dto.isUseMic();
         this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    public RequestCommentDto toDto() {
+        return new RequestCommentDto()
+                .setSId(this.sId)
+                .setMyPos(this.myPos)
+                .setQType(this.qType)
+                .setUseMic(this.useMic)
+                .setSummonerName(this.summonerName)
+                .setTagLine(this.tagLine)
+                .setMemo(this.memo)
+                .setSummonerRank(this.summonerRank)
+                .setApproved(this.approved);
     }
 }

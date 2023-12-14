@@ -105,18 +105,22 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.delete(comment);
     }
 
-    //게시글에 달린 댓글 목록 조회하기
-    @Transactional(readOnly = true)
-    public List<ResponseCommentDto> getCommentList(Long sId) {
-        List<Comment> commentList = commentRepository.findAllBysId(sId);
-        return commentList.stream().map(ResponseCommentDto::fromEntity).toList();
-    }
 
     //댓글 상세 조회하기
     public ResponseCommentDto getOneComment(Long cId) {
         Comment comment = commentRepository.findById(cId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.COMMENT_NOT_FOUND));
         return ResponseCommentDto.fromEntity(comment);
+    }
+
+    //댓글 승인 버튼 눌렀을 때의 로직
+    public Comment approveComment(Long cId) {
+        Comment comment = commentRepository.findById(cId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.COMMENT_NOT_FOUND));
+        RequestCommentDto dto = comment.toDto();
+        dto.setApproved(true);
+        comment.updateComment(dto);
+        return commentRepository.save(comment);
     }
 
     public Page<ResponseCommentDto> searchPagedComment(RequestPageDto.Search dto) {
