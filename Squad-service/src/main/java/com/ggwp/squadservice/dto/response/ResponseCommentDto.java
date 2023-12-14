@@ -20,4 +20,5 @@ public class ResponseCommentDto {
     private String memo;
 
     private String summonerRank;
+
 }
