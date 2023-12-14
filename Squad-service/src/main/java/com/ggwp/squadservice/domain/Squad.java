@@ -87,6 +87,7 @@ public class Squad {
         this.qType = dto.getQType();
         this.useMic = dto.isUseMic();
         this.memo = dto.getMemo();
+        this.approved = dto.isApproved();
         this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 

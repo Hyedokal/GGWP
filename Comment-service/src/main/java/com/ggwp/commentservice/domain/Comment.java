@@ -83,8 +83,10 @@ public class Comment {
     //엔티티 수정을 위한 메서드
     public void updateComment(RequestCommentDto dto) {
         this.myPos = dto.getMyPos();
+        this.qType = dto.getQType();
         this.memo = dto.getMemo();
         this.useMic = dto.isUseMic();
+        this.approved = dto.isApproved();
         this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 
