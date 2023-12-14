@@ -6,7 +6,6 @@ import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.account.service.AccountService;
 import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.enums.GameMode;
-import com.ggwp.searchservice.common.enums.RuneEnums;
 import com.ggwp.searchservice.common.exception.CustomException;
 import com.ggwp.searchservice.common.exception.ErrorCode;
 import com.ggwp.searchservice.league.service.LeagueService;
@@ -19,6 +18,7 @@ import com.ggwp.searchservice.match.feign.LoLToMatchFeign;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
 import com.ggwp.searchservice.summoner.service.SummonerService;
+import com.google.gson.Gson;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -151,43 +151,38 @@ public class MatchServiceImpl implements MatchService {
                 .gameDuration(info.getGameDuration())
                 .gameStartTimestamp(info.getGameStartTimestamp())
                 .gameEndTimestamp(info.getGameEndTimestamp())
-                .participants()
+                .participants(new ArrayList<>())
                 .teams(new ArrayList<>())
                 .build();
 
         List<Team> teamEntities = info.getTeams().stream()
                 .map(teamDto -> {
                     Team team = teamToEntity(teamDto);
-
-                    // 이 부분에서 Team에 Participant를 추가
                     List<Participant> participants = info.getParticipants().stream()
                             .filter(participantDto -> participantDto.getTeamId() == team.getTeamId())
-                            .map(participantDto -> {
-                                Participant participant = participantToEntity(participantDto, team);
-                                team.addParticipant(participant);
-                                return participant;
-
-                            })
+                            .map(participantDto -> participantToEntity(participantDto, team, match))
                             .toList();
-                    team.setMatch(match); // match 연관 매핑
+                    // 참가자 연관 매핑
+                    team.addParticipants(participants);
+                    match.addParticipants(participants);
+                    // 팀과 매치 연관 매핑
+                    team.setMatch(match);
                     return team;
                 })
                 .toList();
 
         match.addTeams(teamEntities); // team 연관 매핑
 
-
         return match;
     }
 
-    private void createMatch(String matchId) throws InterruptedException {
+    private void createMatch(String matchId) {
 
         MatchDto matchdto = getMatchToFegin(matchId);
 
         Match match = matchToEntity(matchdto);
 
         matchRepository.save(match);
-        Thread.sleep(1000);
         // Participant에서 소환사, Account 값 추출해서 저장
         if (matchdto.getInfo().getParticipants().isEmpty()) {
             throw new CustomException(ErrorCode.NotFindParticipants);
@@ -220,7 +215,7 @@ public class MatchServiceImpl implements MatchService {
     private CreateAccountDto createAccountDto(MatchDto.ParticipantDto participantDto) { // Account를 생성하는 DTO
         return CreateAccountDto.builder()
                 .puuid(participantDto.getPuuid())
-                .gameName(participantDto.getSummonerName())
+                .gameName(participantDto.getRiotIdName())
                 .tagLine(participantDto.getRiotIdTagline())
                 .build();
     }
@@ -235,7 +230,7 @@ public class MatchServiceImpl implements MatchService {
                 .summonerLevel(createSummonerDto.getSummonerLevel())
                 .build();
     }
-
+    
     private List<Summoner> extractParticipantList(List<MatchDto.ParticipantDto> participantDtoList) { //Participant를 추출하여 Summoner와 Account를 추출 하여 저장
         List<Summoner> summonerList = new ArrayList<>();
 
@@ -243,16 +238,16 @@ public class MatchServiceImpl implements MatchService {
             CreateSummonerDto createSummonerDto = createSummonerDto(participantDto);
             CreateAccountDto createAccountDto = createAccountDto(participantDto);
 
+            // 업데이트만 한다.
             if (summonerService.existSummoner(createSummonerDto)) { // 소환사가 있으면 업데이트
                 Summoner existingSummoner = summonerService.findSummonerByPuuid(createSummonerDto);
                 // updateLeagues // 소환사가 있으면 계정이 있고, 계정이 있다는 뜻이니 업데이트
-                leagueService.updateLeagues(existingSummoner);
                 ResponseAccountDto accountDto = accountService.updateAccount(createAccountDto);
                 existingSummoner.updateSummoner(createSummonerDto, accountDto.getGameName()); // 소환사 레벨이라던가, 닉네임이라던가 업데이트
                 summonerService.saveSummoner(existingSummoner);
                 summonerList.add(existingSummoner);
             } else {
-                // 소환사가 없으면 새로운 소환사 생성
+                // 생성한다.
                 Summoner newSummoner = summonertoEntity(createSummonerDto);
                 summonerService.saveSummoner(newSummoner); // 저장
                 newSummoner.addLeagues(leagueService.createLeague(newSummoner)); // League 생성 및 연관 매핑
@@ -354,15 +349,16 @@ public class MatchServiceImpl implements MatchService {
                 .build();
     }
 
-    private Participant participantToEntity(MatchDto.ParticipantDto participantDto, Team team) {
+    private Participant participantToEntity(MatchDto.ParticipantDto participantDto, Team team, Match match) {
         return Participant.builder()
                 .participantId(participantDto.getParticipantId())
-                .summonerId(participantDto.getSummonerId())
-                .profileIcon(participantDto.getProfileIcon())
-                .puuid(participantDto.getPuuid())
-                .summonerLevel(participantDto.getSummmonerLevel())
-                .summonerName(participantDto.getSummonerName())
-                .riotIdTagline(participantDto.getRiotIdTagline())
+                .summonerId(participantDto.getSummonerId()) // Summoner
+                .profileIcon(participantDto.getProfileIcon()) // Summoner
+                .puuid(participantDto.getPuuid()) // Summoner // Account
+                .summonerLevel(participantDto.getSummmonerLevel()) // Summoner
+                .summonerName(participantDto.getSummonerName()) // Summoner
+                .riotIdName(participantDto.getRiotIdName()) // Account
+                .riotIdTagline(participantDto.getRiotIdTagline()) // Account
                 .kills(participantDto.getKills())
                 .assists(participantDto.getAssists())
                 .deaths(participantDto.getDeaths())
@@ -383,19 +379,43 @@ public class MatchServiceImpl implements MatchService {
                 .totalMinionsKilled(participantDto.getTotalMinionsKilled())
                 .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
                 .totalDamageTaken(participantDto.getTotalDamageTaken())
-                .primaryDescription(RuneEnums.getById(participantDto.getPerks().getStyles().get(0).getStyle()).getName())
-                .subDescription(RuneEnums.getById(participantDto.getPerks().getStyles().get(1).getStyle()).getName())
-                .primaryStyle(RuneEnums.getById(participantDto.getPerks().getStyles().get(0).getStyle()).getIcon())
-                .subStyle(RuneEnums.getById(participantDto.getPerks().getStyles().get(1).getStyle()).getIcon())
+                .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
+                .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
                 .teamPosition(participantDto.getTeamPosition())
                 .team(team)
+                .match(match)
                 .build();
     }
 
     private Team teamToEntity(MatchDto.TeamDto teamDto) {
+        List<MatchDto.BanDto> bans = teamDto.getBans();
+        List<MatchDto.ObjectivesDto> objectivesDtos = teamDto.getObjectives();
+
+        // Gson 객체 생성
+        Gson gson = new Gson();
+        String banList = gson.toJson(bans);
+
+        int teamIndex = teamDto.getTeamId() == 100 ? 0 : 1;
+        MatchDto.ObjectivesDto teamObjectives = objectivesDtos.get(teamIndex);
+
+        List<Boolean> objectFirstList = new ArrayList<>();
+        objectFirstList.add(teamObjectives.getBaron().isFirst());
+        objectFirstList.add(teamObjectives.getChampion().isFirst());
+        objectFirstList.add(teamObjectives.getDragon().isFirst());
+        objectFirstList.add(teamObjectives.getInhibitor().isFirst());
+        objectFirstList.add(teamObjectives.getTower().isFirst());
+        String objectFirst = gson.toJson(objectFirstList);
+
         return Team.builder()
-                .teamId(teamDto.getTeamId())
                 .win(teamDto.isWin())
+                .teamId(teamDto.getTeamId())
+                .baronKills(teamObjectives.getBaron().getKills())
+                .championKills(teamObjectives.getChampion().getKills())
+                .dragonKills(teamObjectives.getDragon().getKills())
+                .inhibitorKills(teamObjectives.getInhibitor().getKills())
+                .towerKills(teamObjectives.getTower().getKills())
+                .banList(banList)
+                .objectFirst(objectFirst)
                 .build();
     }
 

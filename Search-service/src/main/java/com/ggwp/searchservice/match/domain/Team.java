@@ -25,8 +25,23 @@ public class Team {
 
     @Column(nullable = false)
     private int teamId; // teamId 100 = BLUE 200 = RED
+
     @Column(nullable = false)
     private boolean win; // 승리
+
+    private int baronKills;
+
+    private int championKills;
+
+    private int dragonKills;
+
+    private int inhibitorKills;
+
+    private int towerKills;
+
+    private String objectFirst;
+
+    private String banList;
 
     @ManyToOne
     @JoinColumn(name = "match_id")
@@ -39,10 +54,10 @@ public class Team {
         this.match = match;
     }
 
-    public void addParticipant(Participant participant) {
+    public void addParticipants(List<Participant> participantList) {
         if (this.participants == null) {
             this.participants = new ArrayList<>();
         }
-        this.participants.add(participant);
+        this.participants.addAll(participantList);
     }
 }

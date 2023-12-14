@@ -2,7 +2,6 @@ package com.ggwp.searchservice.league.domain;
 
 import com.ggwp.searchservice.league.dto.CreateLeagueDto;
 import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
-import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,11 +40,6 @@ public class League {
 
     @Version
     private int version;
-
-    // 다대일 연결 ( 리그 2 : 소환사 1)
-    @ManyToOne
-    @JoinColumn(name = "summoner_id")
-    private Summoner summoner;
 
     public ResponseLeagueDto toDto(League league) {
         return ResponseLeagueDto.builder()
