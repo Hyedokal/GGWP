@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 public class ResponseCommentDto {
     private Long cId;
 
-    private Long cId;
+    private Long sId;
 
     private Position myPos;
 
