@@ -17,6 +17,5 @@ public class ResponseCommentDto {
     private String memo;
 
     private String summonerRank;
-    private Page<ResponseCommentDto> commentPage;
 
 }

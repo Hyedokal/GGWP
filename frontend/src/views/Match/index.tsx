@@ -17,35 +17,33 @@
         const openModal = () => setModalOpen(true);
         const closeModal = () => setModalOpen(false);
 
-
         const [isEditModalOpen, setEditModalOpen] = useState(false);
         const [editablePost, setEditablePost] = useState<BoardListResponseDto | null>(null);
-
 
         const [isViewModalOpen, setViewModalOpen] = useState(false);
         const [viewablePost, setViewablePost] = useState<BoardListResponseDto | null>(null);
 
-        const openViewModal = async (sid: number) => {
+        const openViewModal = async (post: BoardListResponseDto) => {
             try {
-                const response = await axios.get(`http://localhost:8000/v1/squads/${sid}?page=0`);
-                setViewablePost(response.data);
+                // Set the post data to viewablePost
+                setViewablePost(post);
+                // Open the ViewPostModal
                 setViewModalOpen(true);
             } catch (error) {
-                console.error('Error fetching post details:', error);
+                console.error('Error opening ViewPostModal:', error);
                 // Handle error
             }
         };
 
-
         const handleDeleteClick = async (sid: number) => {
             // 사용자에게 삭제를 확인하는 메시지를 표시
-            const isConfirmed = window.confirm('해당 항목을 삭제하시겠습니까');
+            const isConfirmed = window.confirm('Are you sure you want to delete?');
 
-            // 사용자가 '확인'을 클릭했을 경우에만 삭제 진행
+            // 사용자가 '확인'을 클릭했을 때만 삭제 진행
             if (isConfirmed) {
                 try {
                     await axios.delete(`http://localhost:8000/v1/squads/${sid}`);
-                    setViewablePost(null); // 삭제 후 viewablePost를 null로 설정
+                    setViewablePost(null); // Get the viewablePost null background
                     refreshList(); // 성공적으로 삭제된 후 목록을 새로고침
                 } catch (error) {
                     console.error('Error deleting squad:', error);
@@ -53,10 +51,15 @@
                 }
             }
         };
+
         const refreshList = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/v1/squads');
-                const dataWithDefaultComments = response.data.map((item: { commentList: any; }) => ({
+                const response = await axios.post('http://localhost:8000/v1/squads/search', {
+                    outdated: false,
+                    page: 0,
+                    size: 15
+                });
+                const dataWithDefaultComments = response.data.content.map((item: BoardListResponseDto) => ({
                     ...item,
                     commentList: item.commentList || [] // Ensures commentList is always an array
                 }));
@@ -65,6 +68,7 @@
                 console.error('Error fetching squads data:', error);
             }
         };
+
         const openEditModal = (post: BoardListResponseDto) => {
             setEditablePost(post);
             setEditModalOpen(true);
@@ -83,8 +87,12 @@
         useEffect(() => {
             const fetchSquads = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8000/v1/squads');
-                    const dataWithDefaultComments = response.data.map((item: { commentList: any; }) => ({
+                    const response = await axios.post('http://localhost:8000/v1/squads/search', {
+                        outdated: false,
+                        page: 0,
+                        size: 15
+                    });
+                    const dataWithDefaultComments = response.data.content.map((item: BoardListResponseDto) => ({
                         ...item,
                         commentList: item.commentList || [] // Ensures commentList is always an array
                     }));
@@ -96,13 +104,12 @@
             };
             fetchSquads(); // Call immediately on component mount
 
-
             const intervalId = setInterval(() => {
                 fetchSquads();
             }, 5000);
 
             return () => clearInterval(intervalId); //
-        }, []); // Empty dependency array ensures this effect runs once after the component mounts
+        }, []); // Empty dependency array ensures effect is only run on mount and unmount
 
         return (
             <div>
@@ -136,7 +143,7 @@
                                 </thead>
                                 <tbody className="text-[#c6cdd4]">
                                 {currentList.map((item, index) => (
-                                    <tr key={index} onClick={() => openViewModal(item.sid)}>
+                                    <tr key={index} onClick={() => openViewModal(item)}> {/* Add onClick handler */}
                                         <td className="p-4 w-1/8 ">{item.sid}</td>
                                         <td className="p-4 w-1/8">{item.summonerName}#{item.tag_line}</td>
                                         <td className="p-4 w-1/8">{item.rank}</td>
