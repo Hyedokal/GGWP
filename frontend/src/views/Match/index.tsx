@@ -14,6 +14,9 @@
 
         const [isModalOpen, setModalOpen] = useState(false);
         const [currentList, setCurrentList] = useState<BoardListResponseDto[]>([]);
+        const [currentPage, setCurrentPage] = useState(0);
+        const [loadMoreSize, setLoadMoreSize] = useState(15); // Initial size for loading more items
+
         const openModal = () => setModalOpen(true);
         const closeModal = () => setModalOpen(false);
 
@@ -22,6 +25,29 @@
 
         const [isViewModalOpen, setViewModalOpen] = useState(false);
         const [viewablePost, setViewablePost] = useState<BoardListResponseDto | null>(null);
+        const loadMorePosts = async () => {
+            try {
+                const newSize = loadMoreSize + 5; // Increment load more size by 5
+                const response = await axios.post('http://localhost:8000/v1/squads/search', {
+                    outdated: false,
+                    page: currentPage,
+                    size: newSize
+                });
+                const dataWithDefaultComments = response.data.content.map((item: BoardListResponseDto) => ({
+                    ...item,
+                    commentList: item.commentList || []
+                }));
+                setCurrentList((prevList) => {
+                    // Combine existing list with new data, avoiding duplicates
+                    const existingIds = new Set(prevList.map(item => item.sid));
+                    const newData = dataWithDefaultComments.filter((item: { sid: number; }) => !existingIds.has(item.sid));
+                    return [...prevList, ...newData];
+                });
+                setLoadMoreSize(newSize); // Update loadMoreSize state
+            } catch (error) {
+                console.error('Error fetching additional squads data:', error);
+            }
+        };
 
         const openViewModal = async (post: BoardListResponseDto) => {
             try {
@@ -172,7 +198,16 @@
                     {isViewModalOpen && viewablePost && (
                         <ViewPostModal post={viewablePost} onClose={() => setViewModalOpen(false)} />
                     )}
+                    <div className="flex justify-center my-4">
+                        <button
+                            className="text-sm bg-[#3a4253] px-2 py-1 rounded"
+                            onClick={loadMorePosts} // Update to call loadMorePosts function
+                        >
+                            Load More
+                        </button>
+                    </div>
                 </div>
+
 
             </div>
 
