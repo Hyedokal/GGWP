@@ -43,7 +43,7 @@ public class Squad {
     private String summonerName;
 
     @Column(nullable = false)
-    private String tag_line;
+    private String tagLine;
 
     @Column(name = "summoner_rank", nullable = false)
     private String summonerRank;
@@ -51,8 +51,11 @@ public class Squad {
     @Column(columnDefinition = "varchar(100)", nullable = false)
     private String memo;
 
-    @Column(columnDefinition = "BIT(1) DEFAULT 0", nullable = false)
-    private boolean outdated;
+    @Column(columnDefinition = "BIT(1)", nullable = false)
+    private boolean outdated = false;
+
+    @Column(columnDefinition = "BIT(1)", nullable = false)
+    private boolean approved = false;
 
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
@@ -63,14 +66,14 @@ public class Squad {
 
     //생성자를 담당하는 정적 메서드
     public static Squad create(Position myPos, Position wantPos, QType qType,
-                               boolean useMic, String summonerName, String tag_line, String rank, String memo) {
+                               boolean useMic, String summonerName, String tagLine, String rank, String memo) {
         return new Squad()
                 .setMyPos(myPos)
                 .setWantPos(wantPos)
                 .setQType(qType)
                 .setUseMic(useMic)
                 .setSummonerName(summonerName)
-                .setTag_line(tag_line)
+                .setTagLine(tagLine)
                 .setSummonerRank(rank)
                 .setMemo(memo)
                 .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
@@ -84,6 +87,21 @@ public class Squad {
         this.qType = dto.getQType();
         this.useMic = dto.isUseMic();
         this.memo = dto.getMemo();
+        this.approved = dto.isApproved();
         this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    public RequestSquadDto toDto() {
+        return new RequestSquadDto()
+                .setMyPos(this.myPos)
+                .setWantPos(this.wantPos)
+                .setQType(this.qType)
+                .setUseMic(this.useMic)
+                .setSummonerName(this.summonerName)
+                .setSummonerRank(this.summonerRank)
+                .setTagLine(this.tagLine)
+                .setMemo(this.memo)
+                .setApproved(this.approved)
+                .setSummonerRank(this.summonerRank);
     }
 }

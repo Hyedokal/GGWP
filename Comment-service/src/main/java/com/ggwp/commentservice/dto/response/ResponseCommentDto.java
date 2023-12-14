@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class ResponseCommentDto {
-    private Long sId;
+    private Long cId;
 
     private Long cId;
 
@@ -18,7 +18,7 @@ public class ResponseCommentDto {
 
     private String summonerName;
 
-    private String tag_line;
+    private String tagLine;
 
     private String memo;
 
@@ -26,11 +26,12 @@ public class ResponseCommentDto {
 
     public static ResponseCommentDto fromEntity(Comment comment) {
         return new ResponseCommentDto()
+                .setCId(comment.getCId())
                 .setSId(comment.getSId())
                 .setMyPos(comment.getMyPos())
                 .setUseMic(comment.isUseMic())
                 .setSummonerName(comment.getSummonerName())
-                .setTag_line(comment.getTag_line())
+                .setTagLine(comment.getTagLine())
                 .setMemo(comment.getMemo())
                 .setSummonerRank(comment.getSummonerRank());
     }
