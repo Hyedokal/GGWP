@@ -68,10 +68,20 @@ public class SquadController {
 
     //게시글 삭제하는 메서드
     @DeleteMapping("/{sId}")
-    public ResponseEntity<String> deleteAnnounce(@PathVariable Long sId) {
+    public ResponseEntity<String> deleteSquad(@PathVariable Long sId) {
         squadService.deleteSquad(sId);
         return ResponseEntity.ok().body("Deleted Successfully");
     }
+
+    //댓글 승인 상태에 따른 게시글 승인 상태 바꾸기
+    @PutMapping("/comment/approve/{cId}")
+    public ResponseEntity<String> approveSquad(@PathVariable Long cId) {
+        String body = commentFeignClient.approveComment(cId).getBody();
+        Long sId = Long.parseLong(body.split(" ")[2]);
+        squadService.approveSquad(sId);
+        return ResponseEntity.ok().body("Squad has approved successfully");
+    }
+
 
     //게시글 필터조회
     @GetMapping("/filter")

@@ -7,12 +7,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
+@NoArgsConstructor
 public class RequestCommentDto {
 
     @NotNull(message = "해당 게시글이 존재하지 않습니다.")
@@ -31,7 +33,7 @@ public class RequestCommentDto {
     public String summonerName;
 
     @NotBlank(message = "Riot 태그를 반드시 입력해야 합니다.")
-    public String tag_line;
+    public String tagLine;
 
     @Length(max = 100, message = "댓글은 최대 100자까지 작성할 수 있습니다.")
     @NotBlank(message = "내용은 반드시 작성되어야 합니다.")
@@ -39,8 +41,10 @@ public class RequestCommentDto {
 
     private String summonerRank;
 
+    private boolean approved;
+
     public Comment toEntity() {
         return Comment.create(this.sId, this.myPos, this.qType, this.useMic,
-                this.summonerName, this.tag_line, this.memo, this.summonerRank);
+                this.summonerName, this.tagLine, this.memo, this.summonerRank, this.approved);
     }
 }

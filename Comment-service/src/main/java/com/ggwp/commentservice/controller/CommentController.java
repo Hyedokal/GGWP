@@ -1,5 +1,6 @@
 package com.ggwp.commentservice.controller;
 
+import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
@@ -22,6 +23,7 @@ public class CommentController {
     public ResponseEntity<String> healthCheck() {
         return ResponseEntity.ok("Comment-service is available");
     }
+
     //게시글별 댓글 페이징처리하여 가져오는 메서드
     @PostMapping("/search")
     public ResponseEntity<Page<ResponseCommentDto>> getPagedComment(@RequestBody RequestPageDto.Search dto) {
@@ -56,4 +58,10 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getOneComment(cId));
     }
 
+    //승인 버튼 눌렀을 때 호출할 메서드
+    @PutMapping("/feign/{cId}")
+    public ResponseEntity<String> approveComment(@PathVariable Long cId) {
+        Comment comment = commentService.approveComment(cId);
+        return ResponseEntity.ok().body("Approved Successfully: " + comment.getSId());
+    }
 }

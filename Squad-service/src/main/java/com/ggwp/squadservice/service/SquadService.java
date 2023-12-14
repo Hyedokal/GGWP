@@ -25,4 +25,6 @@ public interface SquadService {
     Map<QType, String> getSummonerRank(String summonerName);
 
     Page<ResponseSquadDto> searchPagedSquad(RequestSquadPageDto.Search dto);
+
+    Squad approveSquad(Long sId);
 }
