@@ -4,7 +4,6 @@ import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.account.dto.CreateAccountDto;
 import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.common.dto.FrontDto;
-import com.ggwp.searchservice.summoner.domain.Summoner;
 
 public interface AccountService {
 
@@ -12,7 +11,7 @@ public interface AccountService {
 
     String existAccount(FrontDto frontDto);
 
-    ResponseAccountDto createAccount(CreateAccountDto createAccountDto, Summoner summoner);
+    void createAccount(CreateAccountDto createAccountDto);
 
     Account findAccount(FrontDto frontDto);
 

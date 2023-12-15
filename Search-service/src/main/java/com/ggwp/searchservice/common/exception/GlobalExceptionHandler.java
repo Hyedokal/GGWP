@@ -1,6 +1,10 @@
 package com.ggwp.searchservice.common.exception;
 
 import com.ggwp.searchservice.common.dto.ResponseDto;
+import com.ggwp.searchservice.match.service.MatchService;
+import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
+import com.ggwp.searchservice.summoner.service.SummonerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +16,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MatchService matchService;
+    private final SummonerService summonerService;
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ResponseDto.Error> handlerException(CustomException e) {
@@ -35,4 +43,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ErrorCode.NotFeginException.getHttpStatus())
                 .body(new ResponseDto.Error("Feign Exception: " + e.getFeignException().getMessage()));
     }
+
+    @ExceptionHandler(CustomException.NotFoundAccountException.class)
+    public ResponseDto<ResponseSummonerDto> handleNotFoundException(CustomException.NotFoundAccountException ex) {
+
+        matchService.createMatches(ex.getFrontDto());
+
+        return ResponseDto.success(summonerService.getSummoner(ex.getFrontDto()));
+    }
+
 }

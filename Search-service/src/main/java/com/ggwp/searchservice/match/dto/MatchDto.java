@@ -27,8 +27,6 @@ public class MatchDto {
         @JsonProperty("matchId")
         private String matchId;
 
-        @JsonProperty("participants")
-        private List<String> participants;
     }
 
     @Getter
@@ -185,7 +183,7 @@ public class MatchDto {
         @JsonProperty("bans")
         List<BanDto> bans;
         @JsonProperty("objectives")
-        List<ObjectivesDto> objectives;
+        ObjectivesDto objectives;
         @JsonProperty("teamId")
         private int teamId;
         @JsonProperty("win")

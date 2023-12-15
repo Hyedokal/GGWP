@@ -9,7 +9,6 @@ import com.ggwp.searchservice.account.repository.AccountRepository;
 import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.exception.CustomException;
 import com.ggwp.searchservice.common.exception.ErrorCode;
-import com.ggwp.searchservice.summoner.domain.Summoner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,18 +36,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findAccount(FrontDto frontDto) { // Optional Account 엔티티 찾기
         return accountRepository.findAccountByGameNameAndTagLine(frontDto.getGameName(), frontDto.getTagLine())
-                .orElseThrow(() -> new CustomException(ErrorCode.NotFindAccount));
+                .orElseThrow(() -> new CustomException.NotFoundAccountException(frontDto, ErrorCode.NotFindAccount));
     }
 
 
     @Override
     @Transactional
-    public ResponseAccountDto createAccount(CreateAccountDto createAccountDto, Summoner summoner) {
-        Account account = accountToEntity(createAccountDto, summoner);
-        account.updateAccount(feignAccountByPuuid(createAccountDto));
+    public void createAccount(CreateAccountDto createAccountDto) {
+        Account account = accountToEntity(createAccountDto);
         accountRepository.save(account);
-        System.out.println("Account 생성!");
-        return acccountToDto(account);
     }
 
     private FeignAccountDto feignAccountByNameAndTag(FrontDto frontDto) { // 롤 API Feign
@@ -58,10 +54,12 @@ public class AccountServiceImpl implements AccountService {
                 apiKey).orElseThrow(() -> new CustomException(ErrorCode.NotfeignAccountByNameAndTag));
     }
 
-    private FeignAccountDto feignAccountByPuuid(CreateAccountDto createAccountDto) { // 롤 API Feign
-        return accountFeign.getAccountByPuuid(
-                createAccountDto.getPuuid(),
-                apiKey).orElseThrow(() -> new CustomException(ErrorCode.NotfeignAccountByPuuid));
+    private Account feignAccountToEntity(FeignAccountDto accountDto) { // 롤 API Feign
+        return Account.builder()
+                .puuid(accountDto.getPuuid())
+                .gameName(accountDto.getGameName())
+                .tagLine(accountDto.getTagLine())
+                .build();
     }
 
     private ResponseAccountDto acccountToDto(Account account) { // Dto로 변환
@@ -73,12 +71,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-    private Account accountToEntity(CreateAccountDto createAccountDto, Summoner summoner) { // 엔티티로 변환
+    private Account accountToEntity(CreateAccountDto createAccountDto) { // 엔티티로 변환
         return Account.builder()
                 .puuid(createAccountDto.getPuuid())
                 .gameName(createAccountDto.getGameName())
                 .tagLine(createAccountDto.getTagLine())
-                .summoner(summoner)
                 .build();
     }
 
@@ -109,7 +106,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public ResponseAccountDto updateAccount(CreateAccountDto createAccountDto) {
         Account account = findAccountByPuuid(createAccountDto);
-        account.updateAccount(feignAccountByPuuid(createAccountDto));
+        account.updateAccount(createAccountDto);
         accountRepository.save(account);
         return acccountToDto(account);
     }

@@ -28,18 +28,8 @@ public class Team {
 
     @Column(nullable = false)
     private boolean win; // 승리
-
-    private int baronKills;
-
-    private int championKills;
-
-    private int dragonKills;
-
-    private int inhibitorKills;
-
-    private int towerKills;
-
-    private String objectFirst;
+    
+    private String objectList;
 
     private String banList;
 

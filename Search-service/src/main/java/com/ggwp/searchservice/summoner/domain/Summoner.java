@@ -1,5 +1,7 @@
 package com.ggwp.searchservice.summoner.domain;
 
+import com.ggwp.searchservice.account.dto.ResponseAccountDto;
+import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.match.domain.MatchSummoner;
 import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
 import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
@@ -43,8 +45,11 @@ public class Summoner {
     @Column(nullable = false)
     private int summonerLevel; // 소환사 레벨
 
-//    @Version
-//    private int version;
+    @Version
+    private int version;
+
+    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<League> leagues;
 
     // Summoner(OneToMany) <-> MatchSummoner(ManyToOne) <-> Match(OneToMany)  // ManyToMany 연관관계
     @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -63,8 +68,8 @@ public class Summoner {
                 .build();
     }
 
-    public void updateSummoner(CreateSummonerDto createSummonerDto, String gameName) {
-        this.name = gameName;
+    public void updateSummoner(CreateSummonerDto createSummonerDto, ResponseAccountDto accountDto) {
+        this.name = accountDto.getGameName();
         this.profileIconId = createSummonerDto.getProfileIconId();
         this.puuid = createSummonerDto.getPuuid();
         this.revisionDate = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli(); // 업데이트

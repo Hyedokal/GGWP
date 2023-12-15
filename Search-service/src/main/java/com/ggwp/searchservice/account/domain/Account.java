@@ -1,9 +1,10 @@
 package com.ggwp.searchservice.account.domain;
 
-import com.ggwp.searchservice.account.dto.FeignAccountDto;
+import com.ggwp.searchservice.account.dto.CreateAccountDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,10 +31,10 @@ public class Account {
     @Column(nullable = true) // - Null일 수 있다.
     private String tagLine; // 롤 태그
 
-//    @Version
-//    private int version;
+    @Version
+    private int version;
 
-    public void updateAccount(FeignAccountDto accountDto) {
+    public void updateAccount(CreateAccountDto accountDto) {
         this.gameName = accountDto.getGameName();
         this.tagLine = accountDto.getTagLine();
     }

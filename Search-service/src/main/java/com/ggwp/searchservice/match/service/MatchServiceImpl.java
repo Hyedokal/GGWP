@@ -19,6 +19,7 @@ import com.ggwp.searchservice.summoner.domain.Summoner;
 import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
 import com.ggwp.searchservice.summoner.service.SummonerService;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class MatchServiceImpl implements MatchService {
 
     private final LoLToMatchFeign matchFeign;
@@ -53,16 +54,15 @@ public class MatchServiceImpl implements MatchService {
     private String apiKey;
 
     @Override
-    public void createMatches(FrontDto frontDto) throws InterruptedException {
+    public void createMatches(FrontDto frontDto) { // 매치 갱신
 
-        List<String> matchIds = getMatchIdsToFeign(frontDto);
+        List<String> matchIds = getMatchIdsToFeign(frontDto); // Feign 1번
 
         for (String matchId : matchIds) {
             // matchId 갯수만큼 반복  -> 일단 5개
             if (!matchRepository.existsByMatchId(matchId)) {
                 createMatch(matchId);
             }
-            Thread.sleep(1000);
         }
     }
 
@@ -123,10 +123,17 @@ public class MatchServiceImpl implements MatchService {
         return new JPAQueryFactory(entityManager);
     }
 
-
     private List<String> getMatchIdsToFeign(FrontDto frontDto) {
 
-        String puuid = accountService.existAccount(frontDto);
+        String puuid = accountService.existAccount(frontDto); // Feign 1번 (있으면 호출 안함)
+
+        String summonerId = summonerService.summonerFeign(puuid, apiKey).getId();
+        // 페인 써서 summoner 가져오고 summonerId로 리그 페인
+        if (leagueService.existLeague(summonerId)) {
+            leagueService.createLeague(summonerId);
+        } else {
+            leagueService.updateLeagues(summonerId);
+        }
         // puuid를 이용하여 matchIds를 가져온다.
         return matchFeign.getMatchIds(puuid, apiKey)
                 .orElseThrow(() -> new CustomException(ErrorCode.NotFeignMatchIds));
@@ -176,7 +183,7 @@ public class MatchServiceImpl implements MatchService {
         return match;
     }
 
-    private void createMatch(String matchId) {
+    public void createMatch(String matchId) {
 
         MatchDto matchdto = getMatchToFegin(matchId);
 
@@ -184,7 +191,7 @@ public class MatchServiceImpl implements MatchService {
 
         matchRepository.save(match);
         // Participant에서 소환사, Account 값 추출해서 저장
-        if (matchdto.getInfo().getParticipants().isEmpty()) {
+        if (matchdto.getInfo().getParticipants() == null) {
             throw new CustomException(ErrorCode.NotFindParticipants);
         } else {
             List<MatchDto.ParticipantDto> participantDtoList = matchdto.getInfo().getParticipants();
@@ -195,11 +202,9 @@ public class MatchServiceImpl implements MatchService {
                 MatchSummoner matchSummoner = matchSummonerService.createMatchSummoner(match, summoner);
                 matchSummonerList.add(matchSummoner);
             }
-
             match.addMatchSummoners(matchSummonerList);
         }
     }
-
 
     private CreateSummonerDto createSummonerDto(MatchDto.ParticipantDto participantDto) { // 소환사를 생성하는 DTO
         return CreateSummonerDto.builder()
@@ -213,11 +218,19 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private CreateAccountDto createAccountDto(MatchDto.ParticipantDto participantDto) { // Account를 생성하는 DTO
-        return CreateAccountDto.builder()
-                .puuid(participantDto.getPuuid())
-                .gameName(participantDto.getRiotIdName())
-                .tagLine(participantDto.getRiotIdTagline())
-                .build();
+        if (participantDto.getRiotIdName() == null) {
+            return CreateAccountDto.builder()
+                    .puuid(participantDto.getPuuid())
+                    .gameName(participantDto.getSummonerName())
+                    .tagLine(participantDto.getRiotIdTagline())
+                    .build();
+        } else {
+            return CreateAccountDto.builder()
+                    .puuid(participantDto.getPuuid())
+                    .gameName(participantDto.getRiotIdName())
+                    .tagLine(participantDto.getRiotIdTagline())
+                    .build();
+        }
     }
 
     private Summoner summonertoEntity(CreateSummonerDto createSummonerDto) { // SummonrDto를 엔티티로 바꾸는 메소드
@@ -230,7 +243,7 @@ public class MatchServiceImpl implements MatchService {
                 .summonerLevel(createSummonerDto.getSummonerLevel())
                 .build();
     }
-    
+
     private List<Summoner> extractParticipantList(List<MatchDto.ParticipantDto> participantDtoList) { //Participant를 추출하여 Summoner와 Account를 추출 하여 저장
         List<Summoner> summonerList = new ArrayList<>();
 
@@ -243,18 +256,14 @@ public class MatchServiceImpl implements MatchService {
                 Summoner existingSummoner = summonerService.findSummonerByPuuid(createSummonerDto);
                 // updateLeagues // 소환사가 있으면 계정이 있고, 계정이 있다는 뜻이니 업데이트
                 ResponseAccountDto accountDto = accountService.updateAccount(createAccountDto);
-                existingSummoner.updateSummoner(createSummonerDto, accountDto.getGameName()); // 소환사 레벨이라던가, 닉네임이라던가 업데이트
+                existingSummoner.updateSummoner(createSummonerDto, accountDto); // 예전 닉네임 아닌 새로 바뀐 닉네임으로 업데이트
                 summonerService.saveSummoner(existingSummoner);
                 summonerList.add(existingSummoner);
             } else {
                 // 생성한다.
                 Summoner newSummoner = summonertoEntity(createSummonerDto);
-                summonerService.saveSummoner(newSummoner); // 저장
-                newSummoner.addLeagues(leagueService.createLeague(newSummoner)); // League 생성 및 연관 매핑
-                ResponseAccountDto accountDto = accountService.createAccount(createAccountDto, newSummoner);
-                newSummoner.updateSummoner(createSummonerDto, accountDto.getGameName());
-                newSummoner.addAccount(accountService.responseToEntity(accountDto)); // Account 생성 및 연관 매핑
-                summonerService.saveSummoner(newSummoner);
+                summonerService.saveSummoner(newSummoner); // 저장 예전 닉네임이 저장된다.
+                accountService.createAccount(createAccountDto); //
                 summonerList.add(newSummoner);
             }
         }
@@ -272,10 +281,18 @@ public class MatchServiceImpl implements MatchService {
         List<MatchDto.ParticipantDto> participantDtoList = new ArrayList<>();
 
         List<Team> teamList = match.getTeams();
+
         for (Team team : teamList) {
+            Gson gson = new Gson();
+            List<MatchDto.BanDto> bans = gson.fromJson(team.getBanList(), new TypeToken<List<MatchDto.BanDto>>() {
+            }.getType());
+            MatchDto.ObjectivesDto objectives = gson.fromJson(team.getObjectList(), new TypeToken<MatchDto.ObjectivesDto>() {
+            }.getType());
             MatchDto.TeamDto teamDto = MatchDto.TeamDto.builder()
                     .teamId(team.getTeamId())
                     .win(team.isWin())
+                    .bans(bans)
+                    .objectives(objectives)
                     .build();
             teamDtoList.add(teamDto);
 
@@ -283,13 +300,11 @@ public class MatchServiceImpl implements MatchService {
             for (Participant participant : participantList) {
 
                 MatchDto.PerkStyleDto primaryPerkStyleDto = MatchDto.PerkStyleDto.builder()
-                        .description(participant.getPrimaryDescription())
-                        .style(Integer.parseInt(participant.getPrimaryStyle()))
+                        .style(participant.getPrimaryStyle())
                         .build();
 
                 MatchDto.PerkStyleDto subPerkStyleDto = MatchDto.PerkStyleDto.builder()
-                        .description(participant.getSubDescription())
-                        .style(Integer.parseInt(participant.getSubStyle()))
+                        .style(participant.getSubStyle())
                         .build();
 
                 MatchDto.PerksDto perksDto = MatchDto.PerksDto.builder()
@@ -303,6 +318,8 @@ public class MatchServiceImpl implements MatchService {
                         .puuid(participant.getPuuid())
                         .summmonerLevel(participant.getChampLevel())
                         .summonerName(participant.getSummonerName())
+                        .riotIdName(participant.getRiotIdName())
+                        .riotIdTagline(participant.getRiotIdTagline())
                         .kills(participant.getKills())
                         .assists(participant.getAssists())
                         .deaths(participant.getDeaths())
@@ -350,75 +367,99 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private Participant participantToEntity(MatchDto.ParticipantDto participantDto, Team team, Match match) {
-        return Participant.builder()
-                .participantId(participantDto.getParticipantId())
-                .summonerId(participantDto.getSummonerId()) // Summoner
-                .profileIcon(participantDto.getProfileIcon()) // Summoner
-                .puuid(participantDto.getPuuid()) // Summoner // Account
-                .summonerLevel(participantDto.getSummmonerLevel()) // Summoner
-                .summonerName(participantDto.getSummonerName()) // Summoner
-                .riotIdName(participantDto.getRiotIdName()) // Account
-                .riotIdTagline(participantDto.getRiotIdTagline()) // Account
-                .kills(participantDto.getKills())
-                .assists(participantDto.getAssists())
-                .deaths(participantDto.getDeaths())
-                .champExperience(participantDto.getChampExperience())
-                .champLevel(participantDto.getChampLevel())
-                .championId(participantDto.getChampionId())
-                .championName(participantDto.getChampionName())
-                .item0(participantDto.getItem0())
-                .item1(participantDto.getItem1())
-                .item2(participantDto.getItem2())
-                .item3(participantDto.getItem3())
-                .item4(participantDto.getItem4())
-                .item5(participantDto.getItem5())
-                .item6(participantDto.getItem6())
-                .summoner1Id(participantDto.getSummoner1Id())
-                .summoner2Id(participantDto.getSummoner2Id())
-                .neutralMinionsKilled(participantDto.getNeutralMinionsKilled())
-                .totalMinionsKilled(participantDto.getTotalMinionsKilled())
-                .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
-                .totalDamageTaken(participantDto.getTotalDamageTaken())
-                .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
-                .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
-                .teamPosition(participantDto.getTeamPosition())
-                .team(team)
-                .match(match)
-                .build();
+        if (participantDto.getRiotIdName() == null) {
+            return Participant.builder()
+                    .participantId(participantDto.getParticipantId())
+                    .summonerId(participantDto.getSummonerId()) // Summoner
+                    .profileIcon(participantDto.getProfileIcon()) // Summoner
+                    .puuid(participantDto.getPuuid()) // Summoner // Account
+                    .summonerLevel(participantDto.getSummmonerLevel()) // Summoner
+                    .summonerName(participantDto.getSummonerName()) // Summoner
+                    .riotIdName(participantDto.getSummonerName()) // Account
+                    .riotIdTagline(participantDto.getRiotIdTagline()) // Account
+                    .kills(participantDto.getKills())
+                    .assists(participantDto.getAssists())
+                    .deaths(participantDto.getDeaths())
+                    .champExperience(participantDto.getChampExperience())
+                    .champLevel(participantDto.getChampLevel())
+                    .championId(participantDto.getChampionId())
+                    .championName(participantDto.getChampionName())
+                    .item0(participantDto.getItem0())
+                    .item1(participantDto.getItem1())
+                    .item2(participantDto.getItem2())
+                    .item3(participantDto.getItem3())
+                    .item4(participantDto.getItem4())
+                    .item5(participantDto.getItem5())
+                    .item6(participantDto.getItem6())
+                    .summoner1Id(participantDto.getSummoner1Id())
+                    .summoner2Id(participantDto.getSummoner2Id())
+                    .neutralMinionsKilled(participantDto.getNeutralMinionsKilled())
+                    .totalMinionsKilled(participantDto.getTotalMinionsKilled())
+                    .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
+                    .totalDamageTaken(participantDto.getTotalDamageTaken())
+                    .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
+                    .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
+                    .teamPosition(participantDto.getTeamPosition())
+                    .team(team)
+                    .match(match)
+                    .build();
+        } else {
+            return Participant.builder()
+                    .participantId(participantDto.getParticipantId())
+                    .summonerId(participantDto.getSummonerId()) // Summoner
+                    .profileIcon(participantDto.getProfileIcon()) // Summoner
+                    .puuid(participantDto.getPuuid()) // Summoner // Account
+                    .summonerLevel(participantDto.getSummmonerLevel()) // Summoner
+                    .summonerName(participantDto.getSummonerName()) // Summoner
+                    .riotIdName(participantDto.getRiotIdName()) // Account
+                    .riotIdTagline(participantDto.getRiotIdTagline()) // Account
+                    .kills(participantDto.getKills())
+                    .assists(participantDto.getAssists())
+                    .deaths(participantDto.getDeaths())
+                    .champExperience(participantDto.getChampExperience())
+                    .champLevel(participantDto.getChampLevel())
+                    .championId(participantDto.getChampionId())
+                    .championName(participantDto.getChampionName())
+                    .item0(participantDto.getItem0())
+                    .item1(participantDto.getItem1())
+                    .item2(participantDto.getItem2())
+                    .item3(participantDto.getItem3())
+                    .item4(participantDto.getItem4())
+                    .item5(participantDto.getItem5())
+                    .item6(participantDto.getItem6())
+                    .summoner1Id(participantDto.getSummoner1Id())
+                    .summoner2Id(participantDto.getSummoner2Id())
+                    .neutralMinionsKilled(participantDto.getNeutralMinionsKilled())
+                    .totalMinionsKilled(participantDto.getTotalMinionsKilled())
+                    .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
+                    .totalDamageTaken(participantDto.getTotalDamageTaken())
+                    .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
+                    .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
+                    .teamPosition(participantDto.getTeamPosition())
+                    .team(team)
+                    .match(match)
+                    .build();
+        }
+
+
     }
 
     private Team teamToEntity(MatchDto.TeamDto teamDto) {
         List<MatchDto.BanDto> bans = teamDto.getBans();
-        List<MatchDto.ObjectivesDto> objectivesDtos = teamDto.getObjectives();
+        MatchDto.ObjectivesDto objectivesDtos = teamDto.getObjectives();
 
         // Gson 객체 생성
         Gson gson = new Gson();
         String banList = gson.toJson(bans);
-
-        int teamIndex = teamDto.getTeamId() == 100 ? 0 : 1;
-        MatchDto.ObjectivesDto teamObjectives = objectivesDtos.get(teamIndex);
-
-        List<Boolean> objectFirstList = new ArrayList<>();
-        objectFirstList.add(teamObjectives.getBaron().isFirst());
-        objectFirstList.add(teamObjectives.getChampion().isFirst());
-        objectFirstList.add(teamObjectives.getDragon().isFirst());
-        objectFirstList.add(teamObjectives.getInhibitor().isFirst());
-        objectFirstList.add(teamObjectives.getTower().isFirst());
-        String objectFirst = gson.toJson(objectFirstList);
+        String objectList = gson.toJson(objectivesDtos);
 
         return Team.builder()
                 .win(teamDto.isWin())
                 .teamId(teamDto.getTeamId())
-                .baronKills(teamObjectives.getBaron().getKills())
-                .championKills(teamObjectives.getChampion().getKills())
-                .dragonKills(teamObjectives.getDragon().getKills())
-                .inhibitorKills(teamObjectives.getInhibitor().getKills())
-                .towerKills(teamObjectives.getTower().getKills())
                 .banList(banList)
-                .objectFirst(objectFirst)
+                .objectList(objectList)
                 .build();
     }
-
 }
 
 

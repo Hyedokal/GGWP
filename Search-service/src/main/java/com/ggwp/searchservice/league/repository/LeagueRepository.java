@@ -11,4 +11,5 @@ public interface LeagueRepository extends JpaRepository<League, Long> {
 
     Optional<List<League>> findLeaguesBySummonerId(String summonerId);
 
+    boolean existsLeagueBySummonerId(String summonerId);
 }

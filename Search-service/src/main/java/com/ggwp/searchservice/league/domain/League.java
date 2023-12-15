@@ -2,6 +2,7 @@ package com.ggwp.searchservice.league.domain;
 
 import com.ggwp.searchservice.league.dto.CreateLeagueDto;
 import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
+import com.ggwp.searchservice.summoner.domain.Summoner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,10 @@ public class League {
     private int wins; // 승리
     @Column(nullable = false)
     private int losses; // 패배
+
+    @ManyToOne
+    @JoinColumn(name = "summoner_id")
+    private Summoner summoner;
 
     @Version
     private int version;

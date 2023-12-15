@@ -17,4 +17,6 @@ public interface SummonerService {
 
     void saveSummoner(Summoner summoner);
 
+    ResponseSummonerDto summonerFeign(String puuid, String apiKey);
+
 }
