@@ -13,6 +13,7 @@ interface Comment {
 
 interface CommentSectionProps {
     sId: number;
+    refreshKey?: number; // Optional prop to trigger a refresh
 }
 
 interface PaginationInfo {
@@ -20,13 +21,15 @@ interface PaginationInfo {
     totalPages: number;
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ sId }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ sId, refreshKey}) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [pagination, setPagination] = useState<PaginationInfo>({ currentPage: 0, totalPages: 0 });
 
+
     useEffect(() => {
         fetchComments(sId, pagination.currentPage);
-    }, [sId, pagination.currentPage]);
+    }, [sId, pagination.currentPage, refreshKey]); // Add refreshKey as a dependency
+
 
     const fetchComments = (sId: number, page: number) => {
         axios.get(`http://localhost:8000/v1/squads/${sId}?page=${page}`)

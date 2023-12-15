@@ -43,7 +43,7 @@ const Modal : React.FC<ModalProps>  = ({ onClose,onUpdate  }) => {
                 qType,
                 useMic,
                 summonerName: userInfo?.lolNickname || '',// || ' ' 를 사용해서 소환사 이름을 안전하게 할당
-                tag_line:userInfo?.tag||'',
+                tagLine:userInfo?.tag||'',
                 memo,
             };
             try {
