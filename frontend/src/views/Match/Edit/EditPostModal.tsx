@@ -90,7 +90,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onUpdate }
                             <label className="mr-40 text-black">큐타입:</label>
                             <select
                                 className="text-black"
-                                name="QType"
+                                name="qtype"
                                 value={editedPost.qtype}
                                 onChange={handleChange}
                             >
