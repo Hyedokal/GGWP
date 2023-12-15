@@ -73,9 +73,8 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     public boolean existLeague(String summonerId) {
-        return leagueRepository.existsLeagueBySummonerId(summonerId);
+        return leagueRepository.existsLeagueBySummoner_Id(summonerId);
     }
-
 
     // 리그 정보 얻기 No - API
     @Override
@@ -91,7 +90,7 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     private List<League> findLeagues(String summonerId) {
-        return leagueRepository.findLeaguesBySummonerId(summonerId)
+        return leagueRepository.findLeaguesBySummoner_Id(summonerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NotFindLeagues));
     }
 

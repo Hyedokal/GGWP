@@ -191,7 +191,7 @@ public class MatchServiceImpl implements MatchService {
 
         matchRepository.save(match);
         // Participant에서 소환사, Account 값 추출해서 저장
-        if (matchdto.getInfo().getParticipants() == null) {
+        if (matchdto.getInfo().getParticipants().isEmpty()) {
             throw new CustomException(ErrorCode.NotFindParticipants);
         } else {
             List<MatchDto.ParticipantDto> participantDtoList = matchdto.getInfo().getParticipants();
@@ -218,7 +218,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private CreateAccountDto createAccountDto(MatchDto.ParticipantDto participantDto) { // Account를 생성하는 DTO
-        if (participantDto.getRiotIdName() == null) {
+        if (participantDto.getRiotIdName() == null || participantDto.getRiotIdName().trim().isEmpty()) {
             return CreateAccountDto.builder()
                     .puuid(participantDto.getPuuid())
                     .gameName(participantDto.getSummonerName())
@@ -367,81 +367,41 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private Participant participantToEntity(MatchDto.ParticipantDto participantDto, Team team, Match match) {
-        if (participantDto.getRiotIdName() == null) {
-            return Participant.builder()
-                    .participantId(participantDto.getParticipantId())
-                    .summonerId(participantDto.getSummonerId()) // Summoner
-                    .profileIcon(participantDto.getProfileIcon()) // Summoner
-                    .puuid(participantDto.getPuuid()) // Summoner // Account
-                    .summonerLevel(participantDto.getSummmonerLevel()) // Summoner
-                    .summonerName(participantDto.getSummonerName()) // Summoner
-                    .riotIdName(participantDto.getSummonerName()) // Account
-                    .riotIdTagline(participantDto.getRiotIdTagline()) // Account
-                    .kills(participantDto.getKills())
-                    .assists(participantDto.getAssists())
-                    .deaths(participantDto.getDeaths())
-                    .champExperience(participantDto.getChampExperience())
-                    .champLevel(participantDto.getChampLevel())
-                    .championId(participantDto.getChampionId())
-                    .championName(participantDto.getChampionName())
-                    .item0(participantDto.getItem0())
-                    .item1(participantDto.getItem1())
-                    .item2(participantDto.getItem2())
-                    .item3(participantDto.getItem3())
-                    .item4(participantDto.getItem4())
-                    .item5(participantDto.getItem5())
-                    .item6(participantDto.getItem6())
-                    .summoner1Id(participantDto.getSummoner1Id())
-                    .summoner2Id(participantDto.getSummoner2Id())
-                    .neutralMinionsKilled(participantDto.getNeutralMinionsKilled())
-                    .totalMinionsKilled(participantDto.getTotalMinionsKilled())
-                    .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
-                    .totalDamageTaken(participantDto.getTotalDamageTaken())
-                    .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
-                    .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
-                    .teamPosition(participantDto.getTeamPosition())
-                    .team(team)
-                    .match(match)
-                    .build();
-        } else {
-            return Participant.builder()
-                    .participantId(participantDto.getParticipantId())
-                    .summonerId(participantDto.getSummonerId()) // Summoner
-                    .profileIcon(participantDto.getProfileIcon()) // Summoner
-                    .puuid(participantDto.getPuuid()) // Summoner // Account
-                    .summonerLevel(participantDto.getSummmonerLevel()) // Summoner
-                    .summonerName(participantDto.getSummonerName()) // Summoner
-                    .riotIdName(participantDto.getRiotIdName()) // Account
-                    .riotIdTagline(participantDto.getRiotIdTagline()) // Account
-                    .kills(participantDto.getKills())
-                    .assists(participantDto.getAssists())
-                    .deaths(participantDto.getDeaths())
-                    .champExperience(participantDto.getChampExperience())
-                    .champLevel(participantDto.getChampLevel())
-                    .championId(participantDto.getChampionId())
-                    .championName(participantDto.getChampionName())
-                    .item0(participantDto.getItem0())
-                    .item1(participantDto.getItem1())
-                    .item2(participantDto.getItem2())
-                    .item3(participantDto.getItem3())
-                    .item4(participantDto.getItem4())
-                    .item5(participantDto.getItem5())
-                    .item6(participantDto.getItem6())
-                    .summoner1Id(participantDto.getSummoner1Id())
-                    .summoner2Id(participantDto.getSummoner2Id())
-                    .neutralMinionsKilled(participantDto.getNeutralMinionsKilled())
-                    .totalMinionsKilled(participantDto.getTotalMinionsKilled())
-                    .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
-                    .totalDamageTaken(participantDto.getTotalDamageTaken())
-                    .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
-                    .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
-                    .teamPosition(participantDto.getTeamPosition())
-                    .team(team)
-                    .match(match)
-                    .build();
-        }
-
-
+        return Participant.builder()
+                .participantId(participantDto.getParticipantId())
+                .summonerId(participantDto.getSummonerId()) // Summoner
+                .profileIcon(participantDto.getProfileIcon()) // Summoner
+                .puuid(participantDto.getPuuid()) // Summoner // Account
+                .summonerLevel(participantDto.getSummmonerLevel()) // Summoner
+                .summonerName(participantDto.getSummonerName()) // Summoner
+                .riotIdName(participantDto.getRiotIdName()) // Account
+                .riotIdTagline(participantDto.getRiotIdTagline()) // Account
+                .kills(participantDto.getKills())
+                .assists(participantDto.getAssists())
+                .deaths(participantDto.getDeaths())
+                .champExperience(participantDto.getChampExperience())
+                .champLevel(participantDto.getChampLevel())
+                .championId(participantDto.getChampionId())
+                .championName(participantDto.getChampionName())
+                .item0(participantDto.getItem0())
+                .item1(participantDto.getItem1())
+                .item2(participantDto.getItem2())
+                .item3(participantDto.getItem3())
+                .item4(participantDto.getItem4())
+                .item5(participantDto.getItem5())
+                .item6(participantDto.getItem6())
+                .summoner1Id(participantDto.getSummoner1Id())
+                .summoner2Id(participantDto.getSummoner2Id())
+                .neutralMinionsKilled(participantDto.getNeutralMinionsKilled())
+                .totalMinionsKilled(participantDto.getTotalMinionsKilled())
+                .totalDamageDealtToChampions(participantDto.getTotalDamageDealtToChampions())
+                .totalDamageTaken(participantDto.getTotalDamageTaken())
+                .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
+                .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
+                .teamPosition(participantDto.getTeamPosition())
+                .team(team)
+                .match(match)
+                .build();
     }
 
     private Team teamToEntity(MatchDto.TeamDto teamDto) {
