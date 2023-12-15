@@ -13,7 +13,7 @@ public class CustomException extends RuntimeException {
 
     @Getter
     public static class NotFoundAccountException extends CustomException {
-        private final FrontDto frontDto;
+        private final transient FrontDto frontDto;
 
         public NotFoundAccountException(FrontDto frontDto, ErrorCode errorCode) {
             super(errorCode);
