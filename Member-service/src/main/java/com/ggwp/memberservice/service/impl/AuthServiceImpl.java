@@ -64,6 +64,11 @@ public class AuthServiceImpl implements AuthService {
             boolean hasEmail = memberRepository.existsByEmail(email);
             if (hasEmail) return SignUpResponseDto.duplicateEmail();
 
+            Long count = memberRepository.countByLolNicknameAndTag(signUpRequestDto.getLolNickname(), signUpRequestDto.getTag() );
+            if (count > 0) {
+                return SignUpResponseDto.duplicateLolNickTag();
+            }
+
             Member member =signUpRequestDto.toEntity();
             memberRepository.save(member);
 
