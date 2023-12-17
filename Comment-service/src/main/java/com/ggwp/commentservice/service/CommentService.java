@@ -19,7 +19,6 @@ public interface CommentService {
 
     ResponseCommentDto getOneComment(Long cId);
 
-    List<ResponseMatchDto> getMatchInfo(RequestMatchDto dto);
 
     Page<ResponseCommentDto> searchPagedComment(RequestPageDto.Search dto);
 

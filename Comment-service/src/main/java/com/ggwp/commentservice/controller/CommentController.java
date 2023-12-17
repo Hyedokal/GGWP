@@ -7,6 +7,7 @@ import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
+import com.ggwp.commentservice.repository.CommentRepository;
 import com.ggwp.commentservice.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +20,16 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/comments")
 @RequiredArgsConstructor
 @Slf4j
 public class CommentController {
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private final CommentService commentService;
 
@@ -79,24 +81,19 @@ public class CommentController {
     }
 
 
-    @PostMapping("feign/match")
-    public ResponseEntity<List<ResponseMatchDto>> getMatchInfo(@RequestBody String requestBody) {
-        log.info("Raw Request Body: " + requestBody);
-
-        RequestMatchDto dto;
-        try {
-            dto = objectMapper.readValue(requestBody, RequestMatchDto.class);
-        } catch (Exception e) {
-            log.error("Error parsing JSON", e);
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/feign/match")
+    public ResponseEntity<List<ResponseMatchDto>> getMatchInfo(@RequestBody RequestMatchDto dto) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<ResponseMatchDto> responseMatchDtoList = new ArrayList<>();
+        List<Map<String, Object>> matchList = dto.getMatchList();
+        for (Map<String, Object> match : matchList) {
+            String matchJson = objectMapper.writeValueAsString(match);
+            ResponseMatchDto responseMatchDto = objectMapper.readValue(matchJson, new TypeReference<ResponseMatchDto>() {
+            });
+            responseMatchDtoList.add(responseMatchDto);
         }
+        return ResponseEntity.ok(responseMatchDtoList);
 
-        log.info("Parsed sIdList: " + dto.getSIdList());
-
-
-
-        List<ResponseMatchDto> response = commentService.getMatchInfo(dto);
-        log.info("Response: " + response);
-        return ResponseEntity.ok(response);
     }
+
 }
