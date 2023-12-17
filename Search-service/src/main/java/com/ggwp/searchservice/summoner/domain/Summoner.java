@@ -48,8 +48,8 @@ public class Summoner {
     @Version
     private int version;
 
-    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<League> leagues;
+//    @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private List<League> leagues;
 
     // Summoner(OneToMany) <-> MatchSummoner(ManyToOne) <-> Match(OneToMany)  // ManyToMany 연관관계
     @OneToMany(mappedBy = "summoner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

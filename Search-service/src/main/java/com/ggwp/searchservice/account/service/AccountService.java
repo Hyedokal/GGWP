@@ -16,7 +16,4 @@ public interface AccountService {
     Account findAccount(FrontDto frontDto);
 
     ResponseAccountDto getAccount(FrontDto frontDto);
-
-    Account responseToEntity(ResponseAccountDto accountDto);
-
 }

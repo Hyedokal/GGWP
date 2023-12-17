@@ -37,13 +37,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ErrorCode.InValidException.getHttpStatus())
                 .body(new ResponseDto.Error(errors.get(0)));
     }
-
-    @ExceptionHandler(CustomException.FeignClientError.class)
-    public ResponseEntity<ResponseDto.Error> excelErrorException(CustomException.FeignClientError e) {
-        return ResponseEntity.status(ErrorCode.NotFeginException.getHttpStatus())
-                .body(new ResponseDto.Error("Feign Exception: " + e.getFeignException().getMessage()));
-    }
-
     @ExceptionHandler(CustomException.NotFoundAccountException.class)
     public ResponseDto<ResponseSummonerDto> handleNotFoundException(CustomException.NotFoundAccountException ex) {
 

@@ -8,6 +8,7 @@ import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.enums.GameMode;
 import com.ggwp.searchservice.common.exception.CustomException;
 import com.ggwp.searchservice.common.exception.ErrorCode;
+import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.league.service.LeagueService;
 import com.ggwp.searchservice.match.MatchRepository.MatchRepository;
 import com.ggwp.searchservice.match.domain.*;
@@ -130,9 +131,10 @@ public class MatchServiceImpl implements MatchService {
         String summonerId = summonerService.summonerFeign(puuid, apiKey).getId();
         // 페인 써서 summoner 가져오고 summonerId로 리그 페인
         if (leagueService.existLeague(summonerId)) {
-            leagueService.createLeague(summonerId);
-        } else {
             leagueService.updateLeagues(summonerId);
+
+        } else {
+            leagueService.createLeague(summonerId);
         }
         // puuid를 이용하여 matchIds를 가져온다.
         return matchFeign.getMatchIds(puuid, apiKey)
@@ -217,14 +219,28 @@ public class MatchServiceImpl implements MatchService {
                 .build();
     }
 
-    private CreateAccountDto createAccountDto(MatchDto.ParticipantDto participantDto) { // Account를 생성하는 DTO
+    private CreateAccountDto createAccountDto(MatchDto.ParticipantDto participantDto) {
+        // 라이엇 네임이 없거나 공백인 경우
         if (participantDto.getRiotIdName() == null || participantDto.getRiotIdName().trim().isEmpty()) {
-            return CreateAccountDto.builder()
-                    .puuid(participantDto.getPuuid())
-                    .gameName(participantDto.getSummonerName())
-                    .tagLine(participantDto.getRiotIdTagline())
-                    .build();
+            // 라이엇 네임 대신 소환사 네임 사용, ritotagline은 그대로 사용 또는 "KR1"로 지정
+            String gameName = participantDto.getSummonerName();
+            if (participantDto.getRiotIdTagline() == null || participantDto.getRiotIdTagline().trim().isEmpty()) {
+                // ritotagline이 없는 경우 "KR1"로 지정
+                return CreateAccountDto.builder()
+                        .puuid(participantDto.getPuuid())
+                        .gameName(gameName)
+                        .tagLine("KR1")
+                        .build();
+            } else {
+                // ritotagline이 있는 경우 그대로 사용
+                return CreateAccountDto.builder()
+                        .puuid(participantDto.getPuuid())
+                        .gameName(gameName)
+                        .tagLine(participantDto.getRiotIdTagline())
+                        .build();
+            }
         } else {
+            // 라이엇 네임이 있는 경우 그대로 사용
             return CreateAccountDto.builder()
                     .puuid(participantDto.getPuuid())
                     .gameName(participantDto.getRiotIdName())

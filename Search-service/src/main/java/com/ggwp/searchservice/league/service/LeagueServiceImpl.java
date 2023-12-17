@@ -13,6 +13,7 @@ import com.ggwp.searchservice.league.feign.LoLToLeagueFeign;
 import com.ggwp.searchservice.league.repository.LeagueRepository;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import com.ggwp.searchservice.summoner.service.SummonerService;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,8 @@ public class LeagueServiceImpl implements LeagueService {
     private String apiKey;
 
     private List<CreateLeagueDto> leagueFeign(String summonerId) {
-        return leagueFeign.getLeagues(summonerId, apiKey);
+        return leagueFeign.getLeagues(summonerId, apiKey).orElseThrow(()->
+                new CustomException(ErrorCode.NotFeginException));
     }
 
     @Override
@@ -73,7 +75,7 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     public boolean existLeague(String summonerId) {
-        return leagueRepository.existsLeagueBySummoner_Id(summonerId);
+        return leagueRepository.existsLeaguesBySummonerId(summonerId);
     }
 
     // 리그 정보 얻기 No - API
@@ -90,7 +92,7 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     private List<League> findLeagues(String summonerId) {
-        return leagueRepository.findLeaguesBySummoner_Id(summonerId)
+        return leagueRepository.findLeaguesBySummonerId(summonerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NotFindLeagues));
     }
 
@@ -112,6 +114,8 @@ public class LeagueServiceImpl implements LeagueService {
                 .leaguePoints(leagueDto.getLeaguePoints())
                 .wins(leagueDto.getWins())
                 .losses(leagueDto.getLosses())
+                .summonerId(leagueDto.getSummonerId())
+                .summonerName(leagueDto.getSummonerName())
                 .build();
     }
 }

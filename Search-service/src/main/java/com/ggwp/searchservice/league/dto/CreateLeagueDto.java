@@ -26,4 +26,10 @@ public class CreateLeagueDto {
     @NotBlank(message = "losses는 공백이 될 수 없습니다.")
     private int losses;
 
+    @JsonProperty("summonerId")
+    private String summonerId;
+
+    @JsonProperty("summonerName")
+    private String summonerName;
+
 }

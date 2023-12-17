@@ -1,5 +1,6 @@
 package com.ggwp.searchservice.league.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ggwp.searchservice.league.dto.CreateLeagueDto;
 import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
 import com.ggwp.searchservice.summoner.domain.Summoner;
@@ -38,10 +39,10 @@ public class League {
     private int wins; // 승리
     @Column(nullable = false)
     private int losses; // 패배
-
-    @ManyToOne
-    @JoinColumn(name = "summoner_id")
-    private Summoner summoner;
+    @Column(nullable = false)
+    private String summonerId;
+    @Column(nullable = false)
+    private String summonerName;
 
     @Version
     private int version;
@@ -55,6 +56,8 @@ public class League {
                 .leaguePoints(league.getLeaguePoints())
                 .wins(league.getWins())
                 .losses(league.getLosses())
+                .summonerId(league.getSummonerId())
+                .summonerName(league.getSummonerName())
                 .build();
     }
 
@@ -66,6 +69,8 @@ public class League {
         this.losses = createLeagueDto.getLosses();
         this.ranks = createLeagueDto.getRank();
         this.tier = createLeagueDto.getTier();
+        this.summonerId = createLeagueDto.getSummonerId();
+        this.summonerName = createLeagueDto.getSummonerName();
     }
 }
 

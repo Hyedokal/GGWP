@@ -54,14 +54,6 @@ public class AccountServiceImpl implements AccountService {
                 apiKey).orElseThrow(() -> new CustomException(ErrorCode.NotfeignAccountByNameAndTag));
     }
 
-    private Account feignAccountToEntity(FeignAccountDto accountDto) { // 롤 API Feign
-        return Account.builder()
-                .puuid(accountDto.getPuuid())
-                .gameName(accountDto.getGameName())
-                .tagLine(accountDto.getTagLine())
-                .build();
-    }
-
     private ResponseAccountDto acccountToDto(Account account) { // Dto로 변환
         return ResponseAccountDto.builder()
                 .puuid(account.getPuuid())
