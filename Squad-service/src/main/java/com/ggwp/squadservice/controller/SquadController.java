@@ -1,5 +1,7 @@
 package com.ggwp.squadservice.controller;
 
+import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
 import com.ggwp.squadservice.dto.request.RequestCommentPageDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
@@ -9,6 +11,7 @@ import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.feign.CommentFeignClient;
 import com.ggwp.squadservice.service.SquadService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -94,5 +97,13 @@ public class SquadController {
         return ResponseEntity.ok(filteredSquads);
     }
 
+
+
+    @PostMapping("/match/list")
+    public ResponseEntity<ResponseMatchDto> getMatchInfo(@RequestBody RequestMatchDto dto) {
+        ResponseMatchDto responseDto = squadService.getMatchInfo(dto);
+        return ResponseEntity.ok().body(responseDto);
+
+    }
 
 }

@@ -20,4 +20,7 @@ public interface MemberService {
     ResponseEntity<? super PersonalitiesResponseDto> addPersonalities(String uuid, PersonalitiesRequestDto dto);
 
     ResponseEntity<? super  PersonalitiesInfoResponseDto> getPersonalities(String uuid);
+
+
+    ResponseEntity<? super GetMatchInfoResponseDto> getMatchInfo(String uuid);
 }

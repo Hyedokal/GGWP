@@ -17,4 +17,6 @@ public interface CommentFeignClient {
 
     @PutMapping("/v1/comments/feign/{cId}")
     ResponseEntity<String> approveComment(@PathVariable Long cId);
+
+
 }

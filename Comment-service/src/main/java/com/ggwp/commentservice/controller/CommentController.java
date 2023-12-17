@@ -1,20 +1,33 @@
 package com.ggwp.commentservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggwp.commentservice.domain.Comment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
 import com.ggwp.commentservice.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/comments")
 @RequiredArgsConstructor
+@Slf4j
 public class CommentController {
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private final CommentService commentService;
 
@@ -63,5 +76,27 @@ public class CommentController {
     public ResponseEntity<String> approveComment(@PathVariable Long cId) {
         Comment comment = commentService.approveComment(cId);
         return ResponseEntity.ok().body("Approved Successfully: " + comment.getSId());
+    }
+
+
+    @PostMapping("feign/match")
+    public ResponseEntity<List<ResponseMatchDto>> getMatchInfo(@RequestBody String requestBody) {
+        log.info("Raw Request Body: " + requestBody);
+
+        RequestMatchDto dto;
+        try {
+            dto = objectMapper.readValue(requestBody, RequestMatchDto.class);
+        } catch (Exception e) {
+            log.error("Error parsing JSON", e);
+            return ResponseEntity.badRequest().build();
+        }
+
+        log.info("Parsed sIdList: " + dto.getSIdList());
+
+
+
+        List<ResponseMatchDto> response = commentService.getMatchInfo(dto);
+        log.info("Response: " + response);
+        return ResponseEntity.ok(response);
     }
 }

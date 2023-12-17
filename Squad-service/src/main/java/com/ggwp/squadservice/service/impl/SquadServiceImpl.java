@@ -2,6 +2,8 @@ package com.ggwp.squadservice.service.impl;
 
 import com.ggwp.squadservice.domain.QSquad;
 import com.ggwp.squadservice.domain.Squad;
+import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
@@ -109,6 +111,33 @@ public class SquadServiceImpl implements SquadService {
         squad.updateSquad(dto);
         return squadRepository.save(squad);
     }
+
+
+    @Override
+    public ResponseMatchDto getMatchInfo(RequestMatchDto dto) {
+        String summonerName = dto.getSummonerName();// 소환사 이름
+        String tagLine = dto.getTagLine();// 소환사 태그
+        List<Long> sIds = squadRepository.findSIdByApprovedAndSummonerNameAndTagLine(summonerName, tagLine);
+
+        ResponseMatchDto responseDto = new ResponseMatchDto();
+
+            responseDto.setLolNickname(summonerName);
+            responseDto.setTag(tagLine);
+            responseDto.setSIdList(sIds);
+
+        return responseDto;
+
+
+
+    }
+
+
+
+
+
+
+
+
 
     //게시글 삭제하기
     public void deleteSquad(Long sId) {

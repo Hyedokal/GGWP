@@ -38,6 +38,13 @@ public class MemberApiController {
             return response;
         }
 
+        @GetMapping("match/list")
+        public ResponseEntity<? super GetMatchInfoResponseDto> getMatchList(
+                @AuthenticationPrincipal String uuid
+        ) {
+            ResponseEntity<? super GetMatchInfoResponseDto> response = memberService.getMatchInfo(uuid);
+            return response;
+        }
 
 
     @PatchMapping("/lolNickname")
@@ -71,5 +78,10 @@ public class MemberApiController {
     public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(@AuthenticationPrincipal String uuid) {
         return memberService.getPersonalities(uuid);
     }
+
+
+
+    // squad-service에서
+
 }
 

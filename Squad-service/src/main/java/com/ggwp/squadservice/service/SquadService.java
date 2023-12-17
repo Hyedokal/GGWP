@@ -1,6 +1,8 @@
 package com.ggwp.squadservice.service;
 
 import com.ggwp.squadservice.domain.Squad;
+import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
@@ -27,4 +29,8 @@ public interface SquadService {
     Page<ResponseSquadDto> searchPagedSquad(RequestSquadPageDto.Search dto);
 
     Squad approveSquad(Long sId);
+
+
+    ResponseMatchDto getMatchInfo(RequestMatchDto dto);
+
 }

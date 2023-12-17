@@ -2,6 +2,8 @@ package com.ggwp.commentservice.service.impl;
 
 import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.domain.QComment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,6 +124,17 @@ public class CommentServiceImpl implements CommentService {
         dto.setApproved(true);
         comment.updateComment(dto);
         return commentRepository.save(comment);
+    }
+
+
+
+    @Override
+    public List<ResponseMatchDto> getMatchInfo(RequestMatchDto dto) {
+        List<Comment> comments = commentRepository.findBysIdInAndApproved(dto.getSIdList(), true);
+        return comments.stream()
+                .map(comment->new ResponseMatchDto(comment.getSummonerName(),comment.getTagLine()))
+                .collect(Collectors.toList());
+
     }
 
     public Page<ResponseCommentDto> searchPagedComment(RequestPageDto.Search dto) {

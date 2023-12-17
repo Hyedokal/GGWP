@@ -1,11 +1,16 @@
 package com.ggwp.memberservice.service.impl;
 
 import com.ggwp.memberservice.domain.Member;
+import com.ggwp.memberservice.dto.feign.request.RequestMatchDto;
+import com.ggwp.memberservice.dto.feign.response.ResponseMatchDto;
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
 import com.ggwp.memberservice.dto.request.user.PatchTag;
 import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
+import com.ggwp.memberservice.dto.response.ResponseCode;
 import com.ggwp.memberservice.dto.response.ResponseDto;
+import com.ggwp.memberservice.dto.response.ResponseMessage;
 import com.ggwp.memberservice.dto.response.user.*;
+import com.ggwp.memberservice.feign.SquadFeignClient;
 import com.ggwp.memberservice.repository.MemberRepository;
 import com.ggwp.memberservice.service.MemberService;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,6 +26,7 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final SquadFeignClient squadFeignClient;
 
     @Override
     public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String uuid) {
@@ -142,6 +148,36 @@ public class MemberServiceImpl implements MemberService {
         PersonalitiesInfoResponseDto responseDto = PersonalitiesInfoResponseDto.success(personalities);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+
+    //todo    //uuid로 맴버를 찾음 없으면 notExistUser
+    //        // 맴버가 있으면 lolNickname, tag를 가져옴
+    //        //feignClient로 lolNickname, tag를 보내서 매치정보를 받아옴
+    //        //ResponseMatchDto에 lolNickname, tag, sIdList를 넣어서 반환
+    @Override
+    public ResponseEntity<? super GetMatchInfoResponseDto> getMatchInfo(String uuid) {
+        Member member = memberRepository.findByUuid(uuid); // uuid로 맴버를 찾음 없으면 notExistUser
+        if (member == null) {
+            return GetMatchInfoResponseDto.notExistUser();
+        }
+
+        String lolNickname = member.getLolNickname(); // 맴버가 있으면 lolNickname, tag를 가져옴
+        String tag = member.getTag();
+
+        RequestMatchDto requestMatchDto = new RequestMatchDto(); // feignClient로 lolNickname, tag를 보내서 매치정보를 받아옴
+        requestMatchDto.setSummonerName(lolNickname);
+        requestMatchDto.setTagLine(tag);
+        ResponseEntity<ResponseMatchDto> response = squadFeignClient.getMatchInfo(requestMatchDto); //todo feignClient로 lolNickname, tag를 보내서 매치정보를 받아옴
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            ResponseMatchDto responseMatchDto = response.getBody();
+            return GetMatchInfoResponseDto.success(responseMatchDto); //ResponseMatchDto에 lolNickname, tag, sIdList를 넣어서 반환
+        }else{
+            return GetMatchInfoResponseDto.notExistUser();
+        }
+
+
     }
 
 
