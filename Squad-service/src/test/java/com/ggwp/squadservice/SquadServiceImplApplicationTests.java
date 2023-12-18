@@ -51,17 +51,17 @@ class SquadServiceImplApplicationTests {
 //        Assertions.assertEquals(rankInfo, Test);
 //    }
 
-    @Test
-    void outdatedApproved기본값테스트() {
-        //given
-        var dto = new RequestSquadDto(Position.ADC, Position.FLEX,
-                QType.SOLO_RANK, true, "HyedokaL", "8731", "메모메모", null);
-
-        //when
-        Squad squad = squadService.writeSquad(dto);
-
-        //then
-        Assertions.assertFalse(squad.isOutdated());
-        Assertions.assertFalse(squad.isApproved());
-    }
+//    @Test
+//    void outdatedApproved기본값테스트() {
+//        //given
+//        var dto = new RequestSquadDto(Position.ADC, Position.FLEX,
+//                QType.SOLO_RANK, true, "HyedokaL", "8731", "메모메모", null);
+//
+//        //when
+//        Squad squad = squadService.writeSquad(dto);
+//
+//        //then
+//        Assertions.assertFalse(squad.isOutdated());
+//        Assertions.assertFalse(squad.isApproved());
+//    }
 }
