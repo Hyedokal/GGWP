@@ -19,5 +19,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT COUNT(m) FROM Member m WHERE m.lolNickname = :lolNickname AND m.tag = :tag")
     Long countByLolNicknameAndTag(@Param("lolNickname") String lolNickname, @Param("tag") String tag);
+
+
 }
 

@@ -11,4 +11,5 @@ import lombok.Setter;
 public class PatchLolNickNameRequestDto {
     @NotBlank
     String lolNickName;
+    String tag;
 }

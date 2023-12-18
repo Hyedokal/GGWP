@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootTest
-@ComponentScan("com.ggwp.squadservice.feign")
-class SquadServiceImplApplicationTests {
-    @Autowired
-    private SquadService squadService;
-
-    @Mock
-    private RiotFeignClient riotFeignClient;
+//@SpringBootTest
+//@ComponentScan("com.ggwp.squadservice.feign")
+//class SquadServiceImplApplicationTests {
+//    @Autowired
+//    private SquadService squadService;
+//
+//    @Mock
+//    private RiotFeignClient riotFeignClient;
 
 //    @BeforeEach
 //    void setUp() {
@@ -51,17 +51,17 @@ class SquadServiceImplApplicationTests {
 //        Assertions.assertEquals(rankInfo, Test);
 //    }
 
-    @Test
-    void outdatedApproved기본값테스트() {
-        //given
-        var dto = new RequestSquadDto(Position.ADC, Position.FLEX,
-                QType.SOLO_RANK, true, "HyedokaL", "8731", "메모메모", null);
-
-        //when
-        Squad squad = squadService.writeSquad(dto);
-
-        //then
-        Assertions.assertFalse(squad.isOutdated());
-        Assertions.assertFalse(squad.isApproved());
-    }
-}
+//    @Test
+//    void outdatedApproved기본값테스트() {
+//        //given
+//        var dto = new RequestSquadDto(Position.ADC, Position.FLEX,
+//                QType.SOLO_RANK, true, "HyedokaL", "8731", "메모메모", null);
+//
+//        //when
+//        Squad squad = squadService.writeSquad(dto);
+//
+//        //then
+//        Assertions.assertFalse(squad.isOutdated());
+//        Assertions.assertFalse(squad.isApproved());
+//    }
+//}

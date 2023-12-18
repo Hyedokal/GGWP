@@ -83,6 +83,7 @@ public class CommentController {
 
     @PostMapping("/feign/match")  // json으로 받아서 처리
     public ResponseEntity<List<ResponseMatchDto>> getSummonerDetails(@RequestBody RequestMatchDto requestDto) {
+
         List<Long> sIdList = requestDto.getIds();
         System.out.println("sIdList: " + sIdList);
         List<ResponseMatchDto> response = commentService.getSummonerDetails(requestDto);

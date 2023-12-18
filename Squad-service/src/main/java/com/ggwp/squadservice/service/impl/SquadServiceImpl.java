@@ -126,17 +126,7 @@ public class SquadServiceImpl implements SquadService {
             responseDto.setSIdList(sIds);
 
         return responseDto;
-
-
-
     }
-
-
-
-
-
-
-
 
 
     //게시글 삭제하기

@@ -23,7 +23,10 @@ return  ResponseEntity.status(HttpStatus.OK).body(result);
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
-
+    public static ResponseEntity<ResponseDto> nicknameAndTagAlreadyTaken() {
+        ResponseDto result = new ResponseDto(ResponseCode.DUPLICATED_LOL_NICKNAME_TAG, ResponseMessage.DUPLICATED_LOL_NICKNAME_TAG);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
     public static ResponseEntity<ResponseDto> duplicateEmail() {
         ResponseDto result = new ResponseDto(ResponseCode.DUPLICATED_EMAIL, ResponseMessage.DUPLICATED_EMAIL);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);

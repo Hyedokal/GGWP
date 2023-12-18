@@ -17,6 +17,7 @@ public enum ResponseCode {
     NO_PERMISSION("NP"),
     DATABASE_ERROR("DBE");
 
+
     private final String code;
 
     ResponseCode(String code) {
