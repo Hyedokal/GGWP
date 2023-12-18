@@ -13,6 +13,7 @@ import com.ggwp.searchservice.league.feign.LoLToLeagueFeign;
 import com.ggwp.searchservice.league.repository.LeagueRepository;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import com.ggwp.searchservice.summoner.service.SummonerService;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,35 +37,45 @@ public class LeagueServiceImpl implements LeagueService {
     @Value("${LOL.apikey}")
     private String apiKey;
 
-    private List<CreateLeagueDto> leagueFeign(Summoner summoner) {
-        return leagueFeign.getLeagues(summoner.getId(), apiKey);
+    private List<CreateLeagueDto> leagueFeign(String summonerId) {
+        return leagueFeign.getLeagues(summonerId, apiKey).orElseThrow(()->
+                new CustomException(ErrorCode.NotFeginException));
     }
 
     @Override
-    @Transactional
-    public List<League> createLeague(Summoner summoner) {
-        List<League> leagueList = new ArrayList<>();
-        List<CreateLeagueDto> leagueDtoList = leagueFeign(summoner);
+    public void createLeague(String summonerId) {
+        List<CreateLeagueDto> leagueDtoList = leagueFeign(summonerId);
 
         for (CreateLeagueDto createLeagueDto : leagueDtoList) {
-            leagueList.add(leagueRepository.save(leaguetoEntity(createLeagueDto, summoner)));
+            if (createLeagueDto.getLeagueId() != null) {
+                leagueRepository.save(leaguetoEntity(createLeagueDto));
+            }
         }
-        return leagueList;
     }
 
     @Override
-    @Transactional
-    public void updateLeagues(Summoner summoner) {
-        List<League> leagueList = findLeagues(summoner);
-        List<CreateLeagueDto> leagueDtoList = leagueFeign(summoner);
+    public void updateLeagues(String summonerId) {
+
+        List<League> leagueList = findLeagues(summonerId);
+        List<CreateLeagueDto> leagueDtoList = leagueFeign(summonerId);
 
         for (League league : leagueList) {
             for (CreateLeagueDto createLeagueDto : leagueDtoList) {
                 if (createLeagueDto.getQueueType().equals(league.getQueueType())) {
                     league.updateLeague(createLeagueDto);
+                    leagueRepository.save(league);
+                } else {
+                    if (createLeagueDto.getLeagueId() == null) {
+                        break; // CHERRY -> 아레나 모드도 전적에 담김. https://github.com/RiotGames/developer-relations/issues/861
+                    }
+                    leagueRepository.save(leaguetoEntity(createLeagueDto));
                 }
             }
         }
+    }
+
+    public boolean existLeague(String summonerId) {
+        return leagueRepository.existsLeaguesBySummonerId(summonerId);
     }
 
     // 리그 정보 얻기 No - API
@@ -75,13 +86,13 @@ public class LeagueServiceImpl implements LeagueService {
         Account account = accountService.findAccount(frontDto); // 토크으로 Account
         Summoner summoner = summonerService.findSummoner(account); // Summoner 가져오기
 
-        List<League> leagueList = findLeagues(summoner); // 리그 가져오기
+        List<League> leagueList = findLeagues(summoner.getId()); // 리그 가져오기
 
         return leagueToDto(leagueList);
     }
 
-    private List<League> findLeagues(Summoner summoner) {
-        return leagueRepository.findLeaguesBySummonerId(summoner.getId())
+    private List<League> findLeagues(String summonerId) {
+        return leagueRepository.findLeaguesBySummonerId(summonerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NotFindLeagues));
     }
 
@@ -94,7 +105,7 @@ public class LeagueServiceImpl implements LeagueService {
         return leagueDtoList;
     }
 
-    private League leaguetoEntity(CreateLeagueDto leagueDto, Summoner summoner) {
+    private League leaguetoEntity(CreateLeagueDto leagueDto) {
         return League.builder()
                 .leagueId(leagueDto.getLeagueId())
                 .queueType(leagueDto.getQueueType())
@@ -103,7 +114,8 @@ public class LeagueServiceImpl implements LeagueService {
                 .leaguePoints(leagueDto.getLeaguePoints())
                 .wins(leagueDto.getWins())
                 .losses(leagueDto.getLosses())
-                .summoner(summoner)
+                .summonerId(leagueDto.getSummonerId())
+                .summonerName(leagueDto.getSummonerName())
                 .build();
     }
 }

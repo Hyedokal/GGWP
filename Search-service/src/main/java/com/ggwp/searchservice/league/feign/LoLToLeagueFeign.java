@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @FeignClient(name = "lol-league", url = "https://kr.api.riotgames.com/lol/")
 public interface LoLToLeagueFeign {
 
     @GetMapping("league/v4/entries/by-summoner/{encryptedSummonerId}")
-    List<CreateLeagueDto> getLeagues(
+    Optional<List<CreateLeagueDto>> getLeagues(
             @PathVariable("encryptedSummonerId") String encryptedSummonerId,
             @RequestParam("api_key") String apiKey
     );

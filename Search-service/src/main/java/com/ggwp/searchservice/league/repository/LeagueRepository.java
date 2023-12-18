@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface LeagueRepository extends JpaRepository<League, Long> {
 
     Optional<List<League>> findLeaguesBySummonerId(String summonerId);
-
+    boolean existsLeaguesBySummonerId(String summonerId);
 }

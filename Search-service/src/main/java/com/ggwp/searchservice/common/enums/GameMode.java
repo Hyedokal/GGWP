@@ -7,10 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum GameMode {
 
-    DRAFT_PICK_5V5(400, "일반게임"),
-    RANKED_SOLO(420, "솔로랭크"),
-    RANKED_FLEX(440, "자유랭크"),
-    HOWLING_ABYSS(450, "무작위 총력전");
+    DRAFT_PICK_5V5(400, " DRAFT_PICK_5V5"),
+    RANKED_SOLO_5x5(420, "RANKED_SOLO_5x5"),
+    RANKED_FLEX_SR(440, "RANKED_FLEX_SR"),
+    HOWLING_ABYSS(450, "HOWLING_ABYSS");
 
     private final int queueId;
     private final String description;

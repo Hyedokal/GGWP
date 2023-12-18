@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MatchSummonerServiceImpl implements MatchSummonerService {
 
@@ -39,7 +40,6 @@ public class MatchSummonerServiceImpl implements MatchSummonerService {
                 .build();
     }
 
-    @Transactional
     @Override
     public MatchSummoner createMatchSummoner(Match match, Summoner summoner) {
         MatchSummoner matchSummoner = MatchSummoner.builder()

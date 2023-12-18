@@ -1,8 +1,10 @@
 package com.ggwp.searchservice.account.domain;
 
-import com.ggwp.searchservice.account.dto.FeignAccountDto;
-import com.ggwp.searchservice.summoner.domain.Summoner;
-import jakarta.persistence.*;
+import com.ggwp.searchservice.account.dto.CreateAccountDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,14 +31,10 @@ public class Account {
     @Column(nullable = true) // - Null일 수 있다.
     private String tagLine; // 롤 태그
 
-    @OneToOne // (계정과 소환사는 1:1 관계이다.)
-    @JoinColumn(name = "summoner_id")
-    private Summoner summoner;
-
     @Version
     private int version;
 
-    public void updateAccount(FeignAccountDto accountDto) {
+    public void updateAccount(CreateAccountDto accountDto) {
         this.gameName = accountDto.getGameName();
         this.tagLine = accountDto.getTagLine();
     }

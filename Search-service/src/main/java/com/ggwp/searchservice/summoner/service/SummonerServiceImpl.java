@@ -8,6 +8,7 @@ import com.ggwp.searchservice.common.exception.ErrorCode;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
 import com.ggwp.searchservice.summoner.dto.ResponseSummonerDto;
+import com.ggwp.searchservice.summoner.feign.LOLToSummonerFeign;
 import com.ggwp.searchservice.summoner.repository.SummonerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class SummonerServiceImpl implements SummonerService {
 
     private final SummonerRepository summonerRepository;
     private final AccountService accountService;
+    private final LOLToSummonerFeign lolToSummonerFeign;
 
     @Override
     public Summoner findSummoner(Account account) { // Optional을 통해 Summoner 가져오기
@@ -49,6 +51,11 @@ public class SummonerServiceImpl implements SummonerService {
     @Override
     public void saveSummoner(Summoner summoner) {
         summonerRepository.save(summoner);
+    }
+
+    public ResponseSummonerDto summonerFeign(String puuid, String api_key) {
+        return lolToSummonerFeign.getSummonerByPuuid(puuid, api_key).orElseThrow(() ->
+                new CustomException(ErrorCode.NotFeginException));
     }
 
 }

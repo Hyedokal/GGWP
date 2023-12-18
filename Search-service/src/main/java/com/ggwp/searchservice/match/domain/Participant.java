@@ -1,5 +1,6 @@
 package com.ggwp.searchservice.match.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +39,9 @@ public class Participant {
 
     @Column(name = "summoner_level", nullable = false)
     private int summonerLevel;
+
+    @JsonProperty("riotIdName")
+    private String riotIdName;
 
     @Column(name = "riotIdTagline", nullable = true) // null 가능
     private String riotIdTagline;
@@ -85,19 +89,19 @@ public class Participant {
     private int totalDamageTaken; // 총 탱량
     @Column(nullable = false)
     private String teamPosition;
-    @Column(name = "primary_description", nullable = false)
-    private String primaryDescription;
-    @Column(name = "sub_description", nullable = false)
-    private String subDescription;
 
     @Column(name = "primary_style", nullable = false)
-    private String primaryStyle;
+    private int primaryStyle;
 
     @Column(name = "sub_style", nullable = false)
-    private String subStyle;
+    private int subStyle;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_pk")
     private Team team;
+
+    @ManyToOne
+    @JoinColumn(name = "match_id")
+    private Match match;
 
 }

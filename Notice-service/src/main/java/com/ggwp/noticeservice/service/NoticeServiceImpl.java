@@ -34,9 +34,9 @@ public class NoticeServiceImpl implements NoticeService {
 
     // 알림 생성 (보낸 사람, 받는 사람, 상태)
 
-    public void createNotice(RequestFeignDto requestFeignDto){
+    public Notice createNotice(RequestFeignDto requestFeignDto){
         ResponseCommentDto responseCommentDto = commentFeign.getComment(requestFeignDto.getCId());
-        ResponseSquadDto responseSquadDto = squadFeign.getOneSquad(requestFeignDto.getSId());
+        ResponseSquadDto responseSquadDto = squadFeign.getOneSquad(responseCommentDto.getSId());
         Notice notice = Notice.builder()
                 .senderName(responseSquadDto.getSummonerName())
                 .senderTag(responseSquadDto.getTagLine())
@@ -46,8 +46,9 @@ public class NoticeServiceImpl implements NoticeService {
                 .receiverTag(responseCommentDto.getTagLine())
                 .build();
         // 알림 저장
-        noticeRepository.save(notice);
         alarmService.alarmByMessage(noticeToDto(notice));
+
+        return noticeRepository.save(notice);
     }
 
     private ResponseNoticeDto noticeToDto(Notice notice){

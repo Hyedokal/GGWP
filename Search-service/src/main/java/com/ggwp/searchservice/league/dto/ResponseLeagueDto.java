@@ -23,4 +23,8 @@ public class ResponseLeagueDto {
 
     private int losses;
 
+    private String summonerId;
+
+    private String summonerName;
+
 }

@@ -1,5 +1,6 @@
 package com.ggwp.searchservice.league.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ggwp.searchservice.league.dto.CreateLeagueDto;
 import com.ggwp.searchservice.league.dto.ResponseLeagueDto;
 import com.ggwp.searchservice.summoner.domain.Summoner;
@@ -38,14 +39,13 @@ public class League {
     private int wins; // 승리
     @Column(nullable = false)
     private int losses; // 패배
+    @Column(nullable = false)
+    private String summonerId;
+    @Column(nullable = false)
+    private String summonerName;
 
     @Version
     private int version;
-
-    // 다대일 연결 ( 리그 2 : 소환사 1)
-    @ManyToOne
-    @JoinColumn(name = "summoner_id")
-    private Summoner summoner;
 
     public ResponseLeagueDto toDto(League league) {
         return ResponseLeagueDto.builder()
@@ -56,16 +56,21 @@ public class League {
                 .leaguePoints(league.getLeaguePoints())
                 .wins(league.getWins())
                 .losses(league.getLosses())
+                .summonerId(league.getSummonerId())
+                .summonerName(league.getSummonerName())
                 .build();
     }
 
     public void updateLeague(CreateLeagueDto createLeagueDto) {
         this.leagueId = createLeagueDto.getLeagueId();
         this.leaguePoints = createLeagueDto.getLeaguePoints();
+        this.queueType = createLeagueDto.getQueueType();
         this.wins = createLeagueDto.getWins();
         this.losses = createLeagueDto.getLosses();
         this.ranks = createLeagueDto.getRank();
         this.tier = createLeagueDto.getTier();
+        this.summonerId = createLeagueDto.getSummonerId();
+        this.summonerName = createLeagueDto.getSummonerName();
     }
 }
 
