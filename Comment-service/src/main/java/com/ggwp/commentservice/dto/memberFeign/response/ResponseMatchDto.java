@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseMatchDto {
+    private Long id;
     private String summonerName;
     private String tagLine;
 

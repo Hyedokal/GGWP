@@ -118,7 +118,7 @@ public class CommentServiceImpl implements CommentService {
 
             for (Comment comment : comments) {
                 if (comment != null) {
-                    responseList.add(new ResponseMatchDto(comment.getSummonerName(), comment.getTagLine()));
+                    responseList.add(new ResponseMatchDto(comment.getSId(),comment.getSummonerName(), comment.getTagLine()));
                 }
             }
         }

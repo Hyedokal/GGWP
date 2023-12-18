@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
+@Data@NoArgsConstructor
 public class RequestMatchDto {
 
     private List<Long> ids;
