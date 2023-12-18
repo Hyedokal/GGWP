@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "sqaud-service")
+@FeignClient(name = "squad-service")
 public interface NoticeToSquadFeign {
 
     @GetMapping("/v1/squads/{sId}") // commentId를 통해 커멘트 가져오기
