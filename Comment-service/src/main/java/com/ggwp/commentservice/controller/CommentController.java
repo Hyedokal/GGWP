@@ -81,19 +81,12 @@ public class CommentController {
     }
 
 
-    @PostMapping("/feign/match")
-    public ResponseEntity<List<ResponseMatchDto>> getMatchInfo(@RequestBody RequestMatchDto dto) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<ResponseMatchDto> responseMatchDtoList = new ArrayList<>();
-        List<Map<String, Object>> matchList = dto.getMatchList();
-        for (Map<String, Object> match : matchList) {
-            String matchJson = objectMapper.writeValueAsString(match);
-            ResponseMatchDto responseMatchDto = objectMapper.readValue(matchJson, new TypeReference<ResponseMatchDto>() {
-            });
-            responseMatchDtoList.add(responseMatchDto);
-        }
-        return ResponseEntity.ok(responseMatchDtoList);
-
+    @PostMapping("/feign/match")  // json으로 받아서 처리
+    public ResponseEntity<List<ResponseMatchDto>> getSummonerDetails(@RequestBody RequestMatchDto requestDto) {
+        List<Long> sIdList = requestDto.getIds();
+        System.out.println("sIdList: " + sIdList);
+        List<ResponseMatchDto> response = commentService.getSummonerDetails(requestDto);
+        System.out.println("response: " + response);
+        return ResponseEntity.ok().body(response);
     }
-
 }

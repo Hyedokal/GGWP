@@ -2,6 +2,8 @@ package com.ggwp.commentservice.service.impl;
 
 import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.domain.QComment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
@@ -28,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -105,6 +106,27 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.COMMENT_NOT_FOUND));
         commentRepository.delete(comment);
     }
+
+
+
+    @Override
+    public List<ResponseMatchDto> getSummonerDetails(RequestMatchDto requestDto) {
+        List<ResponseMatchDto> responseList = new ArrayList<>();
+
+        for (Long sId : requestDto.getIds()) {
+            List<Comment> comments = commentRepository.findAllBysId(sId);
+
+            for (Comment comment : comments) {
+                if (comment != null) {
+                    responseList.add(new ResponseMatchDto(comment.getSummonerName(), comment.getTagLine()));
+                }
+            }
+        }
+
+        return responseList;
+    }
+
+
 
 
     //댓글 상세 조회하기

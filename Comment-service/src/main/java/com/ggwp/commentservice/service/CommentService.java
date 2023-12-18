@@ -17,6 +17,8 @@ public interface CommentService {
 
     void deleteComment(Long cId);
 
+    List<ResponseMatchDto> getSummonerDetails(RequestMatchDto requestDto);
+
     ResponseCommentDto getOneComment(Long cId);
 
 

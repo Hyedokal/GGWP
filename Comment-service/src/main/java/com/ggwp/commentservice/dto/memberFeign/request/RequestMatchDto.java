@@ -1,16 +1,17 @@
 package com.ggwp.commentservice.dto.memberFeign.request;
 
+
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class RequestMatchDto {
 
-    private List<Long> sIdList;
+    private List<Long> ids;
 
 
 }

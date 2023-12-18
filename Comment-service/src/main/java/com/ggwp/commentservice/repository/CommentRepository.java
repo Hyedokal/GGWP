@@ -15,4 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllBysId(Long sId);
 
 
+
+    // sid 리스트로 댓글 리스트 가져오기
 }
