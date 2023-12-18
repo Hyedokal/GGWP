@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri:
+            file://C:\Users\1\Desktop\GGWP_Private
+server:
+  port: 8888
