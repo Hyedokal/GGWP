@@ -1,5 +1,7 @@
 package com.ggwp.searchservice.match.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.account.dto.CreateAccountDto;
 import com.ggwp.searchservice.account.dto.ResponseAccountDto;
@@ -8,7 +10,6 @@ import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.enums.GameMode;
 import com.ggwp.searchservice.common.exception.CustomException;
 import com.ggwp.searchservice.common.exception.ErrorCode;
-import com.ggwp.searchservice.league.domain.League;
 import com.ggwp.searchservice.league.service.LeagueService;
 import com.ggwp.searchservice.match.MatchRepository.MatchRepository;
 import com.ggwp.searchservice.match.domain.*;
@@ -16,6 +17,7 @@ import com.ggwp.searchservice.match.dto.MatchDto;
 import com.ggwp.searchservice.match.dto.MatchSummonerDto;
 import com.ggwp.searchservice.match.dto.RequestPageDto;
 import com.ggwp.searchservice.match.feign.LoLToMatchFeign;
+import com.ggwp.searchservice.match.presentation.MatchMQProducer;
 import com.ggwp.searchservice.summoner.domain.Summoner;
 import com.ggwp.searchservice.summoner.dto.CreateSummonerDto;
 import com.ggwp.searchservice.summoner.service.SummonerService;
@@ -44,15 +46,20 @@ public class MatchServiceImpl implements MatchService {
 
     private final LoLToMatchFeign matchFeign;
     private final MatchRepository matchRepository;
-
     private final LeagueService leagueService;
     private final AccountService accountService;
     private final MatchSummonerService matchSummonerService;
     private final SummonerService summonerService;
     private final EntityManager entityManager;
-
+    private final ObjectMapper objectMapper;
+    private final MatchMQProducer matchMQProducer;
     @Value("${LOL.apikey}")
     private String apiKey;
+
+    public void sendMessage(FrontDto frontDto) throws JsonProcessingException {
+        String message = objectMapper.writeValueAsString(frontDto);
+        matchMQProducer.sendCreateMessage(message);
+    }
 
     @Override
     public void createMatches(FrontDto frontDto) { // 매치 갱신
