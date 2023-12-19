@@ -10,7 +10,10 @@ public enum GameMode {
     DRAFT_PICK_5V5(400, " DRAFT_PICK_5V5"),
     RANKED_SOLO_5x5(420, "RANKED_SOLO_5x5"),
     RANKED_FLEX_SR(440, "RANKED_FLEX_SR"),
-    HOWLING_ABYSS(450, "HOWLING_ABYSS");
+    HOWLING_ABYSS(450, "HOWLING_ABYSS"),
+    ARENA4v0(1700, "Arena4v0"),
+    ARENA1v0(1710, "Arena");
+
 
     private final int queueId;
     private final String description;

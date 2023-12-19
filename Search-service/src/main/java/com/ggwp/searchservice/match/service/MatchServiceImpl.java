@@ -62,7 +62,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void createMatches(FrontDto frontDto) { // 매치 갱신
+    public String createMatches(FrontDto frontDto) { // 매치 갱신
 
         List<String> matchIds = getMatchIdsToFeign(frontDto); // Feign 1번
 
@@ -72,6 +72,7 @@ public class MatchServiceImpl implements MatchService {
                 createMatch(matchId);
             }
         }
+        return "5개의 매치 DB에 저장!";
     }
 
     // 가져온 matchId로 전적 db에서 조회해서 가져오기 // matchDto 가져오기

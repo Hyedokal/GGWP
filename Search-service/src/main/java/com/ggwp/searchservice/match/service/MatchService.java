@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MatchService {
 
-    void createMatches(FrontDto frontDto);
+    String createMatches(FrontDto frontDto);
 
     List<MatchDto> getMatchList(FrontDto frontDto);
 
