@@ -1,6 +1,8 @@
 package com.ggwp.squadservice.controller;
 
+import com.ggwp.squadservice.dto.memberfeign.request.PatchLolNickNameTagRequestDto;
 import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.PatchLolNickNameTagResponseDto;
 import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
 import com.ggwp.squadservice.dto.request.RequestCommentPageDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
@@ -11,10 +13,12 @@ import com.ggwp.squadservice.enums.Position;
 import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.feign.CommentFeignClient;
 import com.ggwp.squadservice.service.SquadService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,6 +110,16 @@ public class SquadController {
 
         return ResponseEntity.ok().body(responseDto);
 
+    }
+    @PutMapping(path = "/lolNickname-tag")
+    public ResponseEntity<PatchLolNickNameTagResponseDto> patchLolNickNameTag(
+            @RequestBody @Valid PatchLolNickNameTagRequestDto requestBody
+    ){
+
+        System.out.println("Received: " + requestBody.getExistLolNickName() + ", " + requestBody.getExistTag());
+
+        ResponseEntity<PatchLolNickNameTagResponseDto> response = squadService.patchLolNickTag(requestBody);
+        return response;
     }
 
 }

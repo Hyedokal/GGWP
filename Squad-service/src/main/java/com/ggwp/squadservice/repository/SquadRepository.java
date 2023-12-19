@@ -17,5 +17,6 @@ public interface SquadRepository extends JpaRepository<Squad, Long>, JpaSpecific
 
     @Query("SELECT s.sId FROM Squad s WHERE s.approved = true AND s.summonerName = :summonerName AND s.tagLine = :tagLine")
     List<Long> findSIdByApprovedAndSummonerNameAndTagLine(@Param("summonerName") String summonerName, @Param("tagLine") String tagLine);
+    List<Squad> findBySummonerNameAndTagLine(String summonerName, String tagLine);
 
 }

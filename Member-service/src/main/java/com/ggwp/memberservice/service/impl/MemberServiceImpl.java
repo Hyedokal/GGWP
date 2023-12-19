@@ -1,7 +1,9 @@
 package com.ggwp.memberservice.service.impl;
 
 import com.ggwp.memberservice.domain.Member;
+import com.ggwp.memberservice.dto.feign.request.FeignLolNickNameTagResponseDto;
 import com.ggwp.memberservice.dto.feign.request.RequestMatchDto;
+import com.ggwp.memberservice.dto.feign.response.FeignLolNickNameTagRequestDto;
 import com.ggwp.memberservice.dto.feign.response.ResponseMatchDto;
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
 import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -74,10 +77,15 @@ public class MemberServiceImpl implements MemberService {
             }
 
 
-            member.patchLolNickNameTag(dto);
+            FeignLolNickNameTagRequestDto requestBody = new FeignLolNickNameTagRequestDto(member.getLolNickname(), member.getTag(), dto.getLolNickName(), dto.getTag());
+            ResponseEntity<FeignLolNickNameTagResponseDto> feignResponse = squadFeignClient.feignLolNickNameTag(requestBody);
 
-            memberRepository.save(member);
-
+            if (feignResponse.getStatusCode() != HttpStatus.OK) {
+                return PatchLolNickNameTagResponseDto.notExistUser();
+            }else{
+                member.patchLolNickNameTag(dto);
+                memberRepository.save(member);
+            }
 
         } catch (Exception exception) {
             exception.printStackTrace();

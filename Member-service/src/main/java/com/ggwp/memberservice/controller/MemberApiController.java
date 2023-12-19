@@ -46,7 +46,7 @@ public class MemberApiController {
         }
 
 
-    @PatchMapping("/lolNicknameTag")
+    @PutMapping("/lolNicknameTag")
     public ResponseEntity<? super PatchLolNickNameTagResponseDto> patchLolNickNameTag(
             @RequestBody @Valid PatchLolNickNameTagRequestDto requestBody,
             @AuthenticationPrincipal String uuid
@@ -70,10 +70,6 @@ public class MemberApiController {
     public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(@AuthenticationPrincipal String uuid) {
         return memberService.getPersonalities(uuid);
     }
-
-
-
-    // squad-service에서
 
 }
 
