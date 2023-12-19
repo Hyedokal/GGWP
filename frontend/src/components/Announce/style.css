@@ -1,0 +1,195 @@
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+section.notice {
+    padding: 5px 0;
+}
+
+.page-title {
+    font-size: 20px; /* Reduced from 28px */
+    margin-bottom: 30px; /* Reduced from 60px */
+}
+.page-title h3 {
+    font-size: 20px;
+    color: #333333;
+    font-weight: 400;
+    text-align: center;
+}
+
+#board-search .search-window {
+    padding: 10px 0; /* Reduced from 15px */
+    background-color: #f9f7f9;
+}
+#board-search .search-window .search-wrap {
+    position: relative;
+    /*   padding-right: 124px; */
+    margin: 0 auto;
+    width: 80%;
+    max-width: 564px;
+}
+#board-search .search-window .search-wrap input {
+    height: 40px;
+    width: 100%;
+    font-size: 14px;
+    padding: 7px 14px;
+    border: 1px solid #ccc;
+}
+#board-search .search-window .search-wrap input:focus {
+    border-color: #333;
+    outline: 0;
+    border-width: 1px;
+}
+#board-search .search-window .search-wrap .btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 108px;
+    padding: 0;
+    font-size: 16px;
+}
+
+.board-table {
+    font-size: 14px;
+    width: 100%;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.board-table a {
+    color: #333;
+    display: inline-block;
+    line-height: 1.4;
+    word-break: break-all;
+    vertical-align: middle;
+}
+.board-table a:hover {
+    text-decoration: underline;
+}
+.board-table th {
+    text-align: center;
+}
+
+.board-table .th-num {
+    width: 100px;
+    text-align: center;
+}
+
+.board-table .th-date {
+    width: 200px;
+}
+
+.board-table th, .board-table td {
+    padding: 10px 0; /* Reduced from 14px */
+}
+
+.board-table tbody td {
+    border-top: 1px solid #e7e7e7;
+    text-align: center;
+}
+
+.board-table tbody th {
+    padding-left: 28px;
+    padding-right: 14px;
+    border-top: 1px solid #e7e7e7;
+    text-align: left;
+}
+
+.board-table tbody th p{
+    display: none;
+}
+
+
+
+/* reset */
+
+.clearfix:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.container {
+    width: 800px; /* Reduced from 1100px */
+    margin: 0 auto;
+}
+.blind {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    margin: -1px;
+    width: 1px;
+    height: 1px;
+}
+
+.group 			  {
+    position:relative;
+    margin-bottom: 30px; /* Reduced from 45px */
+}
+.input-announce {
+    position: absolute;
+    font-size:10px;
+    padding:10px 10px 10px 5px;
+    display:block;
+    width:100%;
+    border:none;
+    border-bottom:1px solid #757575;
+}
+.bar 	{ position:relative; display:block; width:100%; }
+.bar:before, .bar:after 	{
+    content:'';
+    height:2px;
+    width:0;
+    bottom:1px;
+    position:absolute;
+    background:#5264AE;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+}
+.bar:before {
+    left:50%;
+}
+.bar:after {
+    right:50%;
+}
+
+/* active state */
+input:focus ~ .bar:before, input:focus ~ .bar:after {
+    width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+    position:absolute;
+    height:60%;
+    width:100%;
+    top:25%;
+    left:0;
+    pointer-events:none;
+    opacity:0.5;
+}
+
+/* active state */
+input:focus ~ .highlight {
+    -webkit-animation:inputHighlighter 0.3s ease;
+    -moz-animation:inputHighlighter 0.3s ease;
+    animation:inputHighlighter 0.3s ease;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+    from { background:#5264AE; }
+    to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+    from { background:#5264AE; }
+    to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+    from { background:#5264AE; }
+    to 	{ width:0; background:transparent; }
+}
+
+
+
