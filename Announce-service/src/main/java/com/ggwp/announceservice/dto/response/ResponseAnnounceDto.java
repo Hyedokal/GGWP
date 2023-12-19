@@ -11,16 +11,16 @@ import java.sql.Timestamp;
 @Accessors(chain = true)
 public class ResponseAnnounceDto {
 
-    private String aTitle;
+    private String title;
 
-    private String aContent;
+    private String content;
 
     private Timestamp updatedAt;
 
     public static ResponseAnnounceDto fromEntity(Announce announce) {
         return new ResponseAnnounceDto()
-                .setATitle(announce.getATitle())
-                .setAContent(announce.getAContent())
+                .setTitle(announce.getTitle())
+                .setContent(announce.getContent())
                 .setUpdatedAt(announce.getUpdatedAt());
     }
 }

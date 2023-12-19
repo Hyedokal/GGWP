@@ -13,13 +13,13 @@ public class RequestAnnounceDto {
 
     @NotBlank(message = "제목은 반드시 입력되어야 합니다.")
     @Length(max = 50, message = "제목의 길이는 50자를 초과할 수 없습니다.")
-    private String aTitle;
+    private String title;
 
     @NotBlank(message = "내용은 반드시 입력되어야 합니다.")
     @Length(max = 1000, message = "내용의 길이는 1000자를 초과할 수 없습니다.")
-    private String aContent;
+    private String content;
 
     public Announce toEntity() {
-        return Announce.create(this.aTitle, this.aContent);
+        return Announce.create(this.title, this.content);
     }
 }
