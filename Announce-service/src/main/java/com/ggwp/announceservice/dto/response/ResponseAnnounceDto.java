@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 @Data
 @Accessors(chain = true)
 public class ResponseAnnounceDto {
+    private Long id;
 
     private String title;
 
@@ -19,6 +20,7 @@ public class ResponseAnnounceDto {
 
     public static ResponseAnnounceDto fromEntity(Announce announce) {
         return new ResponseAnnounceDto()
+                .setId(announce.getId())
                 .setTitle(announce.getTitle())
                 .setContent(announce.getContent())
                 .setUpdatedAt(announce.getUpdatedAt());
