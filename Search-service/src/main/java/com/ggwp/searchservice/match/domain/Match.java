@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @Getter
 @Table(name = "matches")
 @DynamicInsert
+@DynamicUpdate
 public class Match {
 
     @Id
@@ -40,11 +42,14 @@ public class Match {
     @Column(name = "game_duration", nullable = false)
     private long gameDuration; // 게임 지속 시각
 
+    @Column(name = "game_start_timestamp", nullable = false)
+    private long gameStartTimestamp; // 게임 시작 시각
+
     @Column(name = "game_end_timestamp", nullable = false)
     private long gameEndTimestamp; // 게임 종료 시각
 
-    @Column(name = "game_start_timestamp", nullable = false)
-    private long gameStartTimestamp; // 게임 시작 시각
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Participant> participants;
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Team> teams;
@@ -67,5 +72,12 @@ public class Match {
         }
 
         this.matchSummoners.addAll(matchSummoners);
+    }
+
+    public void addParticipants(List<Participant> participantList) {
+        if (this.participants == null) {
+            this.participants = new ArrayList<>();
+        }
+        this.participants.addAll(participantList);
     }
 }

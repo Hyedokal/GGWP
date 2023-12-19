@@ -26,6 +26,7 @@ public class MatchDto {
     public static class MetadataDto {
         @JsonProperty("matchId")
         private String matchId;
+
     }
 
     @Getter
@@ -81,6 +82,8 @@ public class MatchDto {
         private String summonerName;
 
         //// Account////////////
+        @JsonProperty("riotIdName")
+        private String riotIdName;
         @JsonProperty("riotIdTagline")
         private String riotIdTagline;
         ////////////////////////////////////////////////////////////
@@ -167,9 +170,6 @@ public class MatchDto {
     @AllArgsConstructor
     @Builder
     public static class PerkStyleDto {
-        @JsonProperty("description")
-        private String description;
-
         @JsonProperty("style")
         private int style;
     }
@@ -180,11 +180,59 @@ public class MatchDto {
     @AllArgsConstructor
     @Builder
     public static class TeamDto {
+        @JsonProperty("bans")
+        List<BanDto> bans;
+        @JsonProperty("objectives")
+        ObjectivesDto objectives;
         @JsonProperty("teamId")
         private int teamId;
-
         @JsonProperty("win")
         private boolean win;
 
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BanDto {
+        @JsonProperty("championId")
+        private int championId;
+        @JsonProperty("pickTurn")
+        private int pickTurn;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ObjectivesDto {
+        @JsonProperty("baron")
+        private ObjectiveDto baron;
+
+        @JsonProperty("champion")
+        private ObjectiveDto champion;
+        @JsonProperty("dragon")
+        private ObjectiveDto dragon;
+
+        @JsonProperty("inhibitor")
+        private ObjectiveDto inhibitor;
+        @JsonProperty("tower")
+        private ObjectiveDto tower;
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ObjectiveDto {
+        @JsonProperty("first")
+        private boolean first;
+        @JsonProperty("kills")
+        private int kills;
     }
 }

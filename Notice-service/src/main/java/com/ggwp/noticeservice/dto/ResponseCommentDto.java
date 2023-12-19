@@ -8,6 +8,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ResponseCommentDto {
 
+    private Long sId;
+
     private String summonerName;
 
     private String tagLine;

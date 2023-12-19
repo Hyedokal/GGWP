@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MatchService {
 
-    void createMatches(FrontDto frontDto) throws InterruptedException;
+    void createMatches(FrontDto frontDto);
 
     List<MatchDto> getMatchList(FrontDto frontDto);
 
