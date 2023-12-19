@@ -9,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 
 
 @Getter
-public class PatchLolNickNameResponseDto extends ResponseDto {
+public class PatchLolNickNameTagResponseDto extends ResponseDto {
 
 
-private PatchLolNickNameResponseDto(ResponseCode code, ResponseMessage message) {super(code, message);}
+private PatchLolNickNameTagResponseDto(ResponseCode code, ResponseMessage message) {super(code, message);}
 
-public static ResponseEntity<PatchLolNickNameResponseDto> success() {
-PatchLolNickNameResponseDto result = new PatchLolNickNameResponseDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+public static ResponseEntity<PatchLolNickNameTagResponseDto> success() {
+PatchLolNickNameTagResponseDto result = new PatchLolNickNameTagResponseDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
 return  ResponseEntity.status(HttpStatus.OK).body(result);
 }
 

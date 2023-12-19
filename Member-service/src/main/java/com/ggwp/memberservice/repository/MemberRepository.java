@@ -13,6 +13,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByEmail(String email);
     Member findByUuid (String uuid);
 
+    @Query("SELECT m FROM Member m WHERE m.lolNickname = :lolNickName AND m.tag = :tag")
+    Member findByLolNickNameAndTag(String lolNickName, String tag);
+
+
 
     boolean existsByEmail(String email); // 이메일 중복검사
 

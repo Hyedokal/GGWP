@@ -1,8 +1,7 @@
 package com.ggwp.memberservice.domain;
 
 
-import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
-import com.ggwp.memberservice.dto.request.user.PatchTag;
+import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
 import jakarta.persistence.*;
 
 import lombok.Builder;
@@ -72,15 +71,13 @@ public class Member extends BaseEntity {
 
 
 
-    public void patchLolNickName(PatchLolNickNameRequestDto dto) {
+    public void patchLolNickNameTag(PatchLolNickNameTagRequestDto dto) {
         this.lolNickname = dto.getLolNickName();
+        this.tag = dto.getTag();
     }
 
 
-    public void patchTag(PatchTag patchTagDto) {
-        this.tag = patchTagDto.getTag();
 
-    }
 
     public void setPersonalities(List<String> personalities) {
         this.personalities = personalities;

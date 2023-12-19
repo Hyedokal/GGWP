@@ -8,7 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchTag {
+public class PatchLolNickNameTagRequestDto {
+    @NotBlank
+    String lolNickName;
     @NotBlank
     String tag;
 }

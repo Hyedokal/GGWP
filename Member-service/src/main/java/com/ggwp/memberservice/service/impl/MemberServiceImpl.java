@@ -3,17 +3,13 @@ package com.ggwp.memberservice.service.impl;
 import com.ggwp.memberservice.domain.Member;
 import com.ggwp.memberservice.dto.feign.request.RequestMatchDto;
 import com.ggwp.memberservice.dto.feign.response.ResponseMatchDto;
-import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
-import com.ggwp.memberservice.dto.request.user.PatchTag;
+import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
 import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
-import com.ggwp.memberservice.dto.response.ResponseCode;
 import com.ggwp.memberservice.dto.response.ResponseDto;
-import com.ggwp.memberservice.dto.response.ResponseMessage;
 import com.ggwp.memberservice.dto.response.user.*;
 import com.ggwp.memberservice.feign.SquadFeignClient;
 import com.ggwp.memberservice.repository.MemberRepository;
 import com.ggwp.memberservice.service.MemberService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,13 +62,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ResponseEntity<? super PatchLolNickNameResponseDto> patchLolNickName(PatchLolNickNameRequestDto dto, String uuid) {
+    public ResponseEntity<? super PatchLolNickNameTagResponseDto> patchLolNickTag(PatchLolNickNameTagRequestDto dto, String uuid) {
         try {
             Member member = memberRepository.findByUuid(uuid);
             if (member == null) {
-                return PatchLolNickNameResponseDto.notExistUser();
+                return PatchLolNickNameTagResponseDto.notExistUser();
             }
-            member.patchLolNickName(dto);
+            Member existingMember = memberRepository.findByLolNickNameAndTag(dto.getLolNickName(), dto.getTag());
+            if (existingMember != null && !existingMember.getUuid().equals(uuid)) {
+                return PatchLolNickNameTagResponseDto.nicknameAndTagAlreadyTaken();
+            }
+
+
+            member.patchLolNickNameTag(dto);
 
             memberRepository.save(member);
 
@@ -81,26 +83,9 @@ public class MemberServiceImpl implements MemberService {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-        return PatchLolNickNameResponseDto.success();
+        return PatchLolNickNameTagResponseDto.success();
     }
 
-    @Override
-    public void patchTag(String uuid, PatchTag patchTagDto) {
-
-        try {
-            Member member = memberRepository.findByUuid(uuid);
-            if (member == null) {
-                throw new EntityNotFoundException();
-            }
-            member.patchTag(patchTagDto);
-            memberRepository.save(member); // Save the updated member
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-
-    }
 
     @Override
     public ResponseEntity<? super PersonalitiesResponseDto> addPersonalities(String uuid, PersonalitiesRequestDto dto) {
