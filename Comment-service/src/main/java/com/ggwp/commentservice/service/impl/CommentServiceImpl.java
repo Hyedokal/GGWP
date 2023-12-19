@@ -2,6 +2,8 @@ package com.ggwp.commentservice.service.impl;
 
 import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.domain.QComment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
@@ -106,6 +108,27 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
+
+    @Override
+    public List<ResponseMatchDto> getSummonerDetails(RequestMatchDto requestDto) {
+        List<ResponseMatchDto> responseList = new ArrayList<>();
+
+        for (Long sId : requestDto.getIds()) {
+            List<Comment> comments = commentRepository.findAllBysId(sId);
+
+            for (Comment comment : comments) {
+                if (comment != null) {
+                    responseList.add(new ResponseMatchDto(comment.getSId(),comment.getSummonerName(), comment.getTagLine()));
+                }
+            }
+        }
+
+        return responseList;
+    }
+
+
+
+
     //댓글 상세 조회하기
     public ResponseCommentDto getOneComment(Long cId) {
         Comment comment = commentRepository.findById(cId)
@@ -122,6 +145,8 @@ public class CommentServiceImpl implements CommentService {
         comment.updateComment(dto);
         return commentRepository.save(comment);
     }
+
+
 
     public Page<ResponseCommentDto> searchPagedComment(RequestPageDto.Search dto) {
         QComment qComment = QComment.comment;

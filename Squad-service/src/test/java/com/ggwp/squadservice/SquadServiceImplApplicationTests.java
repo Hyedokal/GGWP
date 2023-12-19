@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootTest
-@ComponentScan("com.ggwp.squadservice.feign")
-class SquadServiceImplApplicationTests {
-    @Autowired
-    private SquadService squadService;
-
-    @Mock
-    private RiotFeignClient riotFeignClient;
+//@SpringBootTest
+//@ComponentScan("com.ggwp.squadservice.feign")
+//class SquadServiceImplApplicationTests {
+//    @Autowired
+//    private SquadService squadService;
+//
+//    @Mock
+//    private RiotFeignClient riotFeignClient;
 
 //    @BeforeEach
 //    void setUp() {
@@ -64,4 +64,5 @@ class SquadServiceImplApplicationTests {
 //        Assertions.assertFalse(squad.isOutdated());
 //        Assertions.assertFalse(squad.isApproved());
 //    }
-}
+//}
+//}

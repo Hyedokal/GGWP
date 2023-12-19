@@ -171,7 +171,7 @@
                                 {currentList.map((item, index) => (
                                     <tr key={index} onClick={() => openViewModal(item)}> {/* Add onClick handler */}
                                         <td className="p-4 w-1/8 ">{item.sid}</td>
-                                        <td className="p-4 w-1/8">{item.summonerName}#{item.tag_line}</td>
+                                        <td className="p-4 w-1/8">{item.summonerName}#{item.tagLine}</td>
                                         <td className="p-4 w-1/8">{item.rank}</td>
                                         <td className="p-4 w-1/8">{item.myPos}</td>
                                         <td className="p-4 w-1/8">{item.wantPos}</td>
@@ -179,7 +179,7 @@
                                         <td className="p-4 w-1/8">{item.qtype}</td>
                                         <td className="p-4 w-1/8">{item.memo}</td>
                                         <td className="p-4 w-1/8">
-                                            {userInfo?.lolNickname === item.summonerName && userInfo?.tag === item.tag_line && (
+                                            {userInfo?.lolNickname === item.summonerName && userInfo?.tag === item.tagLine && (
                                                 <div className="flex space-x-2">
                                                     <button className="mr-3" onClick={(e) => handleEditClick(e, item)}>Edit</button>
                                                     <button onClick={() => handleDeleteClick(item.sid)}>Delete</button>

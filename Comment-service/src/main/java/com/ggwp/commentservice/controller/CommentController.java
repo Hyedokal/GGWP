@@ -1,19 +1,34 @@
 package com.ggwp.commentservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggwp.commentservice.domain.Comment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
+import com.ggwp.commentservice.repository.CommentRepository;
 import com.ggwp.commentservice.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/comments")
 @RequiredArgsConstructor
+@Slf4j
 public class CommentController {
 
     private final CommentService commentService;
@@ -63,5 +78,16 @@ public class CommentController {
     public ResponseEntity<String> approveComment(@PathVariable Long cId) {
         Comment comment = commentService.approveComment(cId);
         return ResponseEntity.ok().body("Approved Successfully: " + comment.getSId());
+    }
+
+
+    @PostMapping("/feign/match")  // json으로 받아서 처리
+    public ResponseEntity<List<ResponseMatchDto>> getSummonerDetails(@RequestBody RequestMatchDto requestDto) {
+
+        List<Long> sIdList = requestDto.getIds();
+        System.out.println("sIdList: " + sIdList);
+        List<ResponseMatchDto> response = commentService.getSummonerDetails(requestDto);
+        System.out.println("response: " + response);
+        return ResponseEntity.ok().body(response);
     }
 }

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
+import {UserInfo} from "../../../../types";
+import UserInfoStore from "../../../../stores/userInfo.store";
+import {BoardListResponseDto} from "../../BoardListResponseDto";
 
 interface Comment {
     myPos: string;
@@ -8,25 +11,40 @@ interface Comment {
     tagLine: string | null;
     memo: string;
     summonerRank: string;
-    // Add other fields as necessary
+    cid: number;
 }
 
 interface CommentSectionProps {
     sId: number;
+    refreshKey?: number; // Optional prop to trigger a refresh
+    post: BoardListResponseDto;
+
 }
 
 interface PaginationInfo {
     currentPage: number;
     totalPages: number;
 }
-
-const CommentSection: React.FC<CommentSectionProps> = ({ sId }) => {
+const handleMatchClick = (cid: number) => {
+    axios.put(`http://localhost:8000/v1/squads/comment/approve/${cid}`)
+        .then(response => {
+            // Handle successful response
+            console.log("Comment approved:", response);
+        })
+        .catch(error => {
+            // Handle error
+            console.error("Error approving comment:", error);
+        });
+};
+const CommentSection: React.FC<CommentSectionProps> = ({ sId, refreshKey,post}) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [pagination, setPagination] = useState<PaginationInfo>({ currentPage: 0, totalPages: 0 });
+    const userInfo = UserInfoStore(state => state.userInfo);
 
     useEffect(() => {
         fetchComments(sId, pagination.currentPage);
-    }, [sId, pagination.currentPage]);
+    }, [sId, pagination.currentPage, refreshKey]); // Add refreshKey as a dependency
+
 
     const fetchComments = (sId: number, page: number) => {
         axios.get(`http://localhost:8000/v1/squads/${sId}?page=${page}`)
@@ -53,7 +71,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ sId }) => {
             {/* Render comments */}
             {comments.map((comment, index) => (
                 <div key={index}>
-                    <p>{comment.summonerName}: {comment.memo}</p>
+                    <p>이메일: {userInfo?.email} {comment.summonerName}#{comment.tagLine}: {comment.memo} </p>
+                    {userInfo?.lolNickname === post.summonerName && userInfo?.tag === post.tagLine && (
+                        <button onClick={() => handleMatchClick(comment.cid)}>Match</button>
+                        )}
                 </div>
             ))}
 

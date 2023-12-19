@@ -26,8 +26,8 @@ public class SignUpResponseDto extends ResponseDto {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
-    public static ResponseEntity<ResponseDto> unCheckPassword() {
-        ResponseDto result = new ResponseDto(ResponseCode.UNCHECK_PASSWORD, ResponseMessage.UNCHECK_PASSWORD);
+    public static ResponseEntity<ResponseDto> duplicateLolNickTag() {
+        ResponseDto result = new ResponseDto(ResponseCode.DUPLICATED_LOL_NICKNAME_TAG, ResponseMessage.DUPLICATED_LOL_NICKNAME_TAG);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 

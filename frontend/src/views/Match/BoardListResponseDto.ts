@@ -3,7 +3,7 @@ export interface BoardListResponseDto {
     wantPos: string;
     useMic: boolean;
     summonerName: string;
-    tag_line: string | null;
+    tagLine: string | null;
     rank: string;
     memo: string;
     commentList: any[] | null;

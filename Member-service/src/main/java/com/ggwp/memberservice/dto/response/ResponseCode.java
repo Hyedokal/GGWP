@@ -8,6 +8,7 @@ public enum ResponseCode {
     VALIDATION_FAILED("VF"),
     DUPLICATED_EMAIL("DE"),
     UNCHECK_PASSWORD("UP"),
+    DUPLICATED_LOL_NICKNAME_TAG("DLNT"),
     DUPLICATED_NICKNAME("DN"),
     DUPLICATED_TEL_NUMBER("DT"),
     NOT_EXIST_USER("NU"),
@@ -15,6 +16,7 @@ public enum ResponseCode {
     SIGN_IN_FAILED("SF"),
     NO_PERMISSION("NP"),
     DATABASE_ERROR("DBE");
+
 
     private final String code;
 

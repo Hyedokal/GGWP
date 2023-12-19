@@ -2,6 +2,10 @@ package com.ggwp.squadservice.service.impl;
 
 import com.ggwp.squadservice.domain.QSquad;
 import com.ggwp.squadservice.domain.Squad;
+import com.ggwp.squadservice.dto.memberfeign.request.PatchLolNickNameTagRequestDto;
+import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.PatchLolNickNameTagResponseDto;
+import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
@@ -26,6 +30,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,6 +114,47 @@ public class SquadServiceImpl implements SquadService {
         dto.setApproved(true);
         squad.updateSquad(dto);
         return squadRepository.save(squad);
+    }
+
+
+    @Override
+    public ResponseMatchDto getMatchInfo(RequestMatchDto dto) {
+        String summonerName = dto.getSummonerName();// 소환사 이름
+        String tagLine = dto.getTagLine();// 소환사 태그
+        List<Long> sIds = squadRepository.findSIdByApprovedAndSummonerNameAndTagLine(summonerName, tagLine);
+
+        ResponseMatchDto responseDto = new ResponseMatchDto();
+
+            responseDto.setLolNickname(summonerName);
+            responseDto.setTag(tagLine);
+            responseDto.setSIdList(sIds);
+
+        return responseDto;
+    }
+
+    @Override
+    public ResponseEntity<PatchLolNickNameTagResponseDto> patchLolNickTag(PatchLolNickNameTagRequestDto requestBody) {
+
+        try {
+            List<Squad> squads = squadRepository.findBySummonerNameAndTagLine(requestBody.getExistLolNickName(), requestBody.getExistTag());
+
+            if (squads.isEmpty()) {
+                return ResponseEntity.ok(new PatchLolNickNameTagResponseDto(false, "No squads found with the provided summoner name and tag line."));
+            }
+
+            for (Squad squadItem : squads) {
+                squadItem.setSummonerName(requestBody.getLolNickName());
+                squadItem.setTagLine(requestBody.getTag());
+                squadRepository.save(squadItem);
+            }
+
+            return ResponseEntity.ok().body(new PatchLolNickNameTagResponseDto(true, "Squad data updated successfully."));
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new PatchLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));
+        }
     }
 
     //게시글 삭제하기

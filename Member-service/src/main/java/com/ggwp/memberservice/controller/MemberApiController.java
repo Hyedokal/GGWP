@@ -1,8 +1,7 @@
 package com.ggwp.memberservice.controller;
 
 
-import com.ggwp.memberservice.dto.request.user.PatchLolNickNameRequestDto;
-import com.ggwp.memberservice.dto.request.user.PatchTag;
+import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
 import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
 import com.ggwp.memberservice.dto.response.user.*;
 import com.ggwp.memberservice.service.MemberService;
@@ -38,25 +37,25 @@ public class MemberApiController {
             return response;
         }
 
+        @GetMapping("match/list")
+        public ResponseEntity<? super GetMatchInfoResponseDto> getMatchList(
+                @AuthenticationPrincipal String uuid
+        ) {
+            ResponseEntity<? super GetMatchInfoResponseDto> response = memberService.getMatchInfo(uuid);
+            return response;
+        }
 
 
-    @PatchMapping("/lolNickname")
-    public ResponseEntity<? super PatchLolNickNameResponseDto> patchLolNickName(
-            @RequestBody @Valid PatchLolNickNameRequestDto requestBody,
+    @PutMapping("/lolNicknameTag")
+    public ResponseEntity<? super PatchLolNickNameTagResponseDto> patchLolNickNameTag(
+            @RequestBody @Valid PatchLolNickNameTagRequestDto requestBody,
             @AuthenticationPrincipal String uuid
             ){
-        ResponseEntity<? super PatchLolNickNameResponseDto> response = memberService.patchLolNickName(requestBody, uuid);
+        ResponseEntity<? super PatchLolNickNameTagResponseDto> response = memberService.patchLolNickTag(requestBody, uuid);
         return response;
     }
 
-    //tag를 변경하는 메서드
-    @PatchMapping("/tag")
-    public ResponseEntity<String> patchTag(@RequestBody PatchTag patchTagDto, @AuthenticationPrincipal String uuid) {
 
-        memberService.patchTag(uuid, patchTagDto);
-        return ResponseEntity.ok().body("Modified Successfully");
-
-    }
         @PostMapping("/personalities")
     public ResponseEntity<? super PersonalitiesResponseDto> addMemberPersonalities(
             @RequestBody @Valid PersonalitiesRequestDto requestBody,
@@ -71,5 +70,6 @@ public class MemberApiController {
     public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(@AuthenticationPrincipal String uuid) {
         return memberService.getPersonalities(uuid);
     }
+
 }
 

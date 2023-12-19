@@ -6,6 +6,7 @@ public enum ResponseMessage {
     SUCCESS("Success.1"),
     VALIDATION_FAILED("Validation failed."),
     UNCHECK_PASSWORD("비밀번호 불일치"),
+    DUPLICATED_LOL_NICKNAME_TAG("중복된 닉네임입니다."),
     SIGN_IN_FAILED("Login information mismatch."),
     NO_PERMISSION("Do not have permission."),
     NOT_EXIST_USER("This user does not exist."),
