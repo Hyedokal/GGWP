@@ -21,6 +21,11 @@ public class AnnounceController {
     @Autowired
     private final AnnounceService announceService;
 
+    //health check
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Announce-service is available");
+    }
 
     //공지사항 리스트를 페이징처리하여 가져오는 메서드.
     @PostMapping("/search")
@@ -30,23 +35,26 @@ public class AnnounceController {
     }
 
     //공지사항 하나 가져오는 메서드
-    @GetMapping("/{aId}")
-    public ResponseEntity<ResponseAnnounceDto> getOneAnnounce(@PathVariable Long aId) {
-        ResponseAnnounceDto dto = announceService.getOneAnnounce(aId);
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseAnnounceDto> getOneAnnounce(@PathVariable Long id) {
+        ResponseAnnounceDto dto = announceService.getOneAnnounce(id);
         return ResponseEntity.ok().body(dto);
     }
 
     //공지사항 작성하는 메서드
     @PostMapping
     public ResponseEntity<String> writeAnnounce(@RequestBody RequestAnnounceDto dto) {
+        //로그
+        System.out.println(dto);
+        System.out.println(dto.getContent());
         announceService.writeAnnounce(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Saved Successfully");
     }
 
     //공지사항 수정하는 메서드
-    @PutMapping("/{aId}")
-    public ResponseEntity<String> editAnnounce(@PathVariable Long aId, @RequestBody RequestAnnounceDto dto) {
-        announceService.editAnnounce(aId, dto);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> editAnnounce(@PathVariable Long id, @RequestBody RequestAnnounceDto dto) {
+        announceService.editAnnounce(id, dto);
         return ResponseEntity.ok().body("Modified Successfully");
     }
 

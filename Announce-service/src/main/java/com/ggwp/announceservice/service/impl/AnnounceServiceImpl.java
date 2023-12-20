@@ -31,11 +31,11 @@ public class AnnounceServiceImpl implements AnnounceService {
     private final EntityManager entityManager;
 
 
-    //공지사항 작성 후 저장하기
-    public Announce writeAnnounce(RequestAnnounceDto dto) {
-        Announce announce = dto.toEntity();
-        return announceRepository.save(announce);
-    }
+        //공지사항 작성 후 저장하기
+        public Announce writeAnnounce(RequestAnnounceDto dto) {
+            Announce announce = dto.toEntity();
+            return announceRepository.save(announce);
+        }
 
     //공지사항 수정하기
     public Announce editAnnounce(Long aId, RequestAnnounceDto dto) {
@@ -74,7 +74,7 @@ public class AnnounceServiceImpl implements AnnounceService {
         QAnnounce qAnnounce = QAnnounce.announce;
         BooleanBuilder where = where();
         if (dto.getTitle() != null) {   //제목 검색 기능 추가.
-            where.and(qAnnounce.aTitle.contains(dto.getTitle()));
+            where.and(qAnnounce.title.contains(dto.getTitle()));
         }
         Long total = query().select(qAnnounce.count()) //SQL의 count(*) 값을 구하는 것과 같다.
                 .from(qAnnounce)
@@ -87,7 +87,7 @@ public class AnnounceServiceImpl implements AnnounceService {
             dtoList = query().select(qAnnounce)
                     .from(qAnnounce)
                     .where(where)
-                    .orderBy(qAnnounce.aId.desc())
+                    .orderBy(qAnnounce.id.desc())
                     .offset((long) dto.getPage() * dto.getSize())
                     .limit(dto.getSize())
                     .fetch()

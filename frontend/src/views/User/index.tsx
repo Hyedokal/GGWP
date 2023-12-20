@@ -49,7 +49,7 @@ export default function User() {
                     lolNickname: newLolNickName,
                     tag: newTag,
                     email: userInfo?.email ?? "",
-                    userRole: userInfo?.userRole ?? undefined
+                    userRole: userInfo?.role ?? undefined
                 } as UserInfo);
                 await fetchMatchHistory();
                 console.log('Update successful and match history re-fetched');
