@@ -6,6 +6,7 @@ import com.ggwp.memberservice.dto.feign.request.RequestMatchDto;
 import com.ggwp.memberservice.dto.feign.response.FeignLolNickNameTagRequestDto;
 import com.ggwp.memberservice.dto.feign.response.ResponseMatchDto;
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
+import com.ggwp.memberservice.dto.request.user.PatchProfileImageRequestDto;
 import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
 import com.ggwp.memberservice.dto.response.ResponseDto;
 import com.ggwp.memberservice.dto.response.user.*;
@@ -82,7 +83,7 @@ public class MemberServiceImpl implements MemberService {
 
             if (feignResponse.getStatusCode() != HttpStatus.OK) {
                 return PatchLolNickNameTagResponseDto.notExistUser();
-            }else{
+            } else {
                 member.patchLolNickNameTag(dto);
                 memberRepository.save(member);
             }
@@ -166,9 +167,25 @@ public class MemberServiceImpl implements MemberService {
         if (response.getStatusCode() == HttpStatus.OK) {
             ResponseMatchDto responseMatchDto = response.getBody();
             return GetMatchInfoResponseDto.success(responseMatchDto); //ResponseMatchDto에 lolNickname, tag, sIdList를 넣어서 반환
-        }else{
+        } else {
             return GetMatchInfoResponseDto.notExistUser();
         }
     }
 
+    @Override
+    public ResponseEntity<? super PatchProfileImageResponseDto> patchProfileImage(PatchProfileImageRequestDto dto, String uuid) {
+        try {
+
+            Member member = memberRepository.findByUuid(uuid);
+            if (member == null) return PatchProfileImageResponseDto.notExistUser();
+
+            member.patchProfileImage(dto);
+            memberRepository.save(member);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return PatchProfileImageResponseDto.success();
+
+    }
 }
