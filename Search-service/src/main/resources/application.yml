@@ -6,6 +6,11 @@ spring:
       - dev
     include:
       - db
+  rabbitmq:
+    host: ${rabbitmq.host}
+    username: ${rabbitmq.username}
+    password: ${rabbitmq.password}
+    port: ${rabbitmq.port}
 server:
   port: 0
 

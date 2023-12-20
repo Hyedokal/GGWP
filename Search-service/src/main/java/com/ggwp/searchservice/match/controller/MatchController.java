@@ -1,5 +1,6 @@
 package com.ggwp.searchservice.match.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ggwp.searchservice.common.dto.FrontDto;
 import com.ggwp.searchservice.common.dto.ResponseDto;
 import com.ggwp.searchservice.match.dto.MatchDto;
@@ -23,8 +24,9 @@ public class MatchController {
     private final MatchServiceImpl matchService;
 
     @PostMapping("/create") // 매치 5개 api 불러와서 저장 (예시: 엘리스바이 KR1)
-    public ResponseDto<String> createMatch(@Valid @RequestBody FrontDto frontDto) {
-        matchService.createMatches(frontDto);
+    public ResponseDto<String> createMatch(@Valid @RequestBody FrontDto frontDto) throws JsonProcessingException {
+        matchService.sendMessage(frontDto);
+//        matchService.createMatches(frontDto);
         return ResponseDto.success("Create Matches!");
     }
 

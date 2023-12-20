@@ -87,7 +87,7 @@ public class Participant {
     private int totalDamageDealtToChampions; // 총 딜량
     @Column(nullable = false)
     private int totalDamageTaken; // 총 탱량
-    @Column(nullable = false)
+   
     private String teamPosition;
 
     @Column(name = "primary_style", nullable = false)
