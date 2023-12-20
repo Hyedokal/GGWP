@@ -8,6 +8,8 @@ import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
 import com.ggwp.commentservice.dto.response.riotapi.LeagueEntryDTO;
+import com.ggwp.commentservice.dto.squadFeign.request.FeignLolNickNameTagRequestDto;
+import com.ggwp.commentservice.dto.squadFeign.response.FeignLolNickNameTagResponseDto;
 import com.ggwp.commentservice.enums.QType;
 import com.ggwp.commentservice.enums.RomanNum;
 import com.ggwp.commentservice.enums.Tier;
@@ -26,6 +28,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,7 +151,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-
     public Page<ResponseCommentDto> searchPagedComment(RequestPageDto.Search dto) {
         QComment qComment = QComment.comment;
         BooleanBuilder where = where();
@@ -183,5 +186,26 @@ public class CommentServiceImpl implements CommentService {
 
     private JPAQueryFactory query() {
         return new JPAQueryFactory(entityManager);
+    }
+
+
+
+    @Override
+    public ResponseEntity<FeignLolNickNameTagResponseDto> patchLolNickTag(FeignLolNickNameTagRequestDto requestBody) {
+        try{
+            List<Comment> comments = commentRepository.findBySummonerNameAndTagLine(requestBody.getExistLolNickName(), requestBody.getExistTag());
+
+            for(Comment comment : comments){
+                comment.setSummonerName(requestBody.getLolNickName());
+                comment.setTagLine(requestBody.getTag());
+                commentRepository.save(comment);
+            }
+            return ResponseEntity.ok().body(new FeignLolNickNameTagResponseDto(true, "Squad data updated successfully."));
+        }  catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new FeignLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));
+        }
+
     }
 }

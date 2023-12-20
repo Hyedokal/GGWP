@@ -2,8 +2,10 @@ package com.ggwp.squadservice.service.impl;
 
 import com.ggwp.squadservice.domain.QSquad;
 import com.ggwp.squadservice.domain.Squad;
+import com.ggwp.squadservice.dto.memberfeign.request.FeignLolNickNameTagRequestDto;
 import com.ggwp.squadservice.dto.memberfeign.request.PatchLolNickNameTagRequestDto;
 import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.FeignLolNickNameTagResponseDto;
 import com.ggwp.squadservice.dto.memberfeign.response.PatchLolNickNameTagResponseDto;
 import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
@@ -15,6 +17,7 @@ import com.ggwp.squadservice.enums.QType;
 import com.ggwp.squadservice.enums.RomanNum;
 import com.ggwp.squadservice.enums.Tier;
 import com.ggwp.squadservice.exception.ErrorMsg;
+import com.ggwp.squadservice.feign.CommentFeignClient;
 import com.ggwp.squadservice.feign.RiotFeignClient;
 import com.ggwp.squadservice.repository.SquadRepository;
 import com.ggwp.squadservice.service.SquadService;
@@ -46,6 +49,7 @@ public class SquadServiceImpl implements SquadService {
     private final SquadRepository squadRepository;
     private final EntityManager entityManager;
     private final RiotFeignClient riotFeignClient;
+    private final CommentFeignClient commentFeignClient;
 
     @Value("${apiKey}")
     private String apiKey;
@@ -141,15 +145,21 @@ public class SquadServiceImpl implements SquadService {
             if (squads.isEmpty()) {
                 return ResponseEntity.ok(new PatchLolNickNameTagResponseDto(false, "No squads found with the provided summoner name and tag line."));
             }
-            for (Squad squadItem : squads) {
-                squadItem.setSummonerName(requestBody.getLolNickName());
-                squadItem.setTagLine(requestBody.getTag());
-                squadRepository.save(squadItem);
-            }
+            FeignLolNickNameTagRequestDto request = new FeignLolNickNameTagRequestDto(requestBody.getExistLolNickName(), requestBody.getExistTag(), requestBody.getLolNickName(), requestBody.getTag());
+            ResponseEntity<FeignLolNickNameTagResponseDto> feignResponse = commentFeignClient.FeignLolNickNameTag(request);
+            if (feignResponse.getStatusCode() != HttpStatus.OK) {
+                return ResponseEntity.ok().body(new PatchLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));
+            }else{
+                for (Squad squadItem : squads) {
+                    squadItem.setSummonerName(requestBody.getLolNickName());
+                    squadItem.setTagLine(requestBody.getTag());
+                    squadRepository.save(squadItem);
+                }
 
-            return ResponseEntity.ok().body(new PatchLolNickNameTagResponseDto(true, "Squad data updated successfully."));
+                return ResponseEntity.ok().body(new PatchLolNickNameTagResponseDto(true, "Squad data updated successfully."));
+
+            }
         } catch (Exception e) {
-            // Log the exception for debugging purposes
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new PatchLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));

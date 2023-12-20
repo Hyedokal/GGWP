@@ -111,6 +111,9 @@ public class SquadController {
         return ResponseEntity.ok().body(responseDto);
 
     }
+
+
+
     @PutMapping(path = "/lolNickname-tag")
     public ResponseEntity<PatchLolNickNameTagResponseDto> patchLolNickNameTag(
             @RequestBody @Valid PatchLolNickNameTagRequestDto requestBody
