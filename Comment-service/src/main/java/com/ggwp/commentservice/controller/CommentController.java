@@ -1,7 +1,9 @@
 package com.ggwp.commentservice.controller;
 
 import com.ggwp.commentservice.domain.Comment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
@@ -94,8 +96,12 @@ public class CommentController {
 
         ResponseEntity<FeignLolNickNameTagResponseDto> response = commentService.patchLolNickTag(requestBody);
         return response;
-
-
     }
 
+
+    @PostMapping("/feign/matcher")
+    public ResponseEntity<List<ResponseFeignSquadDto>> getCommentMatch(@RequestBody RequestFeignSquadDto requestDto) {
+        List<ResponseFeignSquadDto> response = commentService.getCommentMatch(requestDto);
+        return ResponseEntity.ok().body(response);
+    }
 }

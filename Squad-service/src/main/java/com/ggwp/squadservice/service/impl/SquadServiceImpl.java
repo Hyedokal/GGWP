@@ -5,9 +5,11 @@ import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.memberfeign.request.FeignLolNickNameTagRequestDto;
 import com.ggwp.squadservice.dto.memberfeign.request.PatchLolNickNameTagRequestDto;
 import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.request.RequestSidDto;
 import com.ggwp.squadservice.dto.memberfeign.response.FeignLolNickNameTagResponseDto;
 import com.ggwp.squadservice.dto.memberfeign.response.PatchLolNickNameTagResponseDto;
 import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.ResponseSidDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
@@ -169,7 +171,6 @@ public class SquadServiceImpl implements SquadService {
 
 
 
-
     //게시글 삭제하기
     public void deleteSquad(Long sId) {
         Squad squad = squadRepository.findById(sId)
@@ -251,4 +252,35 @@ public class SquadServiceImpl implements SquadService {
     private JPAQueryFactory query() {
         return new JPAQueryFactory(entityManager);
     }
+
+
+    @Override
+    public ResponseEntity<List<ResponseSidDto>> getSquadMatchList(RequestSidDto requestDto) {
+        List<Long> sIdList = requestDto.getSids();
+        List<ResponseSidDto> responseList = new ArrayList<>();
+
+        try {
+            for (Long sid : sIdList) {
+                Squad squadInfo = squadRepository.findById(sid)
+                        .orElseThrow(() -> new EntityNotFoundException(ErrorMsg.SQUAD_ID_NOT_FOUND));
+
+                ResponseSidDto responseDto = new ResponseSidDto();
+                responseDto.setSuccess(true);
+                responseDto.setMessage("Squad data found.");
+                responseDto.setSids(squadInfo.getSId());
+                responseDto.setSquadNickname(squadInfo.getSummonerName());
+                responseDto.setSquadTag(squadInfo.getTagLine());
+
+                responseList.add(responseDto);
+            }
+            return ResponseEntity.ok(responseList);
+
+        } catch (EntityNotFoundException e) {
+            // Log the error and return a response indicating failure
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Collections.singletonList(new ResponseSidDto())
+            );
+        }
+    }
+
 }

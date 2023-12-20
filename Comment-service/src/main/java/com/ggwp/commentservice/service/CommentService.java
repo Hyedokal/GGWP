@@ -1,7 +1,9 @@
 package com.ggwp.commentservice.service;
 
 import com.ggwp.commentservice.domain.Comment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
@@ -33,4 +35,5 @@ public interface CommentService {
     ResponseEntity<FeignLolNickNameTagResponseDto> patchLolNickTag(FeignLolNickNameTagRequestDto requestBody);
 
 
+    List<ResponseFeignSquadDto> getCommentMatch(RequestFeignSquadDto requestDto);
 }

@@ -16,4 +16,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 
     List<Comment> findBySummonerNameAndTagLine(String summonerName, String tagLine);
+
+
+    @Query("SELECT c.sId FROM Comment c WHERE c.summonerName = :summonerName AND c.tagLine = :tagLine")
+    List<Long> findSidsBySummonerNameAndTagLine(@Param("summonerName") String summonerName, @Param("tagLine") String tagLine);
+
+
+
 }

@@ -16,6 +16,13 @@ interface MatchHistoryResponse {
     tag: string;
     sid: number[];
 }
+interface CommentMatchResponse {
+    sids: number;
+    squadNickname: string;
+    squadTag: string;
+    myName: string;
+    myTag: string;
+}
 
 interface Opponent {
     id: number;
@@ -33,6 +40,30 @@ export default function User() {
         const [newLolNickName, setNewLolNickName] = useState(userInfo?.lolNickname || '');
         const [newTag, setNewTag] = useState(userInfo?.tag || '');
     const [editMode, setEditMode] = useState(false);
+
+    const [matches, setMatches] = useState<CommentMatchResponse[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+
+    const fetchMatches = async () => {
+        setIsLoading(true);
+        try {
+            const response = await axios.post<CommentMatchResponse[]>('http://localhost:8000/v1/comments/feign/matcher', {
+                summonerName: userInfo?.lolNickname,
+                tagLine: userInfo?.tag
+            });
+            setMatches(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // Optionally, call fetchMatches here if you want it to run on component mount
+        fetchMatches();
+    }, []); // Empty dependency array means this effect runs once on mount
 
     const handleUpdate = async () => {
         try {
@@ -99,6 +130,7 @@ export default function User() {
     useEffect(() => {
         if (location.pathname === '/user') {
             fetchMatchHistory();
+            fetchMatches();
         }
     }, [location]);
 
@@ -199,9 +231,41 @@ export default function User() {
                     </div>
                 </div>
 
-            </div>
+                <div className="w-3/4 p-8">
+                    <div className="grid grid-cols-1 gap-4 font-bold text-lg text-purple-600">
+                        <div className="h-12 dark:bg-teal-200 rounded-lg">
+                            <h1>신청 DUO 내역</h1>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 font-bold text-lg text-purple-600">
+                        {/* Check if matches array is empty and display a message */}
+                        {isLoading ? (
+                            <div>Loading...</div>
+                        ) : (
+                            matches.length === 0 ? (
+                                <div>No match history available.</div>
+                            ) : (
+                                matches.map((match, index) => (
+                                    <div key={index} className="h-12 bg-teal-300 dark:bg-teal-700 rounded-lg">
+                                        매치 번호 : {match.sids}
+                                        <span style={{ marginLeft: '60px' }}> {/* Add margin here */}
+                                            글작성자 :{match.myName}#{match.myTag}
+                        </span>
+                                        <span style={{ marginLeft: '60px' }}>
+                            매칭자:  {match.squadNickname}#{match.squadTag}
+                        </span>
+                                    </div>
+                                ))
+                            )
+                        )}
+                    </div>
+                </div>
 
-        </div>
+                    </div>
+                </div>
+
+
+
     )
 
     }

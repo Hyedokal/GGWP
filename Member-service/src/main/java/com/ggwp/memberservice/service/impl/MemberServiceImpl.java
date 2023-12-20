@@ -169,9 +169,6 @@ public class MemberServiceImpl implements MemberService {
         }else{
             return GetMatchInfoResponseDto.notExistUser();
         }
-
-
     }
-
 
 }
