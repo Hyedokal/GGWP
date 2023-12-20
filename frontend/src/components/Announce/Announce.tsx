@@ -230,9 +230,9 @@ const Announce: React.FC = () => {
                                             </tr>
                                         ) : (
                                             // Render announcement data
-                                            <tr key={index}>
+                                            <tr  key={index}>
                                                 <td>{announce.id}</td>
-                                                <td>{announce.title}</td>
+                                                <td>[공지사항]{announce.title}</td>
                                                 <td>{announce.content}</td>
                                                 <td>{formattedDate}</td>
                                                 {userInfo?.role === 'ADMIN' && (

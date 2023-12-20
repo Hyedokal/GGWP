@@ -141,7 +141,6 @@ public class SquadServiceImpl implements SquadService {
             if (squads.isEmpty()) {
                 return ResponseEntity.ok(new PatchLolNickNameTagResponseDto(false, "No squads found with the provided summoner name and tag line."));
             }
-
             for (Squad squadItem : squads) {
                 squadItem.setSummonerName(requestBody.getLolNickName());
                 squadItem.setTagLine(requestBody.getTag());
@@ -156,6 +155,10 @@ public class SquadServiceImpl implements SquadService {
                     .body(new PatchLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));
         }
     }
+
+
+
+
 
     //게시글 삭제하기
     public void deleteSquad(Long sId) {
