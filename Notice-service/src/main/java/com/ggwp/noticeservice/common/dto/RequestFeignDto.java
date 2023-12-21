@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class RequestFeignDto {
 
     @NotNull(message = "comment의 ID는 null 값이 되어선 안됩니다.")
-    private Long cId;
+    private Long cid;
 
 }
