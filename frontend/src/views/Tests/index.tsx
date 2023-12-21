@@ -1,16 +1,14 @@
-import {useNavigate, useParams} from "react-router-dom";
-import UserInfoStore from "../../stores/userInfo.store";
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
+import axios from "axios";
 import {useCookies} from "react-cookie";
-import React, {useState} from "react";
-import SquadResponseDto from "../../apis/dto/response/squad/SquadResponseDto";
-import InputBox from "../../components/InputBox";
+import UserInfoStore from "../../stores/userInfo.store";
 
 export default function Test() {
 
 
-    return (
+    return(
         <div>
-            test
+            <h1>Test</h1>
         </div>
-    );
+    )
 }

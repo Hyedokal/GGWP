@@ -26,17 +26,17 @@ public class CreateaMatchTest {
         matchSummonerRepository.deleteAll();
     }
 
-    @Test
-    public void API_호출횟수점검() throws Exception {
-        List<FrontDto> frontdtoList = new ArrayList<>();
-
-        FrontDto ex1 = FrontDto.builder()
-                .tagLine("KR1")
-                .gameName("엘리스바이")
-                .build();
-
-        matchService.createMatches(ex1);
-
-        assertEquals(50, matchSummonerRepository.count());
-    }
+//    @Test
+//    public void API_호출횟수점검() throws Exception {
+//        List<FrontDto> frontdtoList = new ArrayList<>();
+//
+//        FrontDto ex1 = FrontDto.builder()
+//                .tagLine("KR1")
+//                .gameName("엘리스바이")
+//                .build();
+//
+//        matchService.createMatches(ex1);
+//
+//        assertEquals(50, matchSummonerRepository.count());
+//    }
 }

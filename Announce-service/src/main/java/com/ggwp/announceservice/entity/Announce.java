@@ -18,15 +18,15 @@ public class Announce {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long aId;
+    private Long id;
 
     //공지사항 제목(최대 50자)
     @Column(columnDefinition = "varchar(50)", nullable = false)
-    private String aTitle;
+    private String title;
 
     //공지사항 내용 (최대 1000자)
     @Column(columnDefinition = "varchar(1000)", nullable = false)
-    private String aContent;
+    private String content;
 
     @Column(columnDefinition = "TIMESTAMP", nullable = false)
     private Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
@@ -35,10 +35,10 @@ public class Announce {
     private Timestamp updatedAt = Timestamp.valueOf(LocalDateTime.now());
 
     //생성자를 담당하는 정적 메서드
-    public static Announce create(String aTitle, String aContent) {
+    public static Announce create(String title, String content) {
         return new Announce()
-                .setATitle(aTitle)
-                .setAContent(aContent)
+                .setTitle(title)
+                .setContent(content)
                 .setCreatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
@@ -46,8 +46,9 @@ public class Announce {
 
     //엔티티 수정을 위한 메서드
     public void updateAnnounce(RequestAnnounceDto dto) {
-        this.aTitle = dto.getATitle();
-        this.aContent = dto.getAContent();
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+
         this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 }

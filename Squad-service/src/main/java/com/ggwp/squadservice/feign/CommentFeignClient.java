@@ -1,7 +1,10 @@
 package com.ggwp.squadservice.feign;
 
+import com.ggwp.squadservice.dto.memberfeign.request.FeignLolNickNameTagRequestDto;
+import com.ggwp.squadservice.dto.memberfeign.response.FeignLolNickNameTagResponseDto;
 import com.ggwp.squadservice.dto.request.RequestCommentPageDto;
 import com.ggwp.squadservice.dto.response.ResponseCommentDto;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,10 @@ public interface CommentFeignClient {
 
     @PutMapping("/v1/comments/feign/{cId}")
     ResponseEntity<String> approveComment(@PathVariable Long cId);
+
+
+    @PutMapping("/v1/comments/lolNickname-tag")
+     ResponseEntity<FeignLolNickNameTagResponseDto> FeignLolNickNameTag(@RequestBody @Valid FeignLolNickNameTagRequestDto requestBody);
 
 
 }

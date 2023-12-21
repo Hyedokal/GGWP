@@ -14,12 +14,14 @@ public class GetUserResponseDto extends ResponseDto{
     private String lolNickname;
     private String tag;
     private UserRole role;
+    private String profileImage;
         private GetUserResponseDto(ResponseCode code, ResponseMessage message, Member member) {
             super(code, message);
             this.email = member.getEmail();
             this.lolNickname = member.getLolNickname();
             this.tag = member.getTag();
             this.role = member.getRole();
+            this.profileImage = member.getProfileImageUrl();
         }
 
     public static ResponseEntity<GetUserResponseDto> success(Member member) {

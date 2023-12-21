@@ -1,13 +1,12 @@
     import React, { useEffect, useState } from "react";
-    import axios from 'axios';
     import UserInfoStore from "../../stores/userInfo.store";
-    import {useNavigate} from "react-router-dom";
     import Modal from "../../components/ModalWrite";
     import {BoardListResponseDto} from "./BoardListResponseDto";
     import EditPostModal from "./Edit/EditPostModal";
-    import {findAllByDisplayValue} from "@testing-library/react";
     import ViewPostModal from "./Detail/ViewPostModal";
     import './style.css';
+    import Announce from "../../components/Announce/Announce";
+    import axios from "axios";
 
     export default function Match() {
         const { userInfo } = UserInfoStore();
@@ -140,6 +139,8 @@
         return (
             <div>
                 <div>
+                    <Announce />
+
                     <div className="bg-[#232a34] text-white">
                         <div className="flex items-center justify-between p-4">
                             <div className="flex items-center space-x-2"><button type="button" role="combobox" aria-controls="radix-:r2o:" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-placeholder="" className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="league"><span>솔로랭크</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="h-4 w-4 opacity-50" aria-hidden="true">
@@ -157,10 +158,11 @@
                             <table className="w-full text-sm table-fixed">
                                 <thead>
                                 <tr className="text-[#7a828e]">
+                                    <th className="p-4 w-1/8">프로필</th>
                                     <th className="p-4 w-1/8">번호</th>
                                     <th className="p-4 w-1/8">소환사 이름</th>
-                                    <th className="p-4 w-1/8">내 라인</th>
                                     <th className="p-4 w-1/8">내 티어</th>
+                                    <th className="p-4 w-1/8">내 라인</th>
                                     <th className="p-4 w-1/8">원하는 라인</th>
                                     <th className="p-4 w-1/8">마이크 여부</th>
                                     <th className="p-4 w-1/8">게임 타입</th>
@@ -169,7 +171,20 @@
                                 </thead>
                                 <tbody className="text-[#c6cdd4]">
                                 {currentList.map((item, index) => (
-                                    <tr key={index} onClick={() => openViewModal(item)}> {/* Add onClick handler */}
+                                    <tr key={index} onClick={() => openViewModal(item)}>
+
+                                        <td className="p-4 w-1/8" style={{display: "flex", width: "auto", justifyContent: "center"}}>
+                                            {userInfo?.profileImage ? (
+                                            <img
+                                                src={userInfo.profileImage}
+                                                alt="User Profile"
+                                                style={{ width: '40px', height: '40px', borderRadius: '50%', justifyContent: "center" }}
+                                            />
+                                        ) : (
+                                            <div className="w-10 h-10 bg-gray-300 rounded-full"></div> // Placeholder for no image
+                                        )}
+
+                                        </td>
                                         <td className="p-4 w-1/8 ">{item.sid}</td>
                                         <td className="p-4 w-1/8">{item.summonerName}#{item.tagLine}</td>
                                         <td className="p-4 w-1/8">{item.rank}</td>

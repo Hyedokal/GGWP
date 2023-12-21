@@ -1,29 +1,25 @@
 package com.ggwp.commentservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ggwp.commentservice.domain.Comment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
-import com.ggwp.commentservice.repository.CommentRepository;
+import com.ggwp.commentservice.dto.squadFeign.request.FeignLolNickNameTagRequestDto;
+import com.ggwp.commentservice.dto.squadFeign.response.FeignLolNickNameTagResponseDto;
 import com.ggwp.commentservice.service.CommentService;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/comments")
@@ -88,6 +84,24 @@ public class CommentController {
         System.out.println("sIdList: " + sIdList);
         List<ResponseMatchDto> response = commentService.getSummonerDetails(requestDto);
         System.out.println("response: " + response);
+        return ResponseEntity.ok().body(response);
+    }
+
+
+    @PutMapping("/lolNickname-tag")
+    public ResponseEntity<FeignLolNickNameTagResponseDto> patchLolNickNameTag(
+            @RequestBody @Valid FeignLolNickNameTagRequestDto requestBody
+    ) {
+        System.out.println("Received: " + requestBody.getExistLolNickName() + ", " + requestBody.getExistTag());
+
+        ResponseEntity<FeignLolNickNameTagResponseDto> response = commentService.patchLolNickTag(requestBody);
+        return response;
+    }
+
+
+    @PostMapping("/feign/matcher")
+    public ResponseEntity<List<ResponseFeignSquadDto>> getCommentMatch(@RequestBody RequestFeignSquadDto requestDto) {
+        List<ResponseFeignSquadDto> response = commentService.getCommentMatch(requestDto);
         return ResponseEntity.ok().body(response);
     }
 }
