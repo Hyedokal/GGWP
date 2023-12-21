@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "squad-service")
 public interface NoticeToSquadFeign {
 
-    @GetMapping("/v1/squads/{sId}") // commentId를 통해 커멘트 가져오기
+    @GetMapping("/v1/squads/{sId}/feign") // commentId를 통해 커멘트 가져오기
     ResponseSquadDto getOneSquad(@PathVariable Long sId);
 }
 

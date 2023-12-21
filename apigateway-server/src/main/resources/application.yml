@@ -29,10 +29,21 @@ spring:
           uri: lb://NOTICE-SERVICE
           predicates:
             - Path=/notice-service/**
+        - id: WebSocket-service
+          uri: lb://NOTICE-SERVICE/ws-stomp
+          predicates:
+            - Path=/ws-stomp/**
+
+        - id: HTTP-service
+          uri: lb://NOTICE-SERVICE
+          predicates:
+            - Path=/webjars/**
+
         - id: Search-service
           uri: lb://SEARCH-SERVICE
           predicates:
             - Path=/search-service/**
+
 
 
       default-filters:
