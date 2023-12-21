@@ -18,6 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
+                .setAllowedOrigins("http://localhost:8000")  // 여기를 명시적으로 설정
                 .withSockJS();
     }
 
@@ -31,5 +32,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(stompHandler); // 핸들러 등록
     }
+
 }
 

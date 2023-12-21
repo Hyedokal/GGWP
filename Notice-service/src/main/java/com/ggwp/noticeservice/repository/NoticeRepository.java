@@ -10,7 +10,6 @@ import java.util.Optional;
 public interface NoticeRepository extends JpaRepository<Notice,Long> {
 
     Optional<List<Notice>> findNoticesByReceiverNameAndReceiverTag(String receiverName, String receiverTag);
-
     Optional<Notice> findNoticeById(Long id);
 
 }

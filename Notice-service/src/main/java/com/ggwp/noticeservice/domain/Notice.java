@@ -41,9 +41,8 @@ public class Notice extends BaseEntity {
     @Column(nullable = false)
     private String receiverTag;
 
-    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
-    private MessageEnum msg;
+    private String msg;
 
     public void update(int code) {
         this.status = NoticeEnum.getByCode(code);

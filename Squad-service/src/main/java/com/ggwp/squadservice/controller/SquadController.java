@@ -122,4 +122,10 @@ public class SquadController {
         return response;
     }
 
+    //게시글 하나 상세조회 Feign
+    @GetMapping("/{sId}/feign")
+    public ResponseEntity<ResponseSquadDto> getOneSquadFeign(@PathVariable Long sId) {
+        ResponseSquadDto dto = squadService.getOneSquad(sId);
+        return ResponseEntity.ok().body(dto);
+    }
 }

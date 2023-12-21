@@ -31,6 +31,6 @@ public class ResponseNoticeDto {
 
     private LocalDateTime updatedAt;
 
-    private MessageEnum msg;
+    private String msg;
 
 }
