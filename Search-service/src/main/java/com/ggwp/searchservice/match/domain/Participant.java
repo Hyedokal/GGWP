@@ -87,8 +87,12 @@ public class Participant {
     private int totalDamageDealtToChampions; // 총 딜량
     @Column(nullable = false)
     private int totalDamageTaken; // 총 탱량
-   
+    
     private String teamPosition;
+    @Column(nullable = false)
+    private int primaryPerkStyleSelection;
+    @Column(nullable = false)
+    private int subPerkStyleSelection;
 
     @Column(name = "primary_style", nullable = false)
     private int primaryStyle;
