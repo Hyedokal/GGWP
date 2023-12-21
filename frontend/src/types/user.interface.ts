@@ -3,4 +3,5 @@ export default interface UserInfo {
     lolNickname: string;
     tag: string;
     role: string;
+    profileImage: string;
 }

@@ -54,7 +54,7 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(Long id, String email, String password, String lolNickname,
-                  String uuid, UserRole role, String tag, Boolean agreedPersonal) {
+                  String uuid, UserRole role, String tag, Boolean agreedPersonal, String profileImageUrl) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -63,6 +63,7 @@ public class Member extends BaseEntity {
         this.uuid = uuid;
         this.role = role != null ? role : UserRole.USER;
         this.agreedPersonal = agreedPersonal;
+        this.profileImageUrl = profileImageUrl;
 
     }
 

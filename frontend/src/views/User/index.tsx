@@ -7,6 +7,8 @@ import ViewPersonalities from "./personalities/ViewPersonalities";
 import axios from "axios";
 import {useLocation} from "react-router-dom";
 import {UserInfo} from "../../types";
+import profileImg from "./profile/profile";
+import ProfileImg from "./profile/profile";
 
 interface MatchHistoryResponse {
 
@@ -142,8 +144,7 @@ export default function User() {
             <div className="flex h-screen bg-gray-100 dark:bg-gray-800">
                 <div className="w-1/4 p-8">
                     <div className="flex flex-col items-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow">
-                        <div className="w-24 h-24 bg-gray-300 dark:bg-gray-500 rounded-full"></div>
-                        <div className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">프로필</div>
+                        <ProfileImg/>
                     </div>
                     <div className="mt-8 bg-teal-300 dark:bg-teal-700 rounded-lg p-4">
                         <div className="mt-2 text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">이메일:</div>

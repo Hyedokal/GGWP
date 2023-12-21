@@ -1,28 +1,28 @@
 
 
-spring:
-  application:
-    name: member-service
-  profiles:
-    active: local,db,jwt
-  servlet:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 110MB
+  spring:
+    application:
+      name: member-service
+    profiles:
+      active: local,db,jwt
+    servlet:
+      multipart:
+        max-file-size: 100MB
+        max-request-size: 110MB
 
-file:
-  path: C:/2023-12-20test/file
-  url: http://localhost:4000/file
+  file:
+    path: C:\\local\\
+    url: http://localhost:8000/member-service/file/
 
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
-server:
-  port: 8080
+  eureka:
+    instance:
+      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+        defaultZone: http://127.0.0.1:8761/eureka
+  server:
+    port: 0
 
 

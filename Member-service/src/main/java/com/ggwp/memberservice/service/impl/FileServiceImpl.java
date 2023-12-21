@@ -42,7 +42,7 @@ public class FileServiceImpl implements FileService {
         Resource resource = null;
 
         try {
-            resource = new UrlResource("file:" + filePath + fileName);// description: 파일 저장 경로에서 파일명에 해당하는 파일 불러오기 //
+            resource = new UrlResource("file:" + filePath + fileName);
         } catch (Exception exception) {
             exception.printStackTrace();
             return null;
