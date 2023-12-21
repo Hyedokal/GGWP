@@ -7,7 +7,6 @@ import ViewPersonalities from "./personalities/ViewPersonalities";
 import axios from "axios";
 import {useLocation} from "react-router-dom";
 import {UserInfo} from "../../types";
-import profileImg from "./profile/profile";
 import ProfileImg from "./profile/profile";
 
 interface MatchHistoryResponse {
