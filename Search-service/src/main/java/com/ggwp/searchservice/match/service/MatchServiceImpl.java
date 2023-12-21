@@ -323,12 +323,22 @@ public class MatchServiceImpl implements MatchService {
             List<Participant> participantList = team.getParticipants();
             for (Participant participant : participantList) {
 
+                MatchDto.PerkStyleSelectionDto perkPrimaryStyleSelectionDto = MatchDto.PerkStyleSelectionDto.builder()
+                        .perk(participant.getPrimaryPerkStyleSelection())
+                        .build();
+
+                MatchDto.PerkStyleSelectionDto subPrimaryStyleSelectionDto = MatchDto.PerkStyleSelectionDto.builder()
+                        .perk(participant.getSubPerkStyleSelection())
+                        .build();
+
                 MatchDto.PerkStyleDto primaryPerkStyleDto = MatchDto.PerkStyleDto.builder()
                         .style(participant.getPrimaryStyle())
+                        .selections(Arrays.asList(perkPrimaryStyleSelectionDto))
                         .build();
 
                 MatchDto.PerkStyleDto subPerkStyleDto = MatchDto.PerkStyleDto.builder()
                         .style(participant.getSubStyle())
+                        .selections(Arrays.asList(subPrimaryStyleSelectionDto))
                         .build();
 
                 MatchDto.PerksDto perksDto = MatchDto.PerksDto.builder()
@@ -422,6 +432,8 @@ public class MatchServiceImpl implements MatchService {
                 .totalDamageTaken(participantDto.getTotalDamageTaken())
                 .primaryStyle(participantDto.getPerks().getStyles().get(0).getStyle())
                 .subStyle(participantDto.getPerks().getStyles().get(1).getStyle())
+                .primaryPerkStyleSelection(participantDto.getPerks().getStyles().get(0).getSelections().get(0).getPerk())
+                .subPerkStyleSelection(participantDto.getPerks().getStyles().get(1).getSelections().get(0).getPerk())
                 .teamPosition(participantDto.getTeamPosition())
                 .team(team)
                 .match(match)
