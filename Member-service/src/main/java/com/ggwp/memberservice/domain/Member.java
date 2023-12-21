@@ -2,6 +2,7 @@ package com.ggwp.memberservice.domain;
 
 
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
+import com.ggwp.memberservice.dto.request.user.PatchProfileImageRequestDto;
 import jakarta.persistence.*;
 
 import lombok.Builder;
@@ -43,6 +44,9 @@ public class Member extends BaseEntity {
     private UserRole role;
 
 
+    @Column(columnDefinition = "varchar(255)", nullable = true)
+    private String profileImageUrl;
+
     @ElementCollection
     @CollectionTable(name = "member_personalities", joinColumns = @JoinColumn(name = "member_id"))
     @Column(name = "personality")
@@ -50,7 +54,7 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(Long id, String email, String password, String lolNickname,
-                  String uuid, UserRole role, String tag, Boolean agreedPersonal) {
+                  String uuid, UserRole role, String tag, Boolean agreedPersonal, String profileImageUrl) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -59,6 +63,7 @@ public class Member extends BaseEntity {
         this.uuid = uuid;
         this.role = role != null ? role : UserRole.USER;
         this.agreedPersonal = agreedPersonal;
+        this.profileImageUrl = profileImageUrl;
 
     }
 
@@ -81,5 +86,11 @@ public class Member extends BaseEntity {
 
     public void setPersonalities(List<String> personalities) {
         this.personalities = personalities;
+    }
+
+
+
+    public void patchProfileImage(PatchProfileImageRequestDto dto) {
+        this.profileImageUrl = dto.getProfileImage();
     }
 }

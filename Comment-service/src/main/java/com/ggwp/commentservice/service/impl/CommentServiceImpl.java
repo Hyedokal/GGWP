@@ -2,17 +2,23 @@ package com.ggwp.commentservice.service.impl;
 
 import com.ggwp.commentservice.domain.Comment;
 import com.ggwp.commentservice.domain.QComment;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestSidDto;
+import com.ggwp.commentservice.dto.memberFeign.request.RequestFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.request.RequestMatchDto;
+import com.ggwp.commentservice.dto.memberFeign.response.ResponseFeignSquadDto;
 import com.ggwp.commentservice.dto.memberFeign.response.ResponseMatchDto;
 import com.ggwp.commentservice.dto.request.RequestCommentDto;
 import com.ggwp.commentservice.dto.request.RequestPageDto;
 import com.ggwp.commentservice.dto.response.ResponseCommentDto;
 import com.ggwp.commentservice.dto.response.riotapi.LeagueEntryDTO;
+import com.ggwp.commentservice.dto.squadFeign.request.FeignLolNickNameTagRequestDto;
+import com.ggwp.commentservice.dto.squadFeign.response.FeignLolNickNameTagResponseDto;
 import com.ggwp.commentservice.enums.QType;
 import com.ggwp.commentservice.enums.RomanNum;
 import com.ggwp.commentservice.enums.Tier;
 import com.ggwp.commentservice.exception.ErrorMsg;
 import com.ggwp.commentservice.feign.RiotFeignClient;
+import com.ggwp.commentservice.feign.squad.SquadFeign;
 import com.ggwp.commentservice.repository.CommentRepository;
 import com.ggwp.commentservice.service.CommentService;
 import com.querydsl.core.BooleanBuilder;
@@ -26,6 +32,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final EntityManager entityManager;
     private final RiotFeignClient riotFeignClient;
-
+    private  final SquadFeign squadFeign;
     @Value("${apiKey}")
     private String apiKey;
 
@@ -147,7 +155,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-
     public Page<ResponseCommentDto> searchPagedComment(RequestPageDto.Search dto) {
         QComment qComment = QComment.comment;
         BooleanBuilder where = where();
@@ -183,5 +190,61 @@ public class CommentServiceImpl implements CommentService {
 
     private JPAQueryFactory query() {
         return new JPAQueryFactory(entityManager);
+    }
+
+
+
+    @Override
+    public ResponseEntity<FeignLolNickNameTagResponseDto> patchLolNickTag(FeignLolNickNameTagRequestDto requestBody) {
+        try{
+            List<Comment> comments = commentRepository.findBySummonerNameAndTagLine(requestBody.getExistLolNickName(), requestBody.getExistTag());
+
+            for(Comment comment : comments){
+                comment.setSummonerName(requestBody.getLolNickName());
+                comment.setTagLine(requestBody.getTag());
+                commentRepository.save(comment);
+            }
+            return ResponseEntity.ok().body(new FeignLolNickNameTagResponseDto(true, "Squad data updated successfully."));
+        }  catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new FeignLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));
+        }
+
+    }
+
+    @Override
+    public List<ResponseFeignSquadDto> getCommentMatch(RequestFeignSquadDto requestDto) {
+
+            List<Long> sids = commentRepository.findSidsBySummonerNameAndTagLine(requestDto.getSummonerName(), requestDto.getTagLine());
+            if (sids == null || sids.isEmpty()) {
+                // Log and return empty list if no sids found
+                System.out.println("No sids found for provided summoner name and tag line");
+                return new ArrayList<>();
+            }
+            System.out.println("Retrieved sids: " + sids);
+
+            RequestSidDto requestSidDto = new RequestSidDto();
+            requestSidDto.setSids(sids);
+            System.out.println("RequestSidDto sids: " + requestSidDto.getSids());
+
+        ResponseEntity<List<ResponseFeignSquadDto>> responseEntity = squadFeign.getCommentMatch(requestSidDto);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            List<ResponseFeignSquadDto> responseList = responseEntity.getBody();
+            if (responseList != null) {
+                for (ResponseFeignSquadDto dto : responseList) {
+                    dto.setMyName(requestDto.getSummonerName());
+                    dto.setMyTag(requestDto.getTagLine());
+                }
+            }
+            System.out.println("Response: " + responseList);
+            return responseList;
+            } else {
+                System.out.println("Error: " + responseEntity.getStatusCode());
+                return new ArrayList<>();
+            }
+
+
+
     }
 }

@@ -2,8 +2,10 @@ package com.ggwp.memberservice.controller;
 
 
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
+import com.ggwp.memberservice.dto.request.user.PatchProfileImageRequestDto;
 import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
 import com.ggwp.memberservice.dto.response.user.*;
+import com.ggwp.memberservice.service.FileService;
 import com.ggwp.memberservice.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberApiController {
     private final MemberService memberService;
+    private  final FileService fileService;
 
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
@@ -46,6 +49,11 @@ public class MemberApiController {
         }
 
 
+
+
+
+
+
     @PutMapping("/lolNicknameTag")
     public ResponseEntity<? super PatchLolNickNameTagResponseDto> patchLolNickNameTag(
             @RequestBody @Valid PatchLolNickNameTagRequestDto requestBody,
@@ -70,6 +78,17 @@ public class MemberApiController {
     public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(@AuthenticationPrincipal String uuid) {
         return memberService.getPersonalities(uuid);
     }
+
+    //프사 추가
+    @PatchMapping("/profile-image")
+    public ResponseEntity<? super PatchProfileImageResponseDto> patchProfileImage(
+            @RequestBody @Valid PatchProfileImageRequestDto requestBody,
+            @AuthenticationPrincipal String uuid
+    ) {
+        ResponseEntity<? super PatchProfileImageResponseDto> response = memberService.patchProfileImage(requestBody, uuid);
+        return response;
+    }
+
 
 }
 

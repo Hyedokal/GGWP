@@ -3,8 +3,10 @@ package com.ggwp.squadservice.service;
 import com.ggwp.squadservice.domain.Squad;
 import com.ggwp.squadservice.dto.memberfeign.request.PatchLolNickNameTagRequestDto;
 import com.ggwp.squadservice.dto.memberfeign.request.RequestMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.request.RequestSidDto;
 import com.ggwp.squadservice.dto.memberfeign.response.PatchLolNickNameTagResponseDto;
 import com.ggwp.squadservice.dto.memberfeign.response.ResponseMatchDto;
+import com.ggwp.squadservice.dto.memberfeign.response.ResponseSidDto;
 import com.ggwp.squadservice.dto.request.RequestSquadDto;
 import com.ggwp.squadservice.dto.request.RequestSquadPageDto;
 import com.ggwp.squadservice.dto.response.ResponseSquadDto;
@@ -37,4 +39,7 @@ public interface SquadService {
     ResponseMatchDto getMatchInfo(RequestMatchDto dto);
 
     ResponseEntity<PatchLolNickNameTagResponseDto> patchLolNickTag(PatchLolNickNameTagRequestDto requestBody);
+
+
+    ResponseEntity<List<ResponseSidDto>> getSquadMatchList(RequestSidDto requestDto);
 }

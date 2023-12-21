@@ -1,6 +1,7 @@
 package com.ggwp.memberservice.service;
 
 import com.ggwp.memberservice.dto.request.user.PatchLolNickNameTagRequestDto;
+import com.ggwp.memberservice.dto.request.user.PatchProfileImageRequestDto;
 import com.ggwp.memberservice.dto.request.user.PersonalitiesRequestDto;
 import com.ggwp.memberservice.dto.response.user.*;
 import org.springframework.http.ResponseEntity;
@@ -19,4 +20,6 @@ public interface MemberService {
 
 
     ResponseEntity<? super GetMatchInfoResponseDto> getMatchInfo(String uuid);
+
+    ResponseEntity<? super PatchProfileImageResponseDto> patchProfileImage(PatchProfileImageRequestDto requestBody, String uuid);
 }
