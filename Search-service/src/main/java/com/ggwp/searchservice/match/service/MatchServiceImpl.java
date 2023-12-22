@@ -35,9 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -136,6 +134,42 @@ public class MatchServiceImpl implements MatchService {
 
         String puuid = accountService.existAccount(frontDto); // Feign 1번 (있으면 호출 안함)
 
+        updateLeague(puuid); // 있으면 업데이트 없으면 Create
+
+        // puuid를 이용하여 matchIds를 가져온다.
+        return matchIdsFeign(puuid);
+    }
+
+    private List<String> matchIdsFeign(String puuid) {
+        List<String> matchIdList = new ArrayList<>();
+        int defaultCount = 5;
+        int start = 0;
+        int pageSize = 100;
+
+        while (matchIdList.size() < defaultCount) {
+            List<String> currentMatchIds = matchFeign.getMatchIds(puuid, start, pageSize, apiKey);
+
+            Set<String> uniqueMatchIds = new HashSet<>(currentMatchIds);
+
+            // 중복을 제외한 유일한 매치 ID를 데이터베이스에 조회하고 존재하지 않는 경우에만 추가
+            for (String matchId : uniqueMatchIds) {
+                if (!matchRepository.existsByMatchId(matchId)) {
+                    matchIdList.add(matchId);
+                }
+
+                // 목표 갯수를 채웠을 경우 종료
+                if (matchIdList.size() >= defaultCount) {
+                    break;
+                }
+            }
+
+            start += pageSize;
+        }
+
+        return matchIdList;
+    }
+
+    private void updateLeague(String puuid) {
         String summonerId = summonerService.summonerFeign(puuid, apiKey).getId();
         // 페인 써서 summoner 가져오고 summonerId로 리그 페인
         if (leagueService.existLeague(summonerId)) {
@@ -144,9 +178,6 @@ public class MatchServiceImpl implements MatchService {
         } else {
             leagueService.createLeague(summonerId);
         }
-        // puuid를 이용하여 matchIds를 가져온다.
-        return matchFeign.getMatchIds(puuid, apiKey)
-                .orElseThrow(() -> new CustomException(ErrorCode.NotFeignMatchIds));
     }
 
     // MatchId로 Match를 가져오는 Fegin

@@ -1,35 +1,30 @@
-package com.ggwp.searchservice;
-
-import com.ggwp.searchservice.common.dto.FrontDto;
-import com.ggwp.searchservice.match.MatchRepository.MatchRepository;
-import com.ggwp.searchservice.match.service.MatchService;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-
-@SpringBootTest
-public class createMatchMQTest {
-
-    @Autowired
-    private MatchService matchService;
-
-    @Autowired
-    private MatchRepository matchRepository;
-
-//    @AfterEach
-//    public void dbreset() {
-//        matchRepository.deleteAll();
-//    }
-
+//package com.ggwp.searchservice;
+//
+//import com.ggwp.searchservice.common.dto.FrontDto;
+//import com.ggwp.searchservice.match.MatchRepository.MatchRepository;
+//import com.ggwp.searchservice.match.service.MatchService;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.concurrent.CountDownLatch;
+//import java.util.concurrent.ExecutorService;
+//import java.util.concurrent.Executors;
+//
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//
+//
+//@SpringBootTest
+//public class createMatchMQTest {
+//
+//    @Autowired
+//    private MatchService matchService;
+//
+//    @Autowired
+//    private MatchRepository matchRepository;
+//
 //    @Test
 //    public void API_호출횟수점검() throws Exception {
 //        List<FrontDto> frontdtoList = new ArrayList<>();
@@ -124,4 +119,4 @@ public class createMatchMQTest {
 //
 //        assertEquals(65, matchRepository.count());
 //    }
-}
+//}

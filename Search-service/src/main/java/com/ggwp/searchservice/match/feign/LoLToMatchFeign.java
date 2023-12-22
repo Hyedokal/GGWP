@@ -18,12 +18,13 @@ public interface LoLToMatchFeign {
             @PathVariable("matchId") String matchId,
             @RequestParam("api_key") String apiKey
     );
-
-    @GetMapping("match/v5/matches/by-puuid/{puuid}/ids?start=0&count=5")
-    Optional<List<String>> getMatchIds(
-            @PathVariable("puuid") String puuid,
+    
+    @GetMapping("match/v5/matches/by-puuid/{puuid}/ids")
+    List<String> getMatchIds(
+            @PathVariable String puuid,
+            @RequestParam("start") int start,
+            @RequestParam("count") int count,
             @RequestParam("api_key") String apiKey
     );
-
 }
 
