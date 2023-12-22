@@ -4,21 +4,23 @@ import axios from 'axios';
 import UserInfoStore from "../../../../stores/userInfo.store";
 import './style.css';
 import InputBox from "../../../../components/InputBox";
+import {useCidInfoStore} from "../../../../stores";
 interface WriteCommentModalProps {
     sId: number;
     wontPos: string;
     qType: string;
-    onCommentAdded?: () => void; // Optional callback function
-
+    cId?: number;
+    onCommentAdded?: () => void;
 }
-const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId,wontPos ,qType,onCommentAdded   }) => {
+const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId, wontPos, qType, onCommentAdded, cId }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [useMic, setUseMic] = useState(false);
     const [memo, setMemo] = useState('');
     const [memoError, setSMemoError] = useState<boolean>(false);
     const [memoErrorMessage, setSMemoErrorMessage] = useState<string>('');
+    const { setCidInfo } = useCidInfoStore();
 
-    const userInfo = UserInfoStore(state => state.userInfo);
+    const userInfo = UserInfoStore(state => state.userInfo)
     const openModal = () => {
         setModalIsOpen(true);
     };
@@ -40,6 +42,10 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId,wontPos ,qTyp
                 memo
             });
             console.log(response.data);
+
+            setCidInfo({ cid: response.data });
+            console.log(setCidInfo);
+
             if (onCommentAdded) {
                 onCommentAdded(); // Invoke the callback
             }
@@ -53,6 +59,8 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId,wontPos ,qTyp
             console.error('Error posting comment', error);
         }
     };
+
+
 
     const clearForm = () => {
         setUseMic(false);

@@ -1,18 +1,40 @@
 import './style.css';
-import {useState} from "react";
+import {SetStateAction, useEffect, useState} from "react";
+import UserInfoStore from "../../stores/userInfo.store";
+import CidStore from "../../stores/cid.store";
+import useCidInfoStore from "../../stores/cid.store";
+import axios from "axios";
+interface NoticeResponse {
+    statusCode: number;
+    data: string;
+}
 
 export default function SliderBar() {
     const [isVisible, setIsVisible] = useState(false);
+    const [noticeResponse, setNoticeResponse] = useState<NoticeResponse | null>(null);
 
-    const [notification, setNotification] = useState('');
+    const { userInfo, setUserInfo } = UserInfoStore();
+    const{cidInfo, setCidInfo} = useCidInfoStore();
 
-    // const showNotification = (message) => {
-    //     setNotification(message);
-    //     setIsVisible(true); // 알림과 함께 슬라이더를 자동으로 표시합니다.
-    // };
     const toggleSlider = () => {
         setIsVisible(!isVisible);
     };
+
+    useEffect(() => {
+        if (cidInfo?.cid) {
+            axios.post('http://localhost:8000/notice-service/v1/notice/create', {
+                cid: cidInfo.cid
+            })
+                .then(response => {
+                    setNoticeResponse(response.data);
+                })
+                .catch(error => {
+                    console.error('Error creating notice:', error);
+                });
+        }
+    }, [cidInfo]);
+
+
 
     return (
         <div>
@@ -23,9 +45,15 @@ export default function SliderBar() {
                 onClick={toggleSlider}
             />
             <div className={`slider-container ${isVisible ? 'visible' : ''}`}>
-
-
+                {cidInfo?.cid}
+                {noticeResponse && (
+                    <div>
+                        <p>Status Code: {noticeResponse.statusCode}</p>
+                        <p>Message: {noticeResponse.data}</p>
+                    </div>
+                )}
             </div>
+
         </div>
     );
 }

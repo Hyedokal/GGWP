@@ -44,9 +44,9 @@ public class CommentController {
 
     //댓글 작성하는 메서드
     @PostMapping
-    public ResponseEntity<String> writeComment(@RequestBody RequestCommentDto dto) {
+    public ResponseEntity<Long> writeComment(@RequestBody RequestCommentDto dto) {
         commentService.writeComment(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Wrote Successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.writeComment(dto).getCId());
     }
 
     //댓글 수정하는 메서드
