@@ -80,7 +80,7 @@
                             <div className="mb-10"></div>
                             <CommentSection sId={post.sid} refreshKey={refreshKey} post={post} />
                             <div className="flex justify-end" id="parent-container">
-                                    <WriteCommentModal sId={post.sid} wontPos={post.wantPos} qType={post.qtype} onCommentAdded={refreshComments}/>
+                                    <WriteCommentModal    sId={post.sid} wontPos={post.wantPos} qType={post.qtype} onCommentAdded={refreshComments}/>
                                 <button className="text-sm bg-[#3a4253] px-2 py-1 rounded" onClick={onClose}>Close</button>
                             </div>
 

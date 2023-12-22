@@ -4,7 +4,8 @@ import { useCookies } from 'react-cookie';
 import {useUserStore} from "../../stores";
 import {AUTH_PATH, MAIN_PATH, MATCH_PATH, USER_PATH} from "../../constant";
 import {LoginUser} from "../../types";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import AlarmModal from "../../components/Alarm/AlarmModal";
 
 
 // 헤더 컴포넌트
@@ -91,6 +92,7 @@ export default function Header() {
                 <div >매칭해요</div>
                </div>
                 <div>검색 해요</div>
+
                 <div className='header-right-box'>
                     { isMainPage && (<LoginMyPageButton />) }
                     { allPage && (<LogoutButton />) }
