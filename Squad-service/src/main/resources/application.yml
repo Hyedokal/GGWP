@@ -30,4 +30,4 @@ eureka:
 
 apiKey: ${lol}
 server:
-  port: 0
+  port: 49870
