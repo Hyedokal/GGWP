@@ -15,7 +15,7 @@ spring:
     show-sql: true
 
   profiles:
-    include: db,lol, lb
+    active: db, lol, lb
 
 eureka:
   client:
