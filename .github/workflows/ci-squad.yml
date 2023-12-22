@@ -3,7 +3,7 @@ name: CI for squad-service
 on:
   push:
     branches:
-      - builds
+      - deploy#*
     paths:
       - 'Squad-service/**'
 
