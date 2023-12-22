@@ -18,12 +18,7 @@ public class AlarmController {
 
     private final SimpMessageSendingOperations messagingTemplate;
 
-    // stomp 테스트 화면
-    @GetMapping(value = "stomp", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<Resource> stompAlarm() {
-        Resource htmlFile = new ClassPathResource("static/stomp.html");
-        return ResponseEntity.ok().body(htmlFile);
-    }
+
     @MessageMapping("/{lolname}/{tagLine}")
     public void message(@DestinationVariable("lolname") String lolname,@DestinationVariable("tagLine") String tagLine) {
         messagingTemplate.convertAndSend("/sub/" + lolname + "#" + tagLine, "alarm socket connection completed.");
