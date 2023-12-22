@@ -39,3 +39,4 @@ out/
 ### yml file
 application-db.yml
 application-jwt.yml
+application-lb.yml

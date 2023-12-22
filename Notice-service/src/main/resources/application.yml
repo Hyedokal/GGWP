@@ -3,20 +3,21 @@ spring:
       name: Notice-service
   profiles:
     active:
-      - dev
+      - dev, lb
     include:
       - db
       - jwt
 
 server:
-  port: 0
+  port: 49874
 
-  eureka:
-    instance:
-      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    client:
-      register-with-eureka: true
-      fetch-registry: true
-      service-url:
-        defaultZone: http://127.0.0.1:8761/eureka
+eureka:
+  client:
+    register-with-eureka: false  # Eureka 등록 비활성화
+    fetch-registry: false  # Eureka 레지스트리 조회 비활성화
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true  # Eureka 대신 IP 주소 기반으로 통신
+    hostname: ${loadbalancer.ip}
+    nonSecurePort: 80  # 서비스의 포트
 
