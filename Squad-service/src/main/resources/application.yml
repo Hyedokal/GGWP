@@ -16,10 +16,8 @@ spring:
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
-    service-url:
-      default-zone: http://127.0.0.1:8761/eureka
+    register-with-eureka: false  # Eureka 등록 비활성화
+    fetch-registry: false  # Eureka 레지스트리 조회 비활성화
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     prefer-ip-address: true  # Eureka 대신 IP 주소 기반으로 통신
