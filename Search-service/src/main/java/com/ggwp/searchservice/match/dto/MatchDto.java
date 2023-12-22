@@ -170,9 +170,28 @@ public class MatchDto {
     @AllArgsConstructor
     @Builder
     public static class PerkStyleDto {
+        @JsonProperty("selections")
+        List<PerkStyleSelectionDto> selections;
         @JsonProperty("style")
         private int style;
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class PerkStyleSelectionDto {
+        @JsonProperty("perk")
+        private int perk;
+        @JsonProperty("var1")
+        private int var1;
+        @JsonProperty("var2")
+        private int var2;
+        @JsonProperty("var3")
+        private int var3;
+    }
+
 
     @Getter
     @Setter
