@@ -23,4 +23,4 @@ eureka:
     nonSecurePort: 80  # 서비스의 포트
 
 server:
-  port: 49872
+  port: 49873
