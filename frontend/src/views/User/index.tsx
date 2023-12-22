@@ -8,6 +8,7 @@ import axios from "axios";
 import {useLocation} from "react-router-dom";
 import {UserInfo} from "../../types";
 import ProfileImg from "./profile/profile";
+import './style.css';
 
 interface MatchHistoryResponse {
 
@@ -199,7 +200,7 @@ export default function User() {
                         <h1>MY DUO 내역</h1>
                     </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 font-bold text-lg text-purple-600">
+                    <div className={`grid grid-cols-1 gap-4 font-bold text-lg text-purple-600 ${matches.length > 20 ? 'scrollable-container' : ''}`}>
                         {/* Check if matchHistory is empty and display a message */}
                         {matchHistory.length === 0 ? (
                             <div>Loading match history...</div>
@@ -237,7 +238,7 @@ export default function User() {
                             <h1>신청 DUO 내역</h1>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 font-bold text-lg text-purple-600">
+                    <div className={`grid grid-cols-1 gap-4 font-bold text-lg text-purple-600 ${matches.length > 20 ? 'scrollable-container' : ''}`}>
                         {/* Check if matches array is empty and display a message */}
                         {isLoading ? (
                             <div>Loading...</div>
