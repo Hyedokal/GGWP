@@ -29,6 +29,7 @@ spring:
           uri: lb://NOTICE-SERVICE
           predicates:
             - Path=/notice-service/**
+
         - id: WebSocket-service
           uri: lb://NOTICE-SERVICE/ws-stomp
           predicates:
@@ -60,6 +61,7 @@ spring:
               - PATCH
               - DELETE
               - OPTIONS
+              - MESSAGE
             allowCredentials: true
 
 eureka:

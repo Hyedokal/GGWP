@@ -43,10 +43,13 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId,wontPos ,qTyp
             if (onCommentAdded) {
                 onCommentAdded(); // Invoke the callback
             }
+
             closeModal();
 
 
-        } catch (error) {
+        }
+
+        catch (error) {
             console.error('Error posting comment', error);
         }
     };
