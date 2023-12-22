@@ -47,6 +47,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ sId, refreshKey,post}) 
 
 
     const fetchComments = (sId: number, page: number) => {
+        console.log("sId",sId);
+        console.log("page",page);
         axios.get(`http://localhost:8000/v1/squads/${sId}?page=${page}`)
             .then(response => {
                 if (response.data && response.data.commentPage) {
