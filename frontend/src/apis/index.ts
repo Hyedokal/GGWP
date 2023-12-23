@@ -6,6 +6,7 @@ import {GetSignInUserResponseDto, GetUserResponseDto, PatchLolNickNameResponseDt
 import PatchLolNickNameRequestDto from "./dto/request/user/patch-lol-nickName-request.dto";
 import SquadRequestDto from "./dto/request/squad/SquadRequestDto";
 import SquadResponseDto from "./dto/response/squad/SquadResponseDto";
+import exp from "constants";
 
 
 const DOMAIN = 'http://localhost:8000';
@@ -139,5 +140,59 @@ export const sendSquadRequest = async (requestBody: SquadRequestDto): Promise<Sq
         } else {
             throw error;
         }
+    }
+};
+
+
+
+
+
+
+
+
+//-------------------------------------게시판 api-------------------------------------//
+
+//공지사항 작성
+export const postNewAnnouncement = async (title: string, content: string) => {
+    try {
+        const response = await axios.post('http://localhost:8000/v1/announces', { title, content });
+        return response.data;
+    } catch (error: unknown) {
+        // Type guard to ensure error is an instance of Error
+        if (error instanceof Error) {
+            throw new Error('Error creating new announcement: ' + error.message);
+        } else {
+            throw new Error('An unknown error occurred');
+        }
+    }
+};
+
+//공지사항 삭제
+export const deleteAnnouncementApi = async (announceId: number) => {
+    try {
+        await axios.delete(`http://localhost:8000/v1/announces/${announceId}`);
+    } catch (error) {
+        throw new Error(`Error deleting announcement: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+};
+
+//공지사항 수정
+export const updateAnnouncementApi = async (announcementId: number | null, title: string, content: string) => {
+    if (announcementId === null) {
+        throw new Error("No announcement ID provided for update.");
+    }
+    try {
+        await axios.put(`http://localhost:8000/v1/announces/${announcementId}`, { title, content });
+    } catch (error) {
+        throw new Error(`Error updating announcement: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+};
+//공지사항 조회
+export const fetchAnnouncementsApi = async (page: number) => {
+    try {
+        const response = await axios.post('http://localhost:8000/v1/announces/search', { page: page });
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error fetching announcements: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 };
