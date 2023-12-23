@@ -3,6 +3,7 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import axios from "axios";
 import './style.css';
 import {render} from "react-dom";
+import {deleteAnnouncementApi, fetchAnnouncementsApi, postNewAnnouncement, updateAnnouncementApi} from "../../apis";
 
 interface Announce {
     id: number;
@@ -69,36 +70,37 @@ const Announce: React.FC = () => {
 
 
 
-
-    
-    const handleNewPost = (e: { preventDefault: () => void; }) => {
+    const handleNewPost = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        axios.post('http://localhost:8000/v1/announces', {
-            title: newTitle,
-            content: newContent
-        })
-            .then(response => {
-                fetchAnnouncements(currentPage); // Re-fetch announcements
-                closeModal();
-            })
-            .catch(error => {
-                console.error('Error creating new announcement', error);
-            });
+        try {
+            await postNewAnnouncement(newTitle, newContent);
+            fetchAnnouncements(currentPage);
+            closeModal();
+        } catch (error: unknown) {
+            // Error handling
+            if (error instanceof Error) {
+                console.error(error.message);
+            } else {
+                console.error('An unknown error occurred');
+            }
+        }
     };
 
-    const deleteAnnouncement = (announceId: number) => {
-        axios.delete(`http://localhost:8000/v1/announces/${announceId}`)
-            .then(() => {
-                // Remove the deleted announcement from the local state
-                if (announces) {
-                    const updatedAnnounces = announces.content.filter(announce => announce.id !== announceId);
-                    setAnnounces({ ...announces, content: updatedAnnounces });
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting announcement', error);
-            });
+
+
+    const deleteAnnouncement = async (announceId: number) => {
+        try {
+            await deleteAnnouncementApi(announceId);
+            // Remove the deleted announcement from the local state
+            if (announces) {
+                const updatedAnnounces = announces.content.filter(announce => announce.id !== announceId);
+                setAnnounces({ ...announces, content: updatedAnnounces });
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
+
 
 
     const startEdit = (announce: Announce) => {
@@ -116,18 +118,17 @@ const Announce: React.FC = () => {
     const handleContentChange = (event: ChangeEvent<HTMLInputElement>) => {
         setEditContent(event.target.value);
     };
-    const saveEdit = () => {
-        axios.put(`http://localhost:8000/v1/announces/${editingAnnounceId}`, {
-            title: editTitle,
-            content: editContent
-        })
-            .then(response => {
-                fetchAnnouncements(currentPage); // Re-fetch announcements
-                setEditingAnnounceId(null);
-            })
-            .catch(error => {
-                console.error('Error updating announcement', error);
-            });
+
+
+    const saveEdit =async  () => {
+        try{
+            await updateAnnouncementApi(editingAnnounceId, editTitle, editContent);
+            fetchAnnouncements(currentPage); // Re-fetch announcements
+            setEditingAnnounceId(null);
+
+        } catch (error) {
+            console.error('Error updating announcement'+error);
+        }
     };
 
 
@@ -135,15 +136,17 @@ const Announce: React.FC = () => {
         fetchAnnouncements(currentPage);
     }, [currentPage]);
 
-    const fetchAnnouncements = (page: number) => {
-        axios.post('http://localhost:8000/v1/announces/search', { page: page })
-            .then(response => {
-                setAnnounces(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
+
+    const fetchAnnouncements = async (page: number) => {
+        try {
+            const announcementsData = await fetchAnnouncementsApi(page);
+            setAnnounces(announcementsData);
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
