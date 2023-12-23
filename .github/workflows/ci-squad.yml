@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       # workflows Settings (워크플로우에서 작업할 소스 코드 환경 복사)
