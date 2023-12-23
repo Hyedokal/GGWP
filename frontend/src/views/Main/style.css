@@ -1,5 +1,3 @@
-
-
 .banner {
     background-image: url(assets/v1_396.png); /* Update with your image path */
     background-size: cover; /* This will make sure your image covers the entire banner */
@@ -9,193 +7,26 @@
 
 
 }
-.text-container{
-  padding-left : 50px;
-    padding-right: 50px;
 
-    display:flex;
-    justify-content:space-between
-
-
-;
-    align-items:center;
-
-}
-.img-container{
-    width:200px;
-    height:100px;
-    gap:20px;
-}
-.flag-image{
-    background-image:url(assets/flag.png);
-    height:30px;
-    width:98px;
-}
-.logo-container{
-    display:flex;
-
-}
-.beggwwp{
-    width:250px;
-    height:100px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    margin-left:600px;
-    color:rgba(0,0,0,1);
-    font-family: 'omyu_pretty', serif;
-
-    font-size:25px;
-    font-weight:400;
-}
-
-.function-container{
-    padding-left:419px;
-    padding-right:419px;
-    padding-top:50px;
-    padding-bottom:0px;
-
-    position:relative;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-}
-.match-box {
-    width: 200px;
-    height: 230px;
-    background-color: #f0f0f0;
-    border-radius:20px;
-    border: 0.2rem solid #8CC1F2;
+#main-contain {
+    width: 100%;
+    height: 1000px;
     display: flex;
-    justify-content: center;
-    flex-direction:column;
+    flex-direction: column;
     align-items: center;
-    font-size: 1.0rem;
-    font-weight: bold;
-    color:#626F9F;
+    background-size: 70%; /* Set the size to 70% of the container */
+    background-image: url(assets/LoL_Logo_Rendered_LARGE.png);
+    background-repeat: repeat-x; /* Repeat the image horizontally */
+
+    animation: scrollHorizontally 10s linear infinite;
+}
+@keyframes scrollHorizontally {
+    from {
+        background-position: 100% center;
+    }
+    to {
+        background-position: 0% center;
+    }
+}
 
 
-}
-.circle {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 2px solid #000;
-    margin-bottom:20px;
-}
-.search-box {
-    width: 200px;
-    height: 230px;
-    background-color: #f0f0f0;
-    border-radius:20px;
-    border: 0.2rem solid #8CC1F2;
-    display: flex;
-    justify-content: center;
-    flex-direction:column;
-    align-items: center;
-    font-size: 1.0rem;
-    font-weight: bold;
-    color:#626F9F;
-
-
-}
-.mypage-box {
-    width: 200px;
-    height: 230px;
-    background-color: #f0f0f0;
-    border-radius:20px;
-    border: 0.2rem solid #8CC1F2;
-    display: flex;
-    justify-content: center;
-    flex-direction:column;
-    align-items: center;
-    font-size: 1.0rem;
-    font-weight: bold;
-    color:#626F9F;
-
-
-}
-.matchbox-text-box{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
-}
-.matchbox-text-box:hover {
-    cursor: pointer;
-}
-.searchbox-text-box{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
-}
-.searchbox-text-box:hover {
-    cursor: pointer;
-}
-.mypagebox-text-box{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
-}
-.mypagebox-text-box:hover {
-    cursor: pointer;
-}
-.matchbox-text-box2{
-    display:flex;
-    flex-direction:column;
-    font-size:10px;
-
-}
-.number-box {
-    width: 60px;
-    height: 60px;
-    background-color: #f0f0f0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-
-
-    margin-top:-230px;
-    font-size: 1.2rem;
-    font-weight: bold;
-
-}
-.number-box2 {
-    width: 60px;
-    height: 60px;
-    background-color: #f0f0f0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-    font-size: 1.2rem;
-    font-weight: bold;
-
-}
-.number-box3 {
-    width: 60px;
-    height: 60px;
-    background-color: #f0f0f0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-    font-size: 1.2rem;
-    font-weight: bold;
-
-}
-@font-face {
-    font-family: "ABeeZee-Italic";
-    font-weight: normal;
-    src: url("fonts/ABeeZee-Italic.ttf") format("truetype");
-}
-@font-face {
-    font-family: 'omyu_pretty';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-}

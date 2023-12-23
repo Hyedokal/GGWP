@@ -21,7 +21,7 @@ export default function Footer() {
       <div className='footer-top'>
         <div className='footer-logo-box'>
           <div className='footer-logo-icon-box'>
-            <div className='logo-light-icon'></div>
+            <div className='logo-dark-icon'></div>
           </div>
           <div className='footer-logo-text'>{'GGWP'}</div>
         </div>
