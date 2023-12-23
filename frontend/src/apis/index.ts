@@ -8,11 +8,9 @@ import SquadRequestDto from "./dto/request/squad/SquadRequestDto";
 import SquadResponseDto from "./dto/response/squad/SquadResponseDto";
 
 
-// 포트번호 노출시키지 마세요, .env 파일에 저장해서 환경변수로 불러오세요
-const DOMAIN = 'http://localhost:8000'; // description: 내 URL // 나중엔 gateway주소 //
+const DOMAIN = 'http://localhost:8000';
 
-const API_DOMAIN = `${DOMAIN}/member-service/v1`; // description: API Domain 주소 //
-
+const MEMBER_API_DOMAIN = `${DOMAIN}/member-service/v1`; // description: API Domain 주소 //
 
 const authorization = (token: string) => {// description: Authorizaition Header //
     return { headers: { Authorization: `Bearer ${token}` } };
@@ -20,9 +18,9 @@ const authorization = (token: string) => {// description: Authorizaition Header 
 
 
 
-const SIGN_UP_URL = () => `${API_DOMAIN}/auth/sign-up`; // description: sign up API end point //
+const SIGN_UP_URL = () => `${MEMBER_API_DOMAIN}/auth/sign-up`;
 
-const SIGN_IN_URL = () => `${API_DOMAIN}/auth/sign-in`;// description: sigin in API end point //
+const SIGN_IN_URL = () => `${MEMBER_API_DOMAIN}/auth/sign-in`;
 
 
 
@@ -62,7 +60,7 @@ export const signInRequest = async (requestBody: SignInRequestDto) => { // descr
 
 
 
-const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/member`;  // description: get sign in user API end point //
+const GET_SIGN_IN_USER_URL = () => `${MEMBER_API_DOMAIN}/member`;  // description: get sign in user API end point //
 
 
 
@@ -83,7 +81,7 @@ export const getSignInUserRequest = async (token: string) => {  // description: 
 
 
 // description: get user API end point //
-const GET_USER_URL = () => `${API_DOMAIN}/member/userInfo`;
+const GET_USER_URL = () => `${MEMBER_API_DOMAIN}/member/userInfo`;
 
 // // description: get user request //
 export const getUserRequest = async (token: string) => {
@@ -105,7 +103,7 @@ export const getUserRequest = async (token: string) => {
 
 // description: patch user email API end point //
 
-const PATCH_LOLNAME_URL = () => `${API_DOMAIN}/member/lolNickname`;
+const PATCH_LOLNAME_URL = () => `${MEMBER_API_DOMAIN}/member/lolNickname`;
 
 export const patchLolNicknameRequest = async (requestBody: PatchLolNickNameRequestDto, token:string): Promise<string> => {
     try {

@@ -90,6 +90,7 @@ export default function Header() {
             navigator(MATCH_PATH);
         }
     }
+
     const onLogoClickHanlder = () => {       //          event handler: 로고 클릭 이벤트 처리          //
 
         navigator(MAIN_PATH);
