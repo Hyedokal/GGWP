@@ -35,7 +35,7 @@ jobs:
         # Docker Build
       - name: Build Docker image
         working-directory: Squad-service
-        run: docker build -t hyedokal/ggwp_squad-service .
+        run: docker build -t --no-cache hyedokal/ggwp_squad-service .
 
         # DockerHub Login
       - name: Log in to Docker Hub
