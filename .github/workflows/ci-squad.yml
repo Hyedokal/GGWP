@@ -39,7 +39,7 @@ jobs:
       - name: Build Docker image
         working-directory: Squad-service
         run: |
-          echo $BOOTSTRAP > bootstrap.yml
+          echo $BOOTSTRAP_YML_CONTENT > bootstrap.yml
           docker build -t hyedokal/ggwp_squad-service .
 
         # DockerHub Login
