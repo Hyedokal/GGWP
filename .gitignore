@@ -36,4 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 bootstrap.yml
+=======
+bootstrap.yml
+application-db.yml
+>>>>>>> ba398a5 (Test: CI Test)
