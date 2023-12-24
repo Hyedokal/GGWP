@@ -26,7 +26,6 @@ ext {
 }
 
 dependencies {
-//    implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -37,13 +36,14 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    //testImplementation 'org.springframework.amqp:spring-rabbit-test'
     testImplementation 'junit:junit:4.13.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    implementation 'org.springframework.cloud:spring-cloud-starter-config:4.1.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.0'
 }
 
 dependencyManagement {

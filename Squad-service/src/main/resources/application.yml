@@ -15,7 +15,7 @@ spring:
     show-sql: true
 
   profiles:
-    active: db, lol, lb
+    active: lol, lb
 
 eureka:
   client:
@@ -33,3 +33,4 @@ server:
   port: 49870
 
 #test
+
