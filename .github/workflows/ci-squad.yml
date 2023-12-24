@@ -11,20 +11,23 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
-    env:
-      BOOTSTRAP_YML_CONTENT: ${{ secrets.BOOTSTRAP }}
-
     steps:
       # workflows Settings (워크플로우에서 작업할 소스 코드 환경 복사)
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-        # Settings
+      # Settings
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
+
+      # Copy Secret
+      - name: Copy Secret
+        env:
+          BOOTSTRAP_YML_CONTENT: ${{ secrets.BOOTSTRAP }}
+        run: echo $BOOTSTRAP_YML_CONTENT > src/main/resources/bootstrap.yml
 
         # Gradle Settings
       - name: Grant execute permission for gradlew
@@ -38,9 +41,7 @@ jobs:
         # Docker Build
       - name: Build Docker image
         working-directory: Squad-service
-        run: |
-          echo $BOOTSTRAP_YML_CONTENT > src/main/resources/bootstrap.yml
-          docker build -t hyedokal/ggwp_squad-service .
+        run: docker build -t hyedokal/ggwp_squad-service .
 
         # DockerHub Login
       - name: Log in to Docker Hub

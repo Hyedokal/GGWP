@@ -37,4 +37,3 @@ out/
 .vscode/
 
 bootstrap.yml
-application-db.yml
