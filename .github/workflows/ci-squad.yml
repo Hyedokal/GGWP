@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
+    env:
+      BOOTSTRAP_YML_CONTENT: ${{ secrets.BOOTSTRAP }}
+
     steps:
       # workflows Settings (워크플로우에서 작업할 소스 코드 환경 복사)
       - name: Checkout Repository
@@ -35,7 +38,9 @@ jobs:
         # Docker Build
       - name: Build Docker image
         working-directory: Squad-service
-        run: docker build -t hyedokal/ggwp_squad-service .
+        run: |
+          echo $BOOTSTRAP > bootstrap.yml
+          docker build -t hyedokal/ggwp_squad-service .
 
         # DockerHub Login
       - name: Log in to Docker Hub

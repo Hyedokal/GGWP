@@ -14,8 +14,6 @@ spring:
         format_sql: true
     show-sql: true
 
-  profiles:
-    active: lol, lb
 
 eureka:
   client:
@@ -31,6 +29,4 @@ eureka:
 apiKey: ${lol}
 server:
   port: 49870
-
-#test
 

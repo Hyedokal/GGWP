@@ -1,2 +1,0 @@
-loadbalancer:
-  ip: GGWP-LoadBalancer-298705153.ap-northeast-2.elb.amazonaws.com
