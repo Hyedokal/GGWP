@@ -125,23 +125,6 @@ export const patchLolNicknameRequest = async (requestBody: PatchLolNickNameReque
 };
 
 
-// Define the endpoint path
-const SQUAD_ENDPOINT = '/v1/squads';
-
-//글쓰기 요청
-export const sendSquadRequest = async (requestBody: SquadRequestDto): Promise<SquadResponseDto | string> => {
-    try {
-        const response = await axios.post(DOMAIN + SQUAD_ENDPOINT, requestBody);
-        return response.data;
-    } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-            const responseBody: ResponseDto = error.response.data;
-            return responseBody.message;
-        } else {
-            throw error;
-        }
-    }
-};
 
 
 
@@ -194,5 +177,42 @@ export const fetchAnnouncementsApi = async (page: number) => {
         return response.data;
     } catch (error) {
         throw new Error(`Error fetching announcements: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+};
+
+
+
+// squad 서비스 api 정리
+const SQUAD_ENDPOINT = '/v1/squads';
+
+//글쓰기 요청
+export const sendSquadRequest = async (requestBody: SquadRequestDto): Promise<SquadResponseDto | string> => {
+    try {
+        const response = await axios.post(DOMAIN + SQUAD_ENDPOINT, requestBody);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody.message;
+        } else {
+            throw error;
+        }
+    }
+};
+
+export const postCommentApi = async (sId: number, wontPos: string, qType: string, useMic: boolean, summonerName: string, tagLine: string, memo: string) => {
+    try {
+        const response = await axios.post('http://localhost:8000/v1/comments', {
+            sId,
+            wontPos,
+            qType,
+            useMic,
+            summonerName,
+            tagLine,
+            memo
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error posting comment: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 };

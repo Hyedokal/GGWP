@@ -5,6 +5,7 @@ import UserInfoStore from "../../../../stores/userInfo.store";
 import './style.css';
 import InputBox from "../../../../components/InputBox";
 import {useCidInfoStore} from "../../../../stores";
+import {postCommentApi} from "../../../../apis";
 interface WriteCommentModalProps {
     sId: number;
     wontPos: string;
@@ -32,34 +33,17 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId, wontPos, qTy
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/v1/comments', {
-                sId,
-                wontPos,
-                qType,
-                useMic,
-                summonerName: userInfo ? userInfo.lolNickname : '',
-                tagLine: userInfo ? userInfo.tag : '',
-                memo
-            });
-            console.log(response.data);
+            const commentData = await postCommentApi(sId, wontPos, qType, useMic, userInfo ? userInfo.lolNickname : '', userInfo ? userInfo.tag : '', memo);
 
-            setCidInfo({ cid: response.data });
-            console.log(setCidInfo);
-
+            setCidInfo({ cid: commentData });
             if (onCommentAdded) {
                 onCommentAdded(); // Invoke the callback
             }
-
             closeModal();
-
-
-        }
-
-        catch (error) {
-            console.error('Error posting comment', error);
+        } catch (error) {
+            console.error(error);
         }
     };
-
 
 
     const clearForm = () => {
