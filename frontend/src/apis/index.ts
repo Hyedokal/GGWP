@@ -6,12 +6,13 @@ import {GetSignInUserResponseDto, GetUserResponseDto, PatchLolNickNameResponseDt
 import PatchLolNickNameRequestDto from "./dto/request/user/patch-lol-nickName-request.dto";
 import SquadRequestDto from "./dto/request/squad/SquadRequestDto";
 import SquadResponseDto from "./dto/response/squad/SquadResponseDto";
-import exp from "constants";
 
 
 const DOMAIN = 'http://localhost:8000';
 
 const MEMBER_API_DOMAIN = `${DOMAIN}/member-service/v1`; // description: API Domain 주소 //
+
+
 
 const authorization = (token: string) => {// description: Authorizaition Header //
     return { headers: { Authorization: `Bearer ${token}` } };

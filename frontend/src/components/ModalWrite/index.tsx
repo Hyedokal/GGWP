@@ -3,8 +3,6 @@ import InputBox from "../InputBox";
 import SquadRequestDto from "../../apis/dto/request/squad/SquadRequestDto";
 import {sendSquadRequest} from "../../apis";
 import UserInfoStore from "../../stores/userInfo.store";
-import axios from "axios/index";
-import {BoardListResponseDto} from "../../views/Match/BoardListResponseDto";
 
 
  interface ModalProps {

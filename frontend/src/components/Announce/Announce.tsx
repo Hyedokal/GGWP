@@ -1,8 +1,6 @@
 import UserInfoStore from "../../stores/userInfo.store";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import axios from "axios";
 import './style.css';
-import {render} from "react-dom";
 import {deleteAnnouncementApi, fetchAnnouncementsApi, postNewAnnouncement, updateAnnouncementApi} from "../../apis";
 
 interface Announce {

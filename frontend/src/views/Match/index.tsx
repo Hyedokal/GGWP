@@ -13,7 +13,7 @@
 
         const [isModalOpen, setModalOpen] = useState(false);
         const [currentList, setCurrentList] = useState<BoardListResponseDto[]>([]);
-        const [currentPage, setCurrentPage] = useState(0);
+        const [currentPage] = useState(0);
         const [loadMoreSize, setLoadMoreSize] = useState(15); // Initial size for loading more items
 
         const openModal = () => setModalOpen(true);
@@ -143,9 +143,15 @@
 
                     <div className="bg-[#232a34] text-white">
                         <div className="flex items-center justify-between p-4">
-                            <div className="flex items-center space-x-2"><button type="button" role="combobox" aria-controls="radix-:r2o:" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-placeholder="" className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="league"><span>솔로랭크</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="h-4 w-4 opacity-50" aria-hidden="true">
-                                <path d="m6 9 6 6 6-6"></path>
-                            </svg></button><button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 bg-[#4c586f]">티어 전체</button></div>
+                            <div className="flex items-center space-x-2">
+                                <button type="button" role="combobox" aria-controls="radix-:r2o:" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-placeholder="" className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="league">
+                                    <span>솔로랭크</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 opacity-50" aria-hidden="true">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg>
+                                </button>
+
+                                <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 bg-[#4c586f]">티어 전체</button></div>
 
                             <div className="flex items-center space-x-2">
                                 <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-black hover:bg-primary/90 h-10 px-4 py-2 bg-[#e8415d]" onClick={openModal}>

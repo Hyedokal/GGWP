@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import {UserInfo} from "../../../../types";
 import UserInfoStore from "../../../../stores/userInfo.store";
 import {BoardListResponseDto} from "../../BoardListResponseDto";
 

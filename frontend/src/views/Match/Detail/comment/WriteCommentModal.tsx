@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios';
 import UserInfoStore from "../../../../stores/userInfo.store";
 import './style.css';
 import InputBox from "../../../../components/InputBox";
@@ -17,8 +16,8 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId, wontPos, qTy
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [useMic, setUseMic] = useState(false);
     const [memo, setMemo] = useState('');
-    const [memoError, setSMemoError] = useState<boolean>(false);
-    const [memoErrorMessage, setSMemoErrorMessage] = useState<string>('');
+    const [memoError] = useState<boolean>(false);
+    const [memoErrorMessage] = useState<string>('');
     const { setCidInfo } = useCidInfoStore();
 
     const userInfo = UserInfoStore(state => state.userInfo)

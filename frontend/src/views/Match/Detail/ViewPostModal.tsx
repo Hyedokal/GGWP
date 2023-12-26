@@ -1,9 +1,8 @@
-    import React, {useEffect, useState} from 'react';
+    import React, {useState} from 'react';
     import { BoardListResponseDto } from "../BoardListResponseDto";
     import CommentSection from "./comment/CommentSection";
     import WriteCommentModal from "./comment/WriteCommentModal";
     import './style.css';
-    import axios from "axios";
 
     interface ViewPostModalProps {
         post: BoardListResponseDto;
