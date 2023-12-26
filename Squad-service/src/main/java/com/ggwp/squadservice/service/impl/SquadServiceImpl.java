@@ -97,6 +97,7 @@ public class SquadServiceImpl implements SquadService {
         } else if (dto.getQType().equals(QType.FLEX_RANK)) {
             dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.FLEX_RANK));
         }
+        dto.setSummonerRank(summonerRank);
 
         Squad squad = dto.toEntity();
         return squadRepository.save(squad);

@@ -188,4 +188,18 @@ public class MemberServiceImpl implements MemberService {
         return PatchProfileImageResponseDto.success();
 
     }
+
+    @Override
+    public ResponseEntity<ProfileImgResponseDto> getProfileImageUrl(String lolNickname, String tag) {
+        return memberRepository.findOptionalMemberByLolNicknameAndTag(lolNickname, tag)
+                .map(member -> {
+                    String profileImageUrl = member.getProfileImageUrl(); // Assuming this method exists
+                    ProfileImgResponseDto responseDto = new ProfileImgResponseDto();
+                    responseDto.setProfileImg(profileImageUrl); // Assuming setter method exists
+                    return ResponseEntity.ok(responseDto);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
 }
