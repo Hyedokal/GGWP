@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import {fetchPersonalitiesApi} from "../../../apis";
 
 const ViewPersonalities: React.FC = () => {
     const [cookies] = useCookies(['accessToken']);
@@ -16,22 +17,19 @@ const ViewPersonalities: React.FC = () => {
             }
 
             try {
-                const response = await axios.get('http://localhost:8000/member-service/v1/member/personalities', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.data && response.data.personalities) {
-                    setPersonalities(response.data.personalities);
+                const personalities = await fetchPersonalitiesApi(token);
+                if (personalities) {
+                    setPersonalities(personalities);
                 }
             } catch (error) {
-                console.error('There was an error fetching the personalities:', error);
+                // Error handling is already done in fetchPersonalitiesApi
+                // Additional UI-based error handling can be added here if needed
             }
         };
 
         fetchPersonalities();
     }, [cookies]); // Dependency array with cookies to re-run the effect if cookies change
+
 
     return (
         <div>
