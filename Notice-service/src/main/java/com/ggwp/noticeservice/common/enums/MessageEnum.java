@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public enum MessageEnum {
 
-    APPLY(2,"매칭을 신청하였습니다."),
+    APPLY(2,"댓글을 작성하였습니다."),
     ACCEPT(3,"매칭을 수락하였습니다."),
     REJECT(4,"매칭을 거절했습니다.");
 

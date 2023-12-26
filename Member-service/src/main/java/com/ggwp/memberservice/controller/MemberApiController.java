@@ -75,8 +75,8 @@ public class MemberApiController {
 
 
     @GetMapping("/personalities")
-    public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(@AuthenticationPrincipal String uuid) {
-        return memberService.getPersonalities(uuid);
+    public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(@RequestParam String lolNickname, @RequestParam String tag) {
+        return memberService.getPersonalities(lolNickname, tag);
     }
 
     //프사 추가
@@ -89,6 +89,10 @@ public class MemberApiController {
         return response;
     }
 
+    @GetMapping("/profile-image")
+    public ResponseEntity<ProfileImgResponseDto> getProfile(@RequestParam String lolNickname, @RequestParam String tag) {
+        return memberService.getProfileImageUrl(lolNickname, tag);
+    }
 
 }
 

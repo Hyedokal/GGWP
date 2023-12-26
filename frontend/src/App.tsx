@@ -15,7 +15,7 @@ import {GetSignInUserResponseDto, GetUserResponseDto} from 'apis/dto/response/us
 import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
 import Match from "./views/Match";
-import Test from "./views/Tests";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
 
@@ -65,9 +65,18 @@ function App() {
         <Route element={<Container /> }>
           <Route path={MAIN_PATH} element={<Main />} />
           <Route path={AUTH_PATH} element={<Authentication/>}/>
-          <Route path={USER_PATH} element={<User />} />
-          <Route path={MATCH_PATH} element={<Match/>}/>
-          <Route path='/test' element={<Test/>} />
+
+          <Route path={USER_PATH} element={
+            <ProtectedRoute>
+              <User />
+            </ProtectedRoute>
+          } />
+
+          <Route path={MATCH_PATH} element={
+            <ProtectedRoute>
+              <Match/>
+            </ProtectedRoute>
+          } />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>

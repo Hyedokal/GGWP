@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { useCookies } from "react-cookie";
 import { useState } from "react";
+import {postPersonalitiesApi} from "../../../apis";
+
+export interface InputValuesType {
+    personality1: string;
+    personality2: string;
+    personality3: string;
+}
 
 const RequestSender: React.FC = () => {
     const [cookies] = useCookies(['accessToken']); // accessToken을 쿠키에서 가져옵니다.
@@ -20,37 +27,22 @@ const RequestSender: React.FC = () => {
         setModalIsOpen(false); // 모달을 닫기 위해 상태를 변경합니다.
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
         setInputValues(prevState => ({
             ...prevState,
             [name]: value
-        })); // 입력된 값을 상태에 업데이트합니다.
+        }));
     };
-
     const sendRequest = async () => {
-        if (!token) {
-            console.error('접근 토큰을 찾을 수 없습니다.');
-            return;
-        }
-
         try {
-            const response = await axios.post('http://localhost:8000/member-service/v1/member/personalities', {
-                personalities: [inputValues.personality1, inputValues.personality2, inputValues.personality3]
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // 헤더에 토큰을 포함시킵니다.
-                }
-            });
-
-            console.log(response.data);
+            const responseData = await postPersonalitiesApi(token, inputValues);
+            console.log(responseData);
             closeModal();
-            //페이지 리로드
-            window.location.reload();
-
+            window.location.reload(); //page reload
         } catch (error) {
-            console.error('요청을 보내는 중 오류가 발생했습니다:', error);
+            // Error handling is already done in postPersonalitiesApi
+            // Additional UI-based error handling can be added here if needed
         }
     };
 
@@ -59,9 +51,18 @@ const RequestSender: React.FC = () => {
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={openModal}>성격 추가</button>
             {modalIsOpen && (
                 <div className="mt-4">
-                    <input type="text" name="personality1" value={inputValues.personality1} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1" />
-                    <input type="text" name="personality2" value={inputValues.personality2} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2" />
-                    <input type="text" name="personality3" value={inputValues.personality3} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2" />
+                    <select name="personality1" value={inputValues.personality1} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1">
+                        <option value="빡겜 유저"> 빡겜 유저</option>
+                        <option value="즐겜 유저"> 즐겜 유저</option>
+                    </select>
+                    <select name="personality2" value={inputValues.personality2} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2">
+                        <option value="일찍 (10~22">일찍 (10~22)</option>
+                        <option value="늦게 (22~06)">늦게 (22~06)</option>
+                    </select>
+                    <select name="personality3" value={inputValues.personality3} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2">
+                        <option value="내향적"> 내향적</option>
+                        <option value="외향적"> 외향적 </option>
+                    </select>
                     <div className="mt-2">
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={sendRequest}>전송</button>
                         <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={closeModal}>닫기</button>
