@@ -24,11 +24,13 @@ jobs:
 
       - name: Copy Secret
         env:
-          BOOTSTRAP_YML_CONTENT: ${{ secrets.BOOTSTRAP_SQUAD }}
+          BOOTSTRAP_YML_URL: ${{ secrets.BOOTSTRAP_URL }}
+          BOOTSTRAP_YML_SQUAD: ${{ secrets.BOOTSTRAP_SQUAD }}
           SECRET_DIR: ./Squad-service/src/main/resources
           SECRET_FILENAME: bootstrap.yml
         run: |
-          echo $BOOTSTRAP_YML_CONTENT > $SECRET_DIR/$SECRET_FILENAME
+          echo $BOOTSTRAP_YML_URL > $SECRET_DIR/$SECRET_FILENAME
+          echo $BOOTSTRAP_YML_SQUAD >> $SECRET_DIR/$SECRET_FILENAME
         
         # Gradle Settings
       - name: Grant execute permission for gradlew
