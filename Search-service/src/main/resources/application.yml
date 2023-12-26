@@ -16,11 +16,10 @@ spring:
         format_sql: true
     show-sql: true
 
-  rabbitmq:
-    host: ${rabbitmq.host}
-    username: ${rabbitmq.username}
-    password: ${rabbitmq.password}
-    port: ${rabbitmq.port}
+  activemq:
+    broker-url: ${activemq.url}
+    user: ${activemq.user_}
+    password: ${activemq.password_}
 
 eureka:
   client:
