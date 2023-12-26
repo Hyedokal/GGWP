@@ -3,17 +3,16 @@ import { SignInRequestDto, SignUpRequestDto } from './dto/request/auth';
 import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
 import {GetSignInUserResponseDto, GetUserResponseDto, PatchLolNickNameResponseDto} from "./dto/response/user";
-import PatchLolNickNameRequestDto from "./dto/request/user/patch-lol-nickName-request.dto";
 import SquadRequestDto from "./dto/request/squad/SquadRequestDto";
 import SquadResponseDto from "./dto/response/squad/SquadResponseDto";
 import {BoardListResponseDto} from "../views/Match/BoardListResponseDto";
+import {CommentMatchResponse, MatchHistoryResponse} from "../views/User";
 import {InputValuesType} from "../views/User/personalities/personalitiesSend";
 
 
 const DOMAIN = 'http://localhost:8000';
 
 const MEMBER_API_DOMAIN = `${DOMAIN}/member-service/v1`; // description: API Domain 주소 //
-
 
 
 const authorization = (token: string) => {// description: Authorizaition Header //
@@ -105,27 +104,8 @@ export const getUserRequest = async (token: string) => {
 
 
 
-// description: patch user email API end point //
 
-const PATCH_LOLNAME_URL = () => `${MEMBER_API_DOMAIN}/member/lolNickname`;
 
-export const patchLolNicknameRequest = async (requestBody: PatchLolNickNameRequestDto, token:string): Promise<string> => {
-    try {
-        const response = await axios.patch(PATCH_LOLNAME_URL(), requestBody, authorization(token))
-        const responseBody: PatchLolNickNameResponseDto = response.data;
-        const { code } = responseBody;
-        return code;
-
-    }catch(error){
-        if (axios.isAxiosError(error) && error.response) {
-            const responseBody:ResponseDto= error.response.data;
-            const {code}= responseBody;
-            return code;
-        }else{
-        throw error;
-    }
-    }
-};
 
 
 export const postPersonalitiesApi = async (token: string, inputValues: InputValuesType) => {
@@ -157,6 +137,15 @@ export const fetchPersonalitiesApi = async (lolNick: string | undefined, tag: st
         return response.data.personalities;
     } catch (error) {
         console.error('There was an error fetching the personalities:', error);
+        throw error; // Re-throw the error for further handling if needed
+    }
+};
+export const fetchProfileImageApi = async (lolNick: string | undefined, tag: string | undefined) => {
+    try {
+        const response = await axios.get(`http://localhost:8000/member-service/v1/member/profile-image?lolNickname=${lolNick}&tag=${tag}`);
+        return response.data.profileImg;
+    } catch (error) {
+        console.error('Error fetching profile image:', error);
         throw error; // Re-throw the error for further handling if needed
     }
 };
@@ -225,6 +214,47 @@ export const fetchAnnouncementsApi = async (page: number) => {
         throw new Error(`Error fetching announcements: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 };
+
+//맴버 전적
+export const fetchMatchesApi = async (summonerName: string | undefined, tagLine: string | undefined) => {
+    try {
+        const response = await axios.post<CommentMatchResponse[]>('http://localhost:8000/v1/comments/feign/matcher', {
+            summonerName,
+            tagLine
+        });
+        return response.data; // Returns the fetched matches data
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // Re-throw the error for further handling if needed
+    }
+};
+
+export const updateUserInfoApi = async (newLolNickName: string, newTag: string, accessToken: string) => {
+    return await axios.put('http://localhost:8000/member-service/v1/member/lolNicknameTag', {
+        lolNickName: newLolNickName,
+        tag: newTag
+    }, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+    });
+};
+
+// Separate function for Axios POST request to fetch opponents' info
+export const fetchOpponentsInfoApi = async (ids: number[]) => {
+    return await axios.post('http://localhost:8000/v1/comments/feign/match', { ids: ids });
+};
+
+// Separate function for Axios GET request to fetch match history
+export const fetchMatchHistoryApi = async (accessToken: string) => {
+    return await axios.get<MatchHistoryResponse>('http://localhost:8000/member-service/v1/member/match/list', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+    });
+};
+
+
+
+
+
+
 
 
 
@@ -361,6 +391,19 @@ export const fetchCommentsApi = async (sId: number, page: number) => {
         throw new Error('Comment data is not available');
     } catch (error) {
         console.error('Error fetching comments:', error);
+        throw error; // Re-throw the error for further handling if needed
+    }
+};
+
+
+
+// 알람
+export const createNoticeApi = async (cid: number) => {
+    try {
+        const response = await axios.post('http://localhost:8000/notice-service/v1/notice/create', { cid });
+        return response.data; // Returns the response data
+    } catch (error) {
+        console.error('Error creating notice:', error);
         throw error; // Re-throw the error for further handling if needed
     }
 };
