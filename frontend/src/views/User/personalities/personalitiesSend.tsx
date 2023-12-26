@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { useCookies } from "react-cookie";
 import { useState } from "react";
+import {postPersonalitiesApi} from "../../../apis";
+
+export interface InputValuesType {
+    personality1: string;
+    personality2: string;
+    personality3: string;
+}
 
 const RequestSender: React.FC = () => {
     const [cookies] = useCookies(['accessToken']); // accessToken을 쿠키에서 가져옵니다.
@@ -29,28 +36,14 @@ const RequestSender: React.FC = () => {
     };
 
     const sendRequest = async () => {
-        if (!token) {
-            console.error('접근 토큰을 찾을 수 없습니다.');
-            return;
-        }
-
         try {
-            const response = await axios.post('http://localhost:8000/member-service/v1/member/personalities', {
-                personalities: [inputValues.personality1, inputValues.personality2, inputValues.personality3]
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // 헤더에 토큰을 포함시킵니다.
-                }
-            });
-
-            console.log(response.data);
+            const responseData = await postPersonalitiesApi(token, inputValues);
+            console.log(responseData);
             closeModal();
-            //페이지 리로드
-            window.location.reload();
-
+            window.location.reload(); //page reload
         } catch (error) {
-            console.error('요청을 보내는 중 오류가 발생했습니다:', error);
+            // Error handling is already done in postPersonalitiesApi
+            // Additional UI-based error handling can be added here if needed
         }
     };
 

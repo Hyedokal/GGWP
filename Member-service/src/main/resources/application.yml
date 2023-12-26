@@ -37,5 +37,3 @@ eureka:
 
 server:
   port: 49875
-
-

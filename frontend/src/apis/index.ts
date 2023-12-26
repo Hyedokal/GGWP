@@ -7,6 +7,7 @@ import PatchLolNickNameRequestDto from "./dto/request/user/patch-lol-nickName-re
 import SquadRequestDto from "./dto/request/squad/SquadRequestDto";
 import SquadResponseDto from "./dto/response/squad/SquadResponseDto";
 import {BoardListResponseDto} from "../views/Match/BoardListResponseDto";
+import {InputValuesType} from "../views/User/personalities/personalitiesSend";
 
 
 const DOMAIN = 'http://localhost:8000';
@@ -127,12 +128,59 @@ export const patchLolNicknameRequest = async (requestBody: PatchLolNickNameReque
 };
 
 
+export const postPersonalitiesApi = async (token: string, inputValues: InputValuesType) => {
+    if (!token) {
+        throw new Error('Access token not found.');
+    }
+
+    try {
+        const response = await axios.post('http://localhost:8000/member-service/v1/member/personalities', {
+            personalities: [inputValues.personality1, inputValues.personality2, inputValues.personality3]
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Include token in header.
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('An error occurred while sending the request:', error);
+        throw error; // Re-throw the error for further handling if needed
+    }
+};
 
 
 
+export const fetchPersonalitiesApi = async (token: string) => {
+    try {
+        const response = await axios.get('http://localhost:8000/member-service/v1/member/personalities', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data.personalities;
+    } catch (error) {
+        console.error('There was an error fetching the personalities:', error);
+        throw error;  // Re-throw the error for further handling if needed
+    }
+};
 
 
+//프사
+export const uploadFileApi = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await axios.post('http://localhost:8000/member-service/file/upload', formData);
+    return response.data; // Returns the URL of the uploaded image
+};
 
+export const updateProfileImageApi = async (uploadedImageUrl: string, token: string) => {
+    await axios.patch('http://localhost:8000/member-service/v1/member/profile-image', {
+        profileImage: uploadedImageUrl
+    }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+};
 
 
 //-------------------------------------게시판 api-------------------------------------//
@@ -202,22 +250,6 @@ export const sendSquadRequest = async (requestBody: SquadRequestDto): Promise<Sq
     }
 };
 
-export const postCommentApi = async (sId: number, wontPos: string, qType: string, useMic: boolean, summonerName: string, tagLine: string, memo: string) => {
-    try {
-        const response = await axios.post('http://localhost:8000/v1/comments', {
-            sId,
-            wontPos,
-            qType,
-            useMic,
-            summonerName,
-            tagLine,
-            memo
-        });
-        return response.data;
-    } catch (error) {
-        throw new Error(`Error posting comment: ${error instanceof Error ? error.message : "Unknown error"}`);
-    }
-};
 
 // 글 삭제
 export const deleteSquadApi = async (sid: number) => {
@@ -277,5 +309,62 @@ export const fetchMoreSquadsApi = async (currentPage: number, newSize: number) =
     } catch (error) {
         console.error('Error fetching additional squads data:', error);
         throw error;  // Re-throw the error for further handling if needed
+    }
+};
+
+
+// 글 수정///
+export const updateSquadApi = async (sid: number, editedPost: BoardListResponseDto) => {
+    try {
+        await axios.put(`http://localhost:8000/v1/squads/${sid}`, editedPost);
+    } catch (error) {
+        console.error('Error updating squad:', error);
+        throw error;  // Re-throw the error for further handling if needed
+    }
+};
+
+// 매칭 하기//
+export const approveCommentApi = async (cid: number) => {
+    try {
+        const response = await axios.put(`http://localhost:8000/v1/squads/comment/approve/${cid}`);
+        console.log("Comment approved:", response);
+        return response; // Return the response for any further processing
+    } catch (error) {
+        console.error("Error approving comment:", error);
+        throw error; // Re-throw the error for further handling if needed
+    }
+};
+
+
+// 코멘트..
+//댓글 코맨트
+export const postCommentApi = async (sId: number, wontPos: string, qType: string, useMic: boolean, summonerName: string, tagLine: string, memo: string) => {
+    try {
+        const response = await axios.post('http://localhost:8000/v1/comments', {
+            sId,
+            wontPos,
+            qType,
+            useMic,
+            summonerName,
+            tagLine,
+            memo
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error posting comment: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+};
+
+// 댓글 fetch
+export const fetchCommentsApi = async (sId: number, page: number) => {
+    try {
+        const response = await axios.get(`http://localhost:8000/v1/squads/${sId}?page=${page}`);
+        if (response.data && response.data.commentPage) {
+            return response.data.commentPage;
+        }
+        throw new Error('Comment data is not available');
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        throw error; // Re-throw the error for further handling if needed
     }
 };
