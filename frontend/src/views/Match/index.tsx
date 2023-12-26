@@ -7,6 +7,7 @@
     import './style.css';
     import Announce from "../../components/Announce/Announce";
     import axios from "axios";
+    import {deleteSquadApi, fetchMoreSquadsApi, fetchSquadsApi, fetchSquadsApi2} from "../../apis";
 
     export default function Match() {
         const { userInfo } = UserInfoStore();
@@ -24,29 +25,25 @@
 
         const [isViewModalOpen, setViewModalOpen] = useState(false);
         const [viewablePost, setViewablePost] = useState<BoardListResponseDto | null>(null);
+
+
         const loadMorePosts = async () => {
             try {
                 const newSize = loadMoreSize + 5; // Increment load more size by 5
-                const response = await axios.post('http://localhost:8000/v1/squads/search', {
-                    outdated: false,
-                    page: currentPage,
-                    size: newSize
-                });
-                const dataWithDefaultComments = response.data.content.map((item: BoardListResponseDto) => ({
-                    ...item,
-                    commentList: item.commentList || []
-                }));
+                const additionalData = await fetchMoreSquadsApi(currentPage, newSize);
+
                 setCurrentList((prevList) => {
                     // Combine existing list with new data, avoiding duplicates
                     const existingIds = new Set(prevList.map(item => item.sid));
-                    const newData = dataWithDefaultComments.filter((item: { sid: number; }) => !existingIds.has(item.sid));
+                    const newData = additionalData.filter((item: { sid: number; }) => !existingIds.has(item.sid));
                     return [...prevList, ...newData];
                 });
-                setLoadMoreSize(newSize); // Update loadMoreSize state
+                setLoadMoreSize(newSize);
             } catch (error) {
-                console.error('Error fetching additional squads data:', error);
             }
         };
+
+
 
         const openViewModal = async (post: BoardListResponseDto) => {
             try {
@@ -60,37 +57,30 @@
             }
         };
 
-        const handleDeleteClick = async (sid: number) => {
-            // 사용자에게 삭제를 확인하는 메시지를 표시
-            const isConfirmed = window.confirm('Are you sure you want to delete?');
 
-            // 사용자가 '확인'을 클릭했을 때만 삭제 진행
+        const handleDeleteClick = async (sid: number) => {
+            const isConfirmed = window.confirm('Are you sure you want to delete?');
             if (isConfirmed) {
                 try {
-                    await axios.delete(`http://localhost:8000/v1/squads/${sid}`);
-                    setViewablePost(null); // Get the viewablePost null background
-                    refreshList(); // 성공적으로 삭제된 후 목록을 새로고침
+                    await deleteSquadApi(sid);
+                    setViewablePost(null); // Set the viewablePost to null
+                    refreshList(); // Refresh the list after successful deletion
                 } catch (error) {
-                    console.error('Error deleting squad:', error);
-                    // 오류 처리
                 }
             }
         };
 
         const refreshList = async () => {
             try {
-                const response = await axios.post('http://localhost:8000/v1/squads/search', {
-                    outdated: false,
-                    page: 0,
-                    size: 15
-                });
-                const dataWithDefaultComments = response.data.content.map((item: BoardListResponseDto) => ({
+                const squadsData = await fetchSquadsApi();
+                const dataWithDefaultComments = squadsData.content.map((item: BoardListResponseDto) => ({
                     ...item,
                     commentList: item.commentList || [] // Ensures commentList is always an array
                 }));
                 setCurrentList(dataWithDefaultComments);
             } catch (error) {
-                console.error('Error fetching squads data:', error);
+                // Error handling is already done in fetchSquadsApi
+                // Additional UI-based error handling can be added here if needed
             }
         };
 
@@ -112,29 +102,20 @@
         useEffect(() => {
             const fetchSquads = async () => {
                 try {
-                    const response = await axios.post('http://localhost:8000/v1/squads/search', {
-                        outdated: false,
-                        page: 0,
-                        size: 15
-                    });
-                    const dataWithDefaultComments = response.data.content.map((item: BoardListResponseDto) => ({
-                        ...item,
-                        commentList: item.commentList || [] // Ensures commentList is always an array
-                    }));
+                    const dataWithDefaultComments = await fetchSquadsApi2();
                     setCurrentList(dataWithDefaultComments);
                 } catch (error) {
-                    console.error('Error fetching squads data:', error);
-                    // Handle the error appropriately
                 }
             };
+
             fetchSquads(); // Call immediately on component mount
 
             const intervalId = setInterval(() => {
                 fetchSquads();
             }, 5000);
 
-            return () => clearInterval(intervalId); //
-        }, []); // Empty dependency array ensures effect is only run on mount and unmount
+            return () => clearInterval(intervalId);
+        }, []);
 
         return (
             <div>
