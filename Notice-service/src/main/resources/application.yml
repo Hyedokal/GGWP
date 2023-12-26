@@ -1,12 +1,18 @@
 spring:
   application:
-      name: Notice-service
-  profiles:
-    active:
-      - dev, lb
-    include:
-      - db
-      - jwt
+    name: Notice-service
+  datasource:
+    driver-class-name: ${driver-class-name}
+    url: ${url}
+    username: ${username_}
+    password: ${password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
 
 server:
   port: 49874

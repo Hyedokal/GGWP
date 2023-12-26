@@ -46,6 +46,8 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3'
     implementation 'org.webjars:bootstrap:3.3.7'
     implementation 'org.webjars:jquery:3.1.1-1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config:4.1.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.0'
 
     //jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
