@@ -1,7 +1,6 @@
 import './style.css';
-import React, {SetStateAction, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import UserInfoStore from "../../stores/userInfo.store";
-import CidStore from "../../stores/cid.store";
 import useCidInfoStore from "../../stores/cid.store";
 import axios from "axios";
 import {Client} from "@stomp/stompjs/esm6";

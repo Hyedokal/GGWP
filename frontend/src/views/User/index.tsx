@@ -1,7 +1,6 @@
 import {useCookies} from "react-cookie";
 import UserInfoStore from "../../stores/userInfo.store";
 import {useEffect, useState} from "react";
-import {patchLolNicknameRequest} from "../../apis";
 import RequestSender from "./personalities/personalitiesSend";
 import ViewPersonalities from "./personalities/ViewPersonalities";
 import axios from "axios";

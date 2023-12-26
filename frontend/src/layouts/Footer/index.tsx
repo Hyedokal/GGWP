@@ -36,7 +36,7 @@ export default function Footer() {
         </div>
       </div>
       <div className='footer-bottom'>
-        <div className='footer-copyright'>{'Copyright ⓒ 2022 GGWP. All Right Reserved.'}</div>
+        <div className='footer-copyright'>{' 2023 GGWP. .'}</div>
       </div>
     </div>
   )
