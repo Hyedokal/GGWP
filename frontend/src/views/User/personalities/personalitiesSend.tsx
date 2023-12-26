@@ -27,14 +27,13 @@ const RequestSender: React.FC = () => {
         setModalIsOpen(false); // 모달을 닫기 위해 상태를 변경합니다.
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
         setInputValues(prevState => ({
             ...prevState,
             [name]: value
-        })); // 입력된 값을 상태에 업데이트합니다.
+        }));
     };
-
     const sendRequest = async () => {
         try {
             const responseData = await postPersonalitiesApi(token, inputValues);
@@ -52,9 +51,18 @@ const RequestSender: React.FC = () => {
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={openModal}>성격 추가</button>
             {modalIsOpen && (
                 <div className="mt-4">
-                    <input type="text" name="personality1" value={inputValues.personality1} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1" />
-                    <input type="text" name="personality2" value={inputValues.personality2} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2" />
-                    <input type="text" name="personality3" value={inputValues.personality3} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2" />
+                    <select name="personality1" value={inputValues.personality1} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1">
+                        <option value="빡겜 유저"> 빡겜 유저</option>
+                        <option value="즐겜 유저"> 즐겜 유저</option>
+                    </select>
+                    <select name="personality2" value={inputValues.personality2} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2">
+                        <option value="일찍 (10~22">일찍 (10~22)</option>
+                        <option value="늦게 (22~06)">늦게 (22~06)</option>
+                    </select>
+                    <select name="personality3" value={inputValues.personality3} onChange={handleInputChange} className="border border-gray-300 rounded-md px-2 py-1 mt-2">
+                        <option value="내향적"> 내향적</option>
+                        <option value="외향적"> 외향적 </option>
+                    </select>
                     <div className="mt-2">
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={sendRequest}>전송</button>
                         <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={closeModal}>닫기</button>

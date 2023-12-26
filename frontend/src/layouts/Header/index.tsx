@@ -1,16 +1,14 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import './style.css';
 import { useCookies } from 'react-cookie';
-import {useCidInfoStore, useUserStore} from "../../stores";
+import { useUserStore} from "../../stores";
 import {AUTH_PATH, MAIN_PATH, MATCH_PATH, USER_PATH} from "../../constant";
 import React, {useEffect, useState} from "react";
 import SockJS from "sockjs-client";
 import UserInfoStore from "../../stores/userInfo.store";
 import {Message} from "../../interface/Message";
 import { Client } from '@stomp/stompjs';
-import axios from "axios";
 import SliderBar from "../../components/Sliderbar";
-// import SliderBar from "../../components/Sliderbar";
 
 
 // 헤더 컴포넌트
@@ -160,6 +158,11 @@ export default function Header() {
                     </div>
                 )}
                 <div className='header-right-box'>
+                    {cookies.accessToken && (<div>
+                        <div className='header-user-nickname'>{userInfo?.lolNickname}</div>
+                        <div className='header-user-tag'>{userInfo?.tag}</div>
+                    </div>)}
+
                     { isMainPage && (<LoginMyPageButton />) }
                     { allPage && (<LogoutButton />) }
                 </div>

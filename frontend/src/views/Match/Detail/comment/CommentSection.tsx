@@ -28,6 +28,8 @@ interface PaginationInfo {
 const handleMatchClick = async (cid: number) => {
     try {
         await approveCommentApi(cid);
+        // 모달닫기
+        alert("매칭이 완료되었습니다.");
     } catch (error) {
     }
 };
