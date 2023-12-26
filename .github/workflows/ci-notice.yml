@@ -23,6 +23,17 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Copy Secret
+        env:
+          BOOTSTRAP_YML_URL: ${{ secrets.BOOTSTRAP_URL }}
+          BOOTSTRAP_YML_NOTICE: ${{ secrets.BOOTSTRAP_NOTICE }}
+          SECRET_DIR: ./Notice-service/src/main/resources
+          SECRET_FILENAME: bootstrap.yml
+        run: |
+          echo $BOOTSTRAP_YML_URL > $SECRET_DIR/$SECRET_FILENAME
+          echo $BOOTSTRAP_YML_NOTICE >> $SECRET_DIR/$SECRET_FILENAME
+
+
         # Gradle Settings
       - name: Grant execute permission for gradlew
         run: chmod +x Notice-service/gradlew

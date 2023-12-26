@@ -27,3 +27,4 @@ eureka:
     hostname: ${loadbalancer.ip}
     nonSecurePort: 80  # 서비스의 포트
 
+#TEST
