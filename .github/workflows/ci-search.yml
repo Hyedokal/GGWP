@@ -23,6 +23,16 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Copy Secret
+        env:
+          BOOTSTRAP_YML_URL: ${{ secrets.BOOTSTRAP_URL }}
+          BOOTSTRAP_YML_SEARCH: ${{ secrets.BOOTSTRAP_SEARCH }}
+          SECRET_DIR: ./Search-service/src/main/resources
+          SECRET_FILENAME: bootstrap.yml
+        run: |
+          echo $BOOTSTRAP_YML_URL > $SECRET_DIR/$SECRET_FILENAME
+          echo $BOOTSTRAP_YML_COMMENT >> $SECRET_DIR/$SECRET_FILENAME
+
         # Gradle Settings
       - name: Grant execute permission for gradlew
         run: chmod +x Search-service/gradlew
@@ -35,7 +45,7 @@ jobs:
         # Docker Build
       - name: Build Docker image
         working-directory: Search-service
-        run: docker build --no-cache -t hyedokal/ggwp_search-service .
+        run: docker build -t hyedokal/ggwp_search-service .
 
         # DockerHub Login
       - name: Log in to Docker Hub

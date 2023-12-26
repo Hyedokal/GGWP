@@ -1,11 +1,21 @@
 spring:
   application:
     name: Search-service
-  profiles:
-    active:
-      - dev, lb
-    include:
-      - db, mq
+
+  datasource:
+    url: ${url}
+    username: ${username_}
+    password: ${password}
+    driver-class-name: ${driver-class-name}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
   rabbitmq:
     host: ${rabbitmq.host}
     username: ${rabbitmq.username}
