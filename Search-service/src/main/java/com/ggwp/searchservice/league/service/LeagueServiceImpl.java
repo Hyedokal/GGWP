@@ -38,7 +38,7 @@ public class LeagueServiceImpl implements LeagueService {
     private String apiKey;
 
     private List<CreateLeagueDto> leagueFeign(String summonerId) {
-        return leagueFeign.getLeagues(summonerId, apiKey).orElseThrow(()->
+        return leagueFeign.getLeagues(summonerId, apiKey).orElseThrow(() ->
                 new CustomException(ErrorCode.NotFeginException));
     }
 
