@@ -77,7 +77,6 @@ function App() {
               <Match/>
             </ProtectedRoute>
           } />
-          <Route path='/test' element={<Test/>} />
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>
