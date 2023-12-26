@@ -35,4 +35,3 @@ eureka:
 server:
   port: 49873
 
-#Test
