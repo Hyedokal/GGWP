@@ -24,7 +24,7 @@ jobs:
 
       - name: Copy Secret
         env:
-          BOOTSTRAP_YML_CONTENT: ${{ secrets.BOOTSTRAP }}
+          BOOTSTRAP_YML_CONTENT: ${{ secrets.BOOTSTRAP_SQUAD }}
           SECRET_DIR: ./Squad-service/src/main/resources
           SECRET_FILENAME: bootstrap.yml
         run: |
