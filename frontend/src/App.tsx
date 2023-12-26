@@ -15,7 +15,6 @@ import {GetSignInUserResponseDto, GetUserResponseDto} from 'apis/dto/response/us
 import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
 import Match from "./views/Match";
-import Test from "./views/Tests";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
