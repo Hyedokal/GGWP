@@ -30,6 +30,7 @@ jobs:
         run: |
           mkdir -p src/main/resources
           echo $BOOTSTRAP_YML_CONTENT > $SECRET_DIR/$SECRET_FILENAME
+          cat src/main/resources/bootstrap.yml
         
         # Gradle Settings
       - name: Grant execute permission for gradlew
