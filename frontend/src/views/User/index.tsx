@@ -1,15 +1,15 @@
 import {useCookies} from "react-cookie";
 import UserInfoStore from "../../stores/userInfo.store";
 import {useEffect, useState} from "react";
-import RequestSender from "./personalities/personalitiesSend";
 import ViewPersonalities from "./personalities/ViewPersonalities";
-import axios from "axios";
 import {useLocation} from "react-router-dom";
 import {UserInfo} from "../../types";
 import ProfileImg from "./profile/profile";
 import './style.css';
+import {fetchMatchesApi, fetchMatchHistoryApi, fetchOpponentsInfoApi, updateUserInfoApi} from "../../apis";
+import RequestSender from "./personalities/personalitiesSend";
 
-interface MatchHistoryResponse {
+export interface MatchHistoryResponse {
 
     code: string;
     message: string;
@@ -17,7 +17,7 @@ interface MatchHistoryResponse {
     tag: string;
     sid: number[];
 }
-interface CommentMatchResponse {
+export interface CommentMatchResponse {
     sids: number;
     squadNickname: string;
     squadTag: string;
@@ -49,13 +49,11 @@ export default function User() {
     const fetchMatches = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.post<CommentMatchResponse[]>('http://localhost:8000/v1/comments/feign/matcher', {
-                summonerName: userInfo?.lolNickname,
-                tagLine: userInfo?.tag
-            });
-            setMatches(response.data);
+            const matchesData = await fetchMatchesApi(userInfo?.lolNickname, userInfo?.tag);
+            setMatches(matchesData);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            // Error handling is already done in fetchMatchesApi
+            // Additional UI-based error handling can be added here if needed
         } finally {
             setIsLoading(false);
         }
@@ -68,12 +66,8 @@ export default function User() {
 
     const handleUpdate = async () => {
         try {
-            const response = await axios.put('http://localhost:8000/member-service/v1/member/lolNicknameTag', {
-                lolNickName: newLolNickName,
-                tag: newTag
-            }, {
-                headers: { Authorization: `Bearer ${cookies.accessToken}` }
-            });
+            const response = await updateUserInfoApi(newLolNickName, newTag, cookies.accessToken);
+
 
             if(response.data.code === "SU") {
                 setUserInfo({
@@ -96,7 +90,7 @@ export default function User() {
 
     const fetchOpponentsInfo = async (ids: number[]) => {
         try {
-            const response = await axios.post('http://localhost:8000/v1/comments/feign/match', { ids: ids });
+            const response = await fetchOpponentsInfoApi(ids);
             setOpponents(response.data); // Assuming the response data is an array of Opponent objects
         } catch (error) {
             console.error('Error fetching opponents info:', error);
@@ -112,9 +106,8 @@ export default function User() {
 
     const fetchMatchHistory = async (): Promise<void> => {
         try {
-            const response = await axios.get<MatchHistoryResponse>('http://localhost:8000/member-service/v1/member/match/list', {
-                headers: { Authorization: `Bearer ${cookies.accessToken}` }
-            });
+            const response = await fetchMatchHistoryApi(cookies.accessToken);
+
             if (response.data.code === "SU") {
                 setMatchHistory([response.data]); // Corrected the syntax here
 
@@ -249,7 +242,7 @@ export default function User() {
                                     <div key={index} className="h-12 bg-teal-300 dark:bg-teal-700 rounded-lg">
                                         매치 번호 : {match.sids}
                                         <span style={{ marginLeft: '60px' }}> {/* Add margin here */}
-                                            글작성자 :{match.myName}#{match.myTag}
+                                            댓글 작성자 :{match.myName}#{match.myTag}
                         </span>
                                         <span style={{ marginLeft: '60px' }}>
                             매칭자:  {match.squadNickname}#{match.squadTag}

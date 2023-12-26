@@ -30,3 +30,10 @@
 }
 
 
+.main-text {
+    font-size: 50px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-bottom: 250px;
+}

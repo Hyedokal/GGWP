@@ -145,7 +145,6 @@
                             <table className="w-full text-sm table-fixed">
                                 <thead>
                                 <tr className="text-[#7a828e]">
-                                    <th className="p-4 w-1/8">프로필</th>
                                     <th className="p-4 w-1/8">번호</th>
                                     <th className="p-4 w-1/8">소환사 이름</th>
                                     <th className="p-4 w-1/8">내 티어</th>
@@ -159,19 +158,6 @@
                                 <tbody className="text-[#c6cdd4]">
                                 {currentList.map((item, index) => (
                                     <tr key={index} onClick={() => openViewModal(item)}>
-
-                                        <td className="p-4 w-1/8" style={{display: "flex", width: "auto", justifyContent: "center"}}>
-                                            {userInfo?.profileImage ? (
-                                            <img
-                                                src={userInfo.profileImage}
-                                                alt="User Profile"
-                                                style={{ width: '40px', height: '40px', borderRadius: '50%', justifyContent: "center" }}
-                                            />
-                                        ) : (
-                                            <div className="w-10 h-10 bg-gray-300 rounded-full"></div> // Placeholder for no image
-                                        )}
-
-                                        </td>
                                         <td className="p-4 w-1/8 ">{item.sid}</td>
                                         <td className="p-4 w-1/8">{item.summonerName}#{item.tagLine}</td>
                                         <td className="p-4 w-1/8">{item.rank}</td>
