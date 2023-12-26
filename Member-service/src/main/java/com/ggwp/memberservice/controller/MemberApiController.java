@@ -89,6 +89,10 @@ public class MemberApiController {
         return response;
     }
 
+    @GetMapping("/profile-image")
+    public ResponseEntity<ProfileImgResponseDto> getProfile(@RequestParam String lolNickname, @RequestParam String tag) {
+        return memberService.getProfileImageUrl(lolNickname, tag);
+    }
 
 }
 

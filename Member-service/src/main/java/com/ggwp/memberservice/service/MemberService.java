@@ -22,4 +22,6 @@ public interface MemberService {
     ResponseEntity<? super GetMatchInfoResponseDto> getMatchInfo(String uuid);
 
     ResponseEntity<? super PatchProfileImageResponseDto> patchProfileImage(PatchProfileImageRequestDto requestBody, String uuid);
+
+    ResponseEntity<ProfileImgResponseDto> getProfileImageUrl(String lolNickname, String tag);
 }

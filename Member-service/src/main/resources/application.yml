@@ -4,15 +4,15 @@
     application:
       name: member-service
     profiles:
-      active: local,db,jwt
+      active: local,db,jwt,s3
     servlet:
       multipart:
         max-file-size: 100MB
         max-request-size: 110MB
 
-  file:
-    path: C:\\local\\
-    url: http://localhost:8000/member-service/file/
+
+
+
   eureka:
     instance:
       instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
