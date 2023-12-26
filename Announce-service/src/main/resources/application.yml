@@ -14,9 +14,6 @@ spring:
         format_sql: true
     show-sql: true
 
-  profiles:
-    include: db
-
 eureka:
   client:
     register-with-eureka: false  # Eureka 등록 비활성화
