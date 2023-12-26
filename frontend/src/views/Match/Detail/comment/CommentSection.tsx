@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import {UserInfo} from "../../../../types";
 import UserInfoStore from "../../../../stores/userInfo.store";
 import {BoardListResponseDto} from "../../BoardListResponseDto";
+import {approveCommentApi, fetchCommentsApi} from "../../../../apis";
 
 interface Comment {
     myPos: string;
@@ -25,17 +25,17 @@ interface PaginationInfo {
     currentPage: number;
     totalPages: number;
 }
-const handleMatchClick = (cid: number) => {
-    axios.put(`http://localhost:8000/v1/squads/comment/approve/${cid}`)
-        .then(response => {
-            // Handle successful response
-            console.log("Comment approved:", response);
-        })
-        .catch(error => {
-            // Handle error
-            console.error("Error approving comment:", error);
-        });
+const handleMatchClick = async (cid: number) => {
+    try {
+        await approveCommentApi(cid);
+        // 모달닫기
+        alert("매칭이 완료되었습니다.");
+    } catch (error) {
+    }
 };
+
+
+
 const CommentSection: React.FC<CommentSectionProps> = ({ sId, refreshKey,post}) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [pagination, setPagination] = useState<PaginationInfo>({ currentPage: 0, totalPages: 0 });
@@ -46,24 +46,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({ sId, refreshKey,post}) 
     }, [sId, pagination.currentPage, refreshKey]); // Add refreshKey as a dependency
 
 
-    const fetchComments = (sId: number, page: number) => {
-        console.log("sId",sId);
-        console.log("page",page);
-        axios.get(`http://localhost:8000/v1/squads/${sId}?page=${page}`)
-            .then(response => {
-                if (response.data && response.data.commentPage) {
-                    setComments(response.data.commentPage.content);
-                    setPagination({
-                        currentPage: response.data.commentPage.number,
-                        totalPages: response.data.commentPage.totalPages
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching comments:', error);
+    const fetchComments = async (sId: number, page: number) => {
+        try {
+            const commentPage = await fetchCommentsApi(sId, page);
+            setComments(commentPage.content);
+            setPagination({
+                currentPage: commentPage.number,
+                totalPages: commentPage.totalPages
             });
+        } catch (error) {
+        }
     };
-
     const handlePageChange = (newPage: number) => {
         setPagination(prev => ({ ...prev, currentPage: newPage }));
     };

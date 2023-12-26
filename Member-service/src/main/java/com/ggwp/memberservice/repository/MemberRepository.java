@@ -25,5 +25,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Long countByLolNicknameAndTag(@Param("lolNickname") String lolNickname, @Param("tag") String tag);
 
 
+    Member findByLolNicknameAndTag(String lolNickname, String tag);
+
+    Optional<Member> findOptionalMemberByLolNicknameAndTag(String lolNickname, String tag);
+
+
 }
 

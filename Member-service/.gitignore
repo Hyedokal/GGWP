@@ -37,5 +37,11 @@ out/
 .vscode/
 ### profile file
 application-db.yml
+<<<<<<< HEAD
 bootstrap.yml
 application-jwt.yml
+=======
+
+application-jwt.yml
+application-s3.yml
+>>>>>>> 4047bb9 (Feat: 맴버 프사 S3 설정 및 리펙 , 스쿼드 fix)
