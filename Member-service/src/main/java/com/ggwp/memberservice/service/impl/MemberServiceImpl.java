@@ -120,11 +120,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(String uuid) {
+    public ResponseEntity<? super PersonalitiesInfoResponseDto> getPersonalities(String lolNickname, String tag) {
         Member member;
 
         try {
-            member = memberRepository.findByUuid(uuid);
+            member = memberRepository.findByLolNicknameAndTag(lolNickname, tag);
             if (member == null) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
@@ -135,10 +135,10 @@ public class MemberServiceImpl implements MemberService {
             exception.printStackTrace();
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(PersonalitiesInfoResponseDto.databaseError()); // Assuming you have a databaseError method in PersonalitiesInfoResponseDto
+                    .body(PersonalitiesInfoResponseDto.databaseError());
         }
 
-        List<String> personalities = member.getPersonalities(); // Assuming getPersonalities() returns List<String>
+        List<String> personalities = member.getPersonalities();
         PersonalitiesInfoResponseDto responseDto = PersonalitiesInfoResponseDto.success(personalities);
 
         return ResponseEntity.ok(responseDto);

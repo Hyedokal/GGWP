@@ -16,7 +16,7 @@ public interface MemberService {
 
     ResponseEntity<? super PersonalitiesResponseDto> addPersonalities(String uuid, PersonalitiesRequestDto dto);
 
-    ResponseEntity<? super  PersonalitiesInfoResponseDto> getPersonalities(String uuid);
+    ResponseEntity<? super  PersonalitiesInfoResponseDto> getPersonalities(String lolNickname, String tag);
 
 
     ResponseEntity<? super GetMatchInfoResponseDto> getMatchInfo(String uuid);

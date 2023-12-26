@@ -151,17 +151,13 @@ export const postPersonalitiesApi = async (token: string, inputValues: InputValu
 
 
 
-export const fetchPersonalitiesApi = async (token: string) => {
+export const fetchPersonalitiesApi = async (lolNick: string | undefined, tag: string | undefined) => {
     try {
-        const response = await axios.get('http://localhost:8000/member-service/v1/member/personalities', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await axios.get(`http://localhost:8000/member-service/v1/member/personalities?lolNickname=${lolNick}&tag=${tag}`);
         return response.data.personalities;
     } catch (error) {
         console.error('There was an error fetching the personalities:', error);
-        throw error;  // Re-throw the error for further handling if needed
+        throw error; // Re-throw the error for further handling if needed
     }
 };
 
