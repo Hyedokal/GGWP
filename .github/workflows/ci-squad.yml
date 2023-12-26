@@ -27,7 +27,7 @@ jobs:
           BOOTSTRAP_YML_CONTENT: ${{ secrets.BOOTSTRAP }}
           SECRET_DIR: src/main/resources
           SECRET_FILENAME: bootstrap.yml
-        run: echo $BOOTSTRAP_YML_CONTENT > $SECRET_DIR/$SECRET_FILENAME
+        run: echo $BOOTSTRAP_YML_CONTENT | base64 --decode > $SECRET_DIR/$SECRET_FILENAME
         
         # Gradle Settings
       - name: Grant execute permission for gradlew
