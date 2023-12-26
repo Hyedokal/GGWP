@@ -5,7 +5,7 @@
     import './style.css';
     import axios from "axios";
     import {useCookies} from "react-cookie";
-    import {fetchPersonalitiesApi} from "../../../apis";
+    import {fetchPersonalitiesApi, fetchProfileImageApi} from "../../../apis";
 
     interface ViewPostModalProps {
         post: BoardListResponseDto;
@@ -16,6 +16,7 @@
         const [refreshKey, setRefreshKey] = useState(0);
         const [personalities, setPersonalities] = useState<string[]>([]);
 
+        const [profileImageUrl, setProfileImageUrl] = useState<string>('');
 
         const refreshComments = () => {
             setRefreshKey(prevKey => prevKey + 1); // Increment to trigger a refresh
@@ -23,24 +24,29 @@
 
 
 
+
         useEffect(() => {
-            const fetchAndSetPersonalities = async () => {
+            const fetchAndSetPersonalitiesAndProfileImage = async () => {
                 const lolNick = post.summonerName || undefined;
                 const tag = post.tagLine || undefined;
 
                 try {
+                    // Fetching personalities
                     const fetchedPersonalities = await fetchPersonalitiesApi(lolNick, tag);
                     setPersonalities(fetchedPersonalities);
+
+                    // Fetching profile image
+                    const profileImg = await fetchProfileImageApi(lolNick, tag);
+                    setProfileImageUrl(profileImg);
+
                 } catch (error) {
-                    console.error('Error fetching personalities:', error);
+                    console.error('Error fetching data:', error);
                     // Handle the error appropriately
                 }
             };
 
-            fetchAndSetPersonalities();
+            fetchAndSetPersonalitiesAndProfileImage();
         }, [post.summonerName, post.tagLine]); // Dependency array
-
-
 
 
 
@@ -50,6 +56,18 @@
                     <div className="bg-[#232a38] text-white p-4 rounded-lg w-[591px]">
                         <div className="flex justify-between items-center mb-4">
                             <h1 className="text-lg font-bold mr-2">{post.summonerName}#{post.tagLine}</h1>
+
+                            <td className="p-4 w-1/8" style={{ display: "flex", justifyContent: "center" }}>
+                                {profileImageUrl ? (
+                                    <img
+                                        src={profileImageUrl}
+                                        alt="User Profile"
+                                        style={{ width: '60px', height: '60px', borderRadius: '50%' }}
+                                    />
+                                ) : (
+                                    <div className="w-10 h-10 bg-gray-300 rounded-full" style={{ width: '40px', height: '40px' }}></div> // Placeholder for no image
+                                )}
+                            </td>
 
                         </div>
                         <div className="border-b border-[#3a4253] py-2">
@@ -114,8 +132,10 @@
                             <div className="mb-10"></div>
                             <CommentSection sId={post.sid} refreshKey={refreshKey} post={post} />
                             <div className="flex justify-end" id="parent-container">
-                                    <WriteCommentModal    sId={post.sid} wontPos={post.wantPos} qType={post.qtype} onCommentAdded={refreshComments}/>
-                                <button className="text-sm bg-[#3a4253] px-2 py-1 rounded" onClick={onClose}>Close</button>
+                                    <WriteCommentModal sId={post.sid} wontPos={post.wantPos} qType={post.qtype} onCommentAdded={refreshComments}/>
+
+                                <div className="ml-4">   </div>
+                                <button className="text-sm bg-[#3a4253] px-2 py-1 rounded" onClick={onClose}>닫기</button>
                             </div>
 
                         </div>

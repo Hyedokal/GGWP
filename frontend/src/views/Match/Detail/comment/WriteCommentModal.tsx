@@ -52,7 +52,7 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId, wontPos, qTy
 
     return (
         <div >
-            <button onClick={openModal}>Write Comment</button>
+            <button className="text-sm bg-[#3a4253] px-2 py-1 rounded" onClick={openModal}>댓글쓰기</button>
             <Modal  id="write-comment-modal"
                     ariaHideApp={false}  // Add this if you're not setting appElement
                     overlayClassName="ReactModal__Overlay"

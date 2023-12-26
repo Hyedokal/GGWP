@@ -5,6 +5,7 @@ import useCidInfoStore from "../../stores/cid.store";
 import axios from "axios";
 import {Client} from "@stomp/stompjs/esm6";
 import {Message} from "../../interface/Message";
+import {createNoticeApi} from "../../apis";
 
 interface NoticeResponse {
     statusCode: number;
@@ -49,19 +50,20 @@ const SliderBar: React.FC<{ messages: Message[], sendMessage: (msg: string) => v
 
 
     useEffect(() => {
-        if (cidInfo?.cid) {
-            axios.post('http://localhost:8000/notice-service/v1/notice/create', {
-                cid: cidInfo.cid
-            })
-                .then(response => {
-                    setNoticeResponse(response.data);
-                })
-                .catch(error => {
-                    console.error('Error creating notice:', error);
-                });
-        }
-    }, [cidInfo]); // Add sendMessage as a dependency
+        const createNotice = async () => {
+            if (cidInfo?.cid) {
+                try {
+                    const noticeData = await createNoticeApi(cidInfo.cid);
+                    setNoticeResponse(noticeData);
+                } catch (error) {
+                    // Error handling is already done in createNoticeApi
+                    // Additional UI-based error handling can be added here if needed
+                }
+            }
+        };
 
+        createNotice();
+    }, [cidInfo]); // Dependency array includes cidInfo
 
     useEffect(() => {
         if (messages.length > 0) {

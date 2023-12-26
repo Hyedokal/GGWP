@@ -39,7 +39,7 @@ export default function Main() {
         <div id='Main' >
             <div className='banner'> </div>
             <div id="main-contain" className="bg-[#6C7A89] h-screen flex flex-col items-center justify-center  ">
-                <span className="text-4xl 	text-blue-600	 font-black	 text-[#2C3E50] mb-20 ">GGWP 에서 검색하세요</span>
+                <div className="main-text">GGWP 에서 검색하세요</div>
                 <div
                     className="bg-white p-4 rounded-full shadow-md w-[80%] max-w-[600px] flex items-center justify-between">
                     <input
