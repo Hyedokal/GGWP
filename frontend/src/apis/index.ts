@@ -6,6 +6,7 @@ import {GetSignInUserResponseDto, GetUserResponseDto, PatchLolNickNameResponseDt
 import PatchLolNickNameRequestDto from "./dto/request/user/patch-lol-nickName-request.dto";
 import SquadRequestDto from "./dto/request/squad/SquadRequestDto";
 import SquadResponseDto from "./dto/response/squad/SquadResponseDto";
+import {BoardListResponseDto} from "../views/Match/BoardListResponseDto";
 
 
 const DOMAIN = 'http://localhost:8000';
@@ -215,5 +216,66 @@ export const postCommentApi = async (sId: number, wontPos: string, qType: string
         return response.data;
     } catch (error) {
         throw new Error(`Error posting comment: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
+};
+
+// 글 삭제
+export const deleteSquadApi = async (sid: number) => {
+    try {
+        await axios.delete(`http://localhost:8000/v1/squads/${sid}`);
+    } catch (error) {
+        console.error('Error deleting squad:', error);
+        throw error;  // Re-throw the error for further handling if needed
+    }
+};
+
+//리프레쉬 스쿼드
+export const fetchSquadsApi = async () => {
+    try {
+        const response = await axios.post('http://localhost:8000/v1/squads/search', {
+            outdated: false,
+            page: 0,
+            size: 15
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching squads data:', error);
+        throw error;
+    }
+};
+
+// 글 패치
+export const fetchSquadsApi2 = async () => {
+    try {
+        const response = await axios.post('http://localhost:8000/v1/squads/search', {
+            outdated: false,
+            page: 0,
+            size: 15
+        });
+        return response.data.content.map((item: BoardListResponseDto) => ({
+            ...item,
+            commentList: item.commentList || [] // Ensures commentList is always an array
+        }));
+    } catch (error) {
+        console.error('Error fetching squads data:', error);
+        throw error;  // Re-throw the error for further handling if needed
+    }
+};
+
+// 글 더보기
+export const fetchMoreSquadsApi = async (currentPage: number, newSize: number) => {
+    try {
+        const response = await axios.post('http://localhost:8000/v1/squads/search', {
+            outdated: false,
+            page: currentPage,
+            size: newSize
+        });
+        return response.data.content.map((item: BoardListResponseDto) => ({
+            ...item,
+            commentList: item.commentList || [] // Ensures commentList is always an array
+        }));
+    } catch (error) {
+        console.error('Error fetching additional squads data:', error);
+        throw error;  // Re-throw the error for further handling if needed
     }
 };
