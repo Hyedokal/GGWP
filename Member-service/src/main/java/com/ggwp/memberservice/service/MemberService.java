@@ -16,10 +16,12 @@ public interface MemberService {
 
     ResponseEntity<? super PersonalitiesResponseDto> addPersonalities(String uuid, PersonalitiesRequestDto dto);
 
-    ResponseEntity<? super  PersonalitiesInfoResponseDto> getPersonalities(String uuid);
+    ResponseEntity<? super  PersonalitiesInfoResponseDto> getPersonalities(String lolNickname, String tag);
 
 
     ResponseEntity<? super GetMatchInfoResponseDto> getMatchInfo(String uuid);
 
     ResponseEntity<? super PatchProfileImageResponseDto> patchProfileImage(PatchProfileImageRequestDto requestBody, String uuid);
+
+    ResponseEntity<ProfileImgResponseDto> getProfileImageUrl(String lolNickname, String tag);
 }

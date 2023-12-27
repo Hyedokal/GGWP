@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios';
 import UserInfoStore from "../../../../stores/userInfo.store";
 import './style.css';
 import InputBox from "../../../../components/InputBox";
+import {useCidInfoStore} from "../../../../stores";
+import {postCommentApi} from "../../../../apis";
 interface WriteCommentModalProps {
     sId: number;
     wontPos: string;
     qType: string;
-    onCommentAdded?: () => void; // Optional callback function
-
+    cId?: number;
+    onCommentAdded?: () => void;
 }
-const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId,wontPos ,qType,onCommentAdded   }) => {
+const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId, wontPos, qType, onCommentAdded, cId }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [useMic, setUseMic] = useState(false);
     const [memo, setMemo] = useState('');
-    const [memoError, setSMemoError] = useState<boolean>(false);
-    const [memoErrorMessage, setSMemoErrorMessage] = useState<string>('');
+    const [memoError] = useState<boolean>(false);
+    const [memoErrorMessage] = useState<string>('');
+    const { setCidInfo } = useCidInfoStore();
 
-    const userInfo = UserInfoStore(state => state.userInfo);
+    const userInfo = UserInfoStore(state => state.userInfo)
     const openModal = () => {
         setModalIsOpen(true);
     };
@@ -30,26 +32,18 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId,wontPos ,qTyp
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/v1/comments', {
-                sId,
-                wontPos,
-                qType,
-                useMic,
-                summonerName: userInfo ? userInfo.lolNickname : '',
-                tagLine: userInfo ? userInfo.tag : '',
-                memo
-            });
-            console.log(response.data);
+            const commentData = await postCommentApi(sId, wontPos, qType, useMic, userInfo ? userInfo.lolNickname : '', userInfo ? userInfo.tag : '', memo);
+
+            setCidInfo({ cid: commentData });
             if (onCommentAdded) {
                 onCommentAdded(); // Invoke the callback
             }
             closeModal();
-
-
         } catch (error) {
-            console.error('Error posting comment', error);
+            console.error(error);
         }
     };
+
 
     const clearForm = () => {
         setUseMic(false);
@@ -58,7 +52,7 @@ const WriteCommentModal: React.FC<WriteCommentModalProps> = ({ sId,wontPos ,qTyp
 
     return (
         <div >
-            <button onClick={openModal}>Write Comment</button>
+            <button className="text-sm bg-[#3a4253] px-2 py-1 rounded" onClick={openModal}>댓글쓰기</button>
             <Modal  id="write-comment-modal"
                     ariaHideApp={false}  // Add this if you're not setting appElement
                     overlayClassName="ReactModal__Overlay"

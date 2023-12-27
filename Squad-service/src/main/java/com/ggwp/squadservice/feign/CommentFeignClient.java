@@ -8,7 +8,10 @@ import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "Comment-service")
 public interface CommentFeignClient {
@@ -20,7 +23,7 @@ public interface CommentFeignClient {
 
 
     @PutMapping("/v1/comments/lolNickname-tag")
-     ResponseEntity<FeignLolNickNameTagResponseDto> FeignLolNickNameTag(@RequestBody @Valid FeignLolNickNameTagRequestDto requestBody);
+    ResponseEntity<FeignLolNickNameTagResponseDto> FeignLolNickNameTag(@RequestBody @Valid FeignLolNickNameTagRequestDto requestBody);
 
 
 }

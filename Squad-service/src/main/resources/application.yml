@@ -15,19 +15,18 @@ spring:
     show-sql: true
 
   profiles:
-    include: db,lol, lb
+    include: db,lol
 
 eureka:
   client:
-    register-with-eureka: false  # Eureka 등록 비활성화
-    fetch-registry: false  # Eureka 레지스트리 조회 비활성화
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://127.0.0.1:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    prefer-ip-address: true  # Eureka 대신 IP 주소 기반으로 통신
-    hostname: ${loadbalancer.ip}  # 서비스의 호스트 이름 (예: EC2 인스턴스의 private DNS 또는 Load Balancer의 DNS)
-    nonSecurePort: 80  # 서비스의 포트 (예: 80)
 
 
 apiKey: ${lol}
 server:
-  port: 49870
+  port: 0

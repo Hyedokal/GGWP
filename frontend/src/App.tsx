@@ -18,6 +18,8 @@ import Match from "./views/Match";
 import Test from "./views/Tests";
 import SearchComponent from "./views/Squad";
 import ProfileViewer from "./views/Summoner";
+import ProtectedRoute from "./ProtectedRoute";
+
 
 function App() {
 
@@ -67,9 +69,17 @@ function App() {
         <Route element={<Container /> }>
           <Route path={MAIN_PATH} element={<Main />} />
           <Route path={AUTH_PATH} element={<Authentication/>}/>
-          <Route path={USER_PATH} element={<User />} />
-          <Route path={MATCH_PATH} element={<Match/>}/>
-          <Route path='/test' element={<Test/>} />
+       <Route path={USER_PATH} element={
+            <ProtectedRoute>
+              <User />
+            </ProtectedRoute>
+          } />
+
+          <Route path={MATCH_PATH} element={
+            <ProtectedRoute>
+              <Match/>
+            </ProtectedRoute>
+          } />
           <Route path={SUMMONER_PATH} element={<SearchComponent/>}/>
           <Route path="/summoner/:gameName/:tagLine" element={<ProfileViewer/>}/>
           <Route path='*' element={<h1>404 Not Found</h1>} />

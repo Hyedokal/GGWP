@@ -2,6 +2,7 @@ import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import axios from "axios";
 import {useCookies} from "react-cookie";
 import UserInfoStore from "../../../stores/userInfo.store";
+import {updateProfileImageApi, uploadFileApi} from "../../../apis";
 
 const ProfileImg = () => {
     const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -23,31 +24,21 @@ const ProfileImg = () => {
 
         const file = event.target.files[0];
         try {
-            // Upload the file
-            const formData = new FormData();
-            formData.append('file', file);
-            const uploadResponse = await axios.post('http://localhost:8000/member-service/file/upload', formData);
-            const uploadedImageUrl = uploadResponse.data;
+            const uploadedImageUrl = await uploadFileApi(file);
+            await updateProfileImageApi(uploadedImageUrl, token);
 
-            // Update the profile image
-            const updateResponse = await axios.patch('http://localhost:8000/member-service/v1/member/profile-image', {
-                profileImage: uploadedImageUrl
-            }, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (updateResponse.status === 200) {
-                // Ensure all userInfo fields are set
-                if (userInfo) {
-                    setUserInfo({
-                        ...userInfo,
-                        profileImage: uploadedImageUrl,
-                    });
-                }
+            if (userInfo) {
+                setUserInfo({
+                    ...userInfo,
+                    profileImage: uploadedImageUrl,
+                });
             }
         } catch (error) {
             console.error('Error uploading file:', error);
         }
     };
+
+
 
     const onProfileImageClickHandler = () => {
         if (!fileInputRef.current) return;

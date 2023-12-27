@@ -18,7 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
-                .setAllowedOrigins("http://localhost:8000")  // 여기를 명시적으로 설정
+                .setAllowedOrigins("http://localhost:3000")  // 추후에 AWS front EC2 주소로 변경
                 .withSockJS();
     }
 
