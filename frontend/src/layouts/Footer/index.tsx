@@ -4,6 +4,8 @@ import './style.css';
 //          component: 푸터 컴포넌트          //
 export default function Footer() {
 
+
+
   //          event handler: 인스타 아이콘 버튼 클릭 이벤트 처리         //
   const onInstaIconClickHandler = () => {
     window.location.href = 'https://www.instagram.com';
@@ -19,7 +21,7 @@ export default function Footer() {
       <div className='footer-top'>
         <div className='footer-logo-box'>
           <div className='footer-logo-icon-box'>
-            <div className='logo-light-icon'></div>
+            <div className='logo-dark-icon'></div>
           </div>
           <div className='footer-logo-text'>{'GGWP'}</div>
         </div>
@@ -34,7 +36,7 @@ export default function Footer() {
         </div>
       </div>
       <div className='footer-bottom'>
-        <div className='footer-copyright'>{'Copyright ⓒ 2022 GGWP. All Right Reserved.'}</div>
+        <div className='footer-copyright'>{' 2023 GGWP. .'}</div>
       </div>
     </div>
   )

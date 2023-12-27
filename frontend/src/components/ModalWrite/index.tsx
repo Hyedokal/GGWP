@@ -3,8 +3,6 @@ import InputBox from "../InputBox";
 import SquadRequestDto from "../../apis/dto/request/squad/SquadRequestDto";
 import {sendSquadRequest} from "../../apis";
 import UserInfoStore from "../../stores/userInfo.store";
-import axios from "axios/index";
-import {BoardListResponseDto} from "../../views/Match/BoardListResponseDto";
 
 
  interface ModalProps {
@@ -34,8 +32,12 @@ const Modal : React.FC<ModalProps>  = ({ onClose,onUpdate  }) => {
                 setSMemoErrorMessage("비속어를 쓰면 안된다고");
                 hasError = true;
             }
-            if (hasError) return;
 
+            if (myPos === wantPos) {
+                alert("포지션이 같으면 안됩니다");
+                hasError = true;
+            }
+            if (hasError) return;
 
             const requestBody: SquadRequestDto = {
                 myPos,

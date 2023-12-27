@@ -4,6 +4,7 @@ import com.ggwp.searchservice.account.domain.Account;
 import com.ggwp.searchservice.account.dto.CreateAccountDto;
 import com.ggwp.searchservice.account.dto.ResponseAccountDto;
 import com.ggwp.searchservice.common.dto.FrontDto;
+import org.springframework.stereotype.Service;
 
 public interface AccountService {
 

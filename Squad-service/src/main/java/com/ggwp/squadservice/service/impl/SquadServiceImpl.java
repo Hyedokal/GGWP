@@ -71,6 +71,7 @@ public class SquadServiceImpl implements SquadService {
                 if (queueType.equals("RANKED_SOLO_5x5")) {
                     String rankString = Tier.getAbbreviationByFullName(tier) + RomanNum.getValueByRomanNum(rank);
                     rankMap.put(QType.SOLO_RANK, rankString);
+                    rankMap.put(QType.HOWLING_ABYSS, rankString);
                 } else if (queueType.equals("RANKED_FLEX_SR")) {
                     String rankString = Tier.getAbbreviationByFullName(tier) + RomanNum.getValueByRomanNum(rank);
                     rankMap.put(QType.FLEX_RANK, rankString);
@@ -78,10 +79,10 @@ public class SquadServiceImpl implements SquadService {
             }
         } catch (FeignException e) {
             log.info("Error: " + e.getMessage());
-            rankMap.put(QType.SOLO_RANK, "error-issue");
-            rankMap.put(QType.FLEX_RANK, "error-issue");
+            rankMap.put(QType.SOLO_RANK, "Unranked");
+            rankMap.put(QType.HOWLING_ABYSS, "Unranked");
+            rankMap.put(QType.FLEX_RANK, "Unranked");
         }
-
 
         return rankMap;
     }
@@ -91,13 +92,12 @@ public class SquadServiceImpl implements SquadService {
         Map<QType, String> summonerRanks = this.getSummonerRank(dto.getSummonerName());
         String summonerRank = summonerRanks.getOrDefault(dto.getQType(), "Unranked");
 
-        if ("error-issue".equals(summonerRank)) {
-            dto.setSummonerRank("Unknown Rank");
-        } else if (dto.getQType().equals(QType.SOLO_RANK)) {
+        if (dto.getQType().equals(QType.SOLO_RANK)) {
             dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.SOLO_RANK));
         } else if (dto.getQType().equals(QType.FLEX_RANK)) {
             dto.setSummonerRank(this.getSummonerRank(dto.getSummonerName()).get(QType.FLEX_RANK));
         }
+        dto.setSummonerRank(summonerRank);
 
         Squad squad = dto.toEntity();
         return squadRepository.save(squad);
@@ -131,9 +131,9 @@ public class SquadServiceImpl implements SquadService {
 
         ResponseMatchDto responseDto = new ResponseMatchDto();
 
-            responseDto.setLolNickname(summonerName);
-            responseDto.setTag(tagLine);
-            responseDto.setSIdList(sIds);
+        responseDto.setLolNickname(summonerName);
+        responseDto.setTag(tagLine);
+        responseDto.setSIdList(sIds);
 
         return responseDto;
     }
@@ -151,7 +151,7 @@ public class SquadServiceImpl implements SquadService {
             ResponseEntity<FeignLolNickNameTagResponseDto> feignResponse = commentFeignClient.FeignLolNickNameTag(request);
             if (feignResponse.getStatusCode() != HttpStatus.OK) {
                 return ResponseEntity.ok().body(new PatchLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));
-            }else{
+            } else {
                 for (Squad squadItem : squads) {
                     squadItem.setSummonerName(requestBody.getLolNickName());
                     squadItem.setTagLine(requestBody.getTag());
@@ -167,8 +167,6 @@ public class SquadServiceImpl implements SquadService {
                     .body(new PatchLolNickNameTagResponseDto(false, "An error occurred while updating squad data."));
         }
     }
-
-
 
 
     //게시글 삭제하기

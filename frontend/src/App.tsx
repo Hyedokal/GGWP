@@ -1,81 +1,86 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
+import {Route, Routes, useLocation} from 'react-router-dom';
 import './App.css';
-import {AUTH_PATH, MAIN_PATH, MATCH_PATH, SUMMONER_PATH, USER_PATH} from 'constant';
+import {AUTH_PATH, MAIN_PATH, MATCH_PATH, USER_PATH} from 'constant';
 
 import Main from 'views/Main';
 import Authentication from 'views/Authentication';
-import  User  from 'views/User';
+import User from 'views/User';
 import Container from 'layouts/Container';
-import { useEffect } from 'react';
-import { useCookies } from 'react-cookie';
-import { useUserStore } from 'stores';
+import {useEffect} from 'react';
+import {useCookies} from 'react-cookie';
+import {useUserStore} from 'stores';
 
 import {getSignInUserRequest, getUserRequest} from 'apis';
 import {GetSignInUserResponseDto, GetUserResponseDto} from 'apis/dto/response/user';
 import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
 import Match from "./views/Match";
-import Test from "./views/Tests";
-import SearchComponent from "./views/Squad";
 import ProfileViewer from "./views/Summoner";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
 
-  const { pathname } = useLocation();   //          state: 현재 페이지 url 상태          //
-  const { user, setUser } = useUserStore();   //          state: 로그인 유저 상태          //
-  const [cookies, setCookie] = useCookies();  //          state: cookie 상태          //
-  const { userInfo, setUserInfo } = UserInfoStore();
+    const {pathname} = useLocation();   //          state: 현재 페이지 url 상태          //
+    const {user, setUser} = useUserStore();   //          state: 로그인 유저 상태          //
+    const [cookies, setCookie] = useCookies();  //          state: cookie 상태          //
+    const {userInfo, setUserInfo} = UserInfoStore();
 
     //          function: get sign in user response 처리 함수 //
-  const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
-    const { code } = responseBody;
-    if (code !== 'SU') {
-      setCookie('accessToken', '', { expires: new Date(), path: MAIN_PATH });
-      setUser(null);
-      return;
+    const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
+        const {code} = responseBody;
+        if (code !== 'SU') {
+            setCookie('accessToken', '', {expires: new Date(), path: MAIN_PATH});
+            setUser(null);
+            return;
+        }
+
+        setUser({...responseBody as GetSignInUserResponseDto});
     }
 
-    setUser({ ...responseBody as GetSignInUserResponseDto });
-  }
-
-  // function: getUserRequest 처리 함수
+    // function: getUserRequest 처리 함수
     const getUserResponse = (responseBody: GetUserResponseDto | ResponseDto) => {
-    const {code} = responseBody;
-    if(code !== 'SU'){
-      setUserInfo(null);
-      return;
-    }
-      setUserInfo({...responseBody as GetUserResponseDto});
-      }
-
-
-  useEffect(() => {    //          effect: 현재 path가 변경될 때마다 실행될 함수          //
-    const accessToken = cookies.accessToken;
-    if (!accessToken) {
-      setUser(null);
-      return;
+        const {code} = responseBody;
+        if (code !== 'SU') {
+            setUserInfo(null);
+            return;
+        }
+        setUserInfo({...responseBody as GetUserResponseDto});
     }
 
-    getSignInUserRequest(accessToken).then(getSignInUserResponse);
-    getUserRequest(accessToken).then(getUserResponse);
-  }, [pathname]);
+
+    useEffect(() => {    //          effect: 현재 path가 변경될 때마다 실행될 함수          //
+        const accessToken = cookies.accessToken;
+        if (!accessToken) {
+            setUser(null);
+            return;
+        }
+
+        getSignInUserRequest(accessToken).then(getSignInUserResponse);
+        getUserRequest(accessToken).then(getUserResponse);
+    }, [pathname]);
 
 
+    return (
+        <Routes>
+            <Route element={<Container/>}>
+                <Route path={MAIN_PATH} element={<Main/>}/>
+                <Route path={AUTH_PATH} element={<Authentication/>}/>
+                <Route path={USER_PATH} element={
+                    <ProtectedRoute>
+                        <User/>
+                    </ProtectedRoute>
+                }/>
 
-  return (
-      <Routes>
-        <Route element={<Container /> }>
-          <Route path={MAIN_PATH} element={<Main />} />
-          <Route path={AUTH_PATH} element={<Authentication/>}/>
-          <Route path={USER_PATH} element={<User />} />
-          <Route path={MATCH_PATH} element={<Match/>}/>
-          <Route path='/test' element={<Test/>} />
-          <Route path={SUMMONER_PATH} element={<SearchComponent/>}/>
-          <Route path="/summoner/:gameName/:tagLine" element={<ProfileViewer/>}/>
-          <Route path='*' element={<h1>404 Not Found</h1>} />
-        </Route>
-      </Routes>
-  );
+                <Route path={MATCH_PATH} element={
+                    <ProtectedRoute>
+                        <Match/>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/summoner/:gameName/:tagLine" element={<ProfileViewer/>}/>
+                <Route path='*' element={<h1>404 Not Found</h1>}/>
+            </Route>
+        </Routes>
+    );
 }
 
 export default App;

@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {BoardListResponseDto} from "../BoardListResponseDto";
 import axios from "axios";
 import "./style.css"
+import {updateSquadApi} from "../../../apis";
 interface EditPostModalProps {
     post: BoardListResponseDto;
     onClose: () => void;
@@ -22,15 +23,12 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onUpdate }
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:8000/v1/squads/${post.sid}`, editedPost);
+            await updateSquadApi(post.sid, editedPost);
             onUpdate(); // Refresh the list
             onClose(); // Close the modal
         } catch (error) {
-            console.error('Error updating squad:', error);
-            // Handle error appropriately
         }
     };
-
 
 
 

@@ -1,0 +1,83 @@
+.alarm-icon {
+    position: fixed; /* or 'relative' depending on your layout structure */
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 1000;
+    border: none;
+    background-color: transparent;
+    padding: 10px;
+    width: 45px; /* Set the width of the icon */
+    height: 45px; /* Set the height of the icon */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+}
+
+/* Container for the sliding panel */
+.slider-container {
+    position: fixed;
+    left: -250px; /* Start off screen */
+    top: 100px;
+    width: 250px; /* Width of the slider */
+    height: 30%;
+    background-color: #f2f2f2;
+    transition: left 0.3s; /* Smooth slide effect */
+    z-index: 999; /* Below the toggle button */
+    border-radius: 20px;
+    max-height: 300px; /* Adjust as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+
+
+}
+
+/* Make slider visible */
+.slider-container.visible {
+    left: 0; /* Slide in */
+}
+
+/* The slider itself */
+.slider {
+    margin: 20px;
+    /* Rest of your slider CSS */
+}
+
+/* Applying the animation to the icon */
+.pulse-effect {
+    animation: pulseEffect 2s ease-out infinite;
+}
+
+
+.alarm-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: red; /* Red background for alarm */
+    z-index: 998; /* Below the alarm icon, above other content */
+    opacity: 0; /* Start hidden */
+    transition: opacity 0.3s ease; /* Transition for showing/hiding */
+}
+
+.show-alarm-background {
+    opacity: 1; /* Make background visible */
+}
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.shake {
+    animation: shake 0.5s; /* Adjust duration as needed */
+    animation-iteration-count: infinite;
+}

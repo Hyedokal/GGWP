@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs "NodeJS 20.9.0"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/deploy#1']],
+                    extensions: [[$class: 'PathRestriction', excludedRegions: '', includedRegions: 'frontend/.*']],
+                    userRemoteConfigs: [[url: 'https://github.com/hyedokal/GGWP.git']]
+                ])
+            }
+        }
+
+        stage('Build and push Docker image') {
+            steps {
+                script {
+                    dir('frontend') {
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                            def app = docker.build("hyedokal/ggwp_frontend", "-f Dockerfile .")
+                            app.push("latest")
+                    }
+                }
+            }
+        }
+    }
+
+        stage('Deploy to EC2') {
+            steps {
+                dir('frontend') {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-98-110.ap-northeast-2.compute.amazonaws.com '
+                            sudo docker stop \$(sudo docker ps -q) || true
+                            sudo docker rm \$(sudo docker ps -a -q) || true
+                            sudo docker rmi \$(sudo docker images -q) || true
+                            sudo docker pull hyedokal/ggwp_frontend:latest
+                            sudo docker run -d -p 3000:3000 hyedokal/ggwp_frontend:latest
+                        '
+                    """
+                }
+            }
+        }
+    }
+}

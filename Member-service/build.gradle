@@ -33,8 +33,6 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'//테스트페이지를위한 타임리프
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'//ㅅㅣ큐리티
@@ -42,8 +40,10 @@ dependencies {
 //    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     //feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-//jwt
+    //jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config:4.1.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.0'
 
 //디코딩에러
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
@@ -51,6 +51,10 @@ dependencies {
 
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    //aws s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 
 }
 

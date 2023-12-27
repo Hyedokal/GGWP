@@ -38,3 +38,5 @@ out/
 
 ### uml file
 application-db.yml
+application-lb.yml
+application-mq.yml

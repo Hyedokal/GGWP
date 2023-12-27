@@ -1,18 +1,43 @@
+spring:
+  application:
+    name: member-service
+  datasource:
+    driver-class-name: ${driver-class-name}
+    url: ${url}
+    username: ${username_}
+    password: ${password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
+  jwt:
+    secret-key: ${secret-key}
 
 
+<<<<<<< HEAD
+file:
+  path: ${filepath}
+  url: ${file_url}
+=======
   spring:
     application:
       name: member-service
     profiles:
-      active: local,db,jwt
+      active: local,db,jwt,s3
     servlet:
       multipart:
         max-file-size: 100MB
         max-request-size: 110MB
 
-  file:
-    path: C:\\local\\
-    url: http://localhost:8000/member-service/file/
+
+
 
   eureka:
     instance:
@@ -24,5 +49,17 @@
         defaultZone: http://127.0.0.1:8761/eureka
   server:
     port: 0
+>>>>>>> 4047bb9 (Feat: 맴버 프사 S3 설정 및 리펙 , 스쿼드 fix)
 
+eureka:
+  client:
+    register-with-eureka: false  # Eureka 등록 비활성화
+    fetch-registry: false  # Eureka 레지스트리 조회 비활성화
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true  # Eureka 대신 IP 주소 기반으로 통신
+    hostname: ${loadbalancer.ip}
+    nonSecurePort: 80  # 서비스의 포트
 
+server:
+  port: 49875

@@ -19,6 +19,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/health-check")
+    @Operation(summary = "Account Health-check", description = "헬스 체크용 엔드 포인트")
     public String healthcheck() {
         return "health-check";
     }

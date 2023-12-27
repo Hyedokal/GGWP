@@ -3,7 +3,13 @@ spring:
     config:
       server:
         git:
-          uri:
-            file://C:\Users\1\Desktop\GGWP_Private
+          uri: https://github.com/Hyedokal/GGWP_YAML.git
+          # Jasypt로 암호화
+          username: ENC(/k3ZITY7n0nSI23ETDyFU7FKqbjvB/BTCKba0SUDsPEWPzsi7bHjIflALDUGNx0F)
+          password: ENC(mU2rgpbjatoYT+xZfhlXsUi22hoxfoMy8QVOlfc69iZ749HS+E3VXn3PPqiYEH6703mKyOSL+6sfmjsSRp2nG/x1JtBtzeRn2xjlazf4Zss=)
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
 server:
   port: 8888

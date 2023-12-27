@@ -15,6 +15,7 @@ public class GetUserResponseDto extends ResponseDto{
     private String tag;
     private UserRole role;
     private String profileImage;
+
         private GetUserResponseDto(ResponseCode code, ResponseMessage message, Member member) {
             super(code, message);
             this.email = member.getEmail();

@@ -1,37 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
+import {fetchPersonalitiesApi} from "../../../apis";
+import UserInfoStore from "../../../stores/userInfo.store";
 
 const ViewPersonalities: React.FC = () => {
-    const [cookies] = useCookies(['accessToken']);
     const [personalities, setPersonalities] = useState<string[]>([]);
+
+    const {userInfo} = UserInfoStore();
+    const lolNick = userInfo?.lolNickname;
+    const tag = userInfo?.tag;
 
     useEffect(() => {
         const fetchPersonalities = async () => {
-            const token = cookies.accessToken;
-
-            if (!token) {
-                console.error('No access token available');
-                return;
-            }
 
             try {
-                const response = await axios.get('http://localhost:8000/member-service/v1/member/personalities', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.data && response.data.personalities) {
-                    setPersonalities(response.data.personalities);
+                const personalities = await fetchPersonalitiesApi(lolNick, tag);
+                if (personalities) {
+                    setPersonalities(personalities);
                 }
             } catch (error) {
-                console.error('There was an error fetching the personalities:', error);
             }
         };
 
         fetchPersonalities();
-    }, [cookies]); // Dependency array with cookies to re-run the effect if cookies change
+    }, []); // Empty dependency array if lolNick and tag do not change over time
+
 
     return (
         <div>
