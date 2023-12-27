@@ -1,8 +1,7 @@
-
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import './style.css';
 
 
 const ProfileViewer: React.FC = () => {
@@ -148,7 +147,7 @@ const ProfileViewer: React.FC = () => {
                                         <p>Queue Type: {data.queueType}</p>
                                         <p>Tier: {data.tier}</p>
                                         {/* tierImages 객체를 사용하여 tier에 맞는 이미지를 화면에 출력 */}
-                                        <img className="RankIcon" src={require(`../../views/Test/assets/${data.tier}.png`)} alt={data.tier} />
+                                        <img className="RankIcon" src={require(`../../views/Summoner/assets/${data.tier}.png`)} alt={data.tier} />
                                         {/* 나머지 데이터 출력 */}
                                         <p>League Points: {data.leaguePoints}</p>
                                         <p>Wins: {data.wins}</p>

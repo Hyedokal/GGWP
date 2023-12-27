@@ -15,7 +15,6 @@ import {GetSignInUserResponseDto, GetUserResponseDto} from 'apis/dto/response/us
 import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
 import Match from "./views/Match";
-import Test from "./views/Tests";
 import SearchComponent from "./views/Squad";
 import ProfileViewer from "./views/Summoner";
 import ProtectedRoute from "./ProtectedRoute";
@@ -80,7 +79,6 @@ function App() {
               <Match/>
             </ProtectedRoute>
           } />
-          <Route path={SUMMONER_PATH} element={<SearchComponent/>}/>
           <Route path="/summoner/:gameName/:tagLine" element={<ProfileViewer/>}/>
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>
