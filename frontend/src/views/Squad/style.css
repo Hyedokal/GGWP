@@ -1,0 +1,233 @@
+#Squad{
+
+    height:700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+    gap:30px;
+    background-color: #DFF9F7;
+
+}
+
+/*.searchingbox{*/
+
+/*    display:flex;*/
+/*    justify-content:center;*/
+/*    align-items:center;*/
+/*}*/
+
+/*.edgebox {*/
+/*    width: 700px;*/
+/*    height: 60px;*/
+/*    background-color: #726A6A59;*/
+/*    border-radius: 10px;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content:space-between;*/
+
+
+/*}*/
+/*.typingbox{*/
+/*     width:600px;*/
+/*    height:30px;*/
+/*    background-color:#FFFFFF;*/
+/*    border-radius:10px;*/
+
+
+/*}*/
+/*.gogobox{*/
+/*    display:flex;*/
+
+/*    align-items:center;*/
+/*    gap: 15px;*/
+/*}*/
+/*.gogobutton{*/
+
+/*        border-radius: 46px;*/
+/*        width: 95px;*/
+/*        height: 30px;*/
+
+/*        display: flex;*/
+/*        justify-content: center;*/
+/*        align-items: center;*/
+
+/*        background-color: rgba(0, 0, 0, 1);*/
+
+/*        color: rgba(255, 255, 255, 1);*/
+/*        font-size: 14px;*/
+/*        font-weight: 500;*/
+/*        line-height: 140%;*/
+
+/*}*/
+/*.gogobutton:hover {*/
+/*    cursor: pointer;*/
+/*    background-color: rgba(0, 0, 0, 0.8);*/
+/*}*/
+/*.summonerbox{*/
+
+/*    display:flex;*/
+/*    justify-content:center;*/
+/*    align-items:center;*/
+/*    gap:50px;*/
+/*}*/
+/*.firstbox{*/
+/*    width:200px;*/
+/*    height:200px;*/
+/*    border-radius: 10px;*/
+/*    display:flex;*/
+/*    background-color: #D9D9D9;*/
+
+/*}*/
+/*.secondbox{*/
+/*    width:200px;*/
+/*    height:200px;*/
+/*    border-radius: 10px;*/
+/*    display:flex;*/
+/*    background-color: #D9D9D9;*/
+
+/*}*/
+/*.thirdbox {*/
+/*    width: 200px;*/
+/*    height: 200px;*/
+/*    border-radius: 10px;*/
+/*    display: flex;*/
+/*    background-color: #D9D9D9;*/
+/*}*/
+/*.fourthbox{*/
+/*    width:200px;*/
+/*    height:200px;*/
+/*    border-radius: 10px;*/
+/*    display:flex;*/
+/*    background-color: #D9D9D9;*/
+/*}*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*.kdabox{*/
+/*    display:flex;*/
+/*    justify-content:center;*/
+/*    align-items:center;*/
+/*}*/
+/*.kdarectangle{*/
+/*    width:600px;*/
+/*    height:200px;*/
+/*    background-color:#D9D9D9;*/
+/*    display:flex;*/
+/*    border-radius:10px;*/
+/*}*/
+
+
+/*.SearchBar .SearchInputContainer{*/
+/*    position: relative;*/
+/*    right: 1rem;*/
+/*    top: 3rem;*/
+/*    width: 260px;*/
+/*    height: 32px;*/
+/*    margin-right: 1rem;*/
+/*}*/
+
+/*.community-icon{*/
+/*    width: 200px;*/
+/*    height: 163px;*/
+/*}*/
+
+/*.icon-form {*/
+/*    margin-left: 30px;*/
+/*    justify-content: flex-start;*/
+/*    margin-top: 28px;*/
+
+/*    align-items: center;*/
+/*}*/
+/*.icon-text {*/
+/*    display: inline-block;*/
+/*    vertical-align: middle;*/
+/*    line-height: 39px;*/
+/*    margin-bottom: 46px;*/
+/*    margin-left: 8px;*/
+/*    font-size: 32px;*/
+/*    color: #fff;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.SearchForm{*/
+/*    position: relative;*/
+/*    justify-content: flex-end;*/
+/*    .main-input {*/
+/*        border-radius: 2px;*/
+/*        background: #fff;*/
+/*        border: none;*/
+/*        width: 268px;*/
+/*        line-height: 17px;*/
+/*        font-size: 14px;*/
+/*        padding: 12px 62px 11px 12px;*/
+/*        box-sizing: border-box;*/
+/*        height: 40px;*/
+/*        margin-right: 8px;*/
+/*    }*/
+
+/*    .mainBtn {*/
+/*        position: absolute;*/
+/*        top: 0;*/
+/*        right: 0;*/
+/*        margin-top: 5px;*/
+/*        margin-right: 15px;*/
+/*        position: absolute;*/
+/*        background: none;*/
+/*        border: 0;*/
+/*    }*/
+/*}*/
+/*}*/
+
+
+.BannerImg {
+    display:flex;
+
+    background-image: url(assets/v1_396.png); /* Update with your image path */
+
+    background-size: cover; /* This will make sure your image covers the entire banner */
+    background-position: center; /* This will center your image in the banner */
+    height:550px;
+    width: 100%;
+}
+
+.MainSearchContainer {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    height: 3rem;
+    gap:20px;
+}
+
+
+.loginArea{
+    position: absolute;
+    color: white;
+    margin-left: 94%;
+    top: 3%;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+.SearchInput {
+    flex:1;
+    margin-right:10px;
+    width: 300px; /* 원하는 너비로 조정해보세요 */
+    height: 40px; /* 원하는 높이로 조정해보세요 */
+    /* 필요에 따라 다른 스타일도 추가할 수 있습니다. */
+}
+.SearchButton{
+
+
+}
