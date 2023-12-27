@@ -4,8 +4,8 @@ pipeline {
         stage('Debugging') {
             steps {
                 script {
-                    echo "Current user: $(whoami)"
-                    echo "SSH environment variables: $(env | grep SSH)"
+                    echo "Current user: ${whoami}"
+                    echo "SSH environment variables: ${env | grep SSH}"
                 }
             }
         }
