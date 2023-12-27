@@ -10,7 +10,7 @@ pipeline {
             steps {
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: '*/deploy#*']],
+                    branches: [[name: '*/deploy#1']],
                     extensions: [[$class: 'PathRestriction', excludedRegions: '', includedRegions: 'frontend/.*']],
                     userRemoteConfigs: [[url: 'https://github.com/hyedokal/GGWP.git']]
                 ])
