@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
-import {AUTH_PATH, MAIN_PATH, MATCH_PATH, USER_PATH} from 'constant';
+import {AUTH_PATH, MAIN_PATH, MATCH_PATH, SUMMONER_PATH, USER_PATH} from 'constant';
 
 import Main from 'views/Main';
 import Authentication from 'views/Authentication';
@@ -16,6 +16,8 @@ import ResponseDto from 'apis/dto/response';
 import UserInfoStore from "./stores/userInfo.store";
 import Match from "./views/Match";
 import Test from "./views/Tests";
+import SearchComponent from "./views/Squad";
+import ProfileViewer from "./views/Summoner";
 
 function App() {
 
@@ -68,6 +70,8 @@ function App() {
           <Route path={USER_PATH} element={<User />} />
           <Route path={MATCH_PATH} element={<Match/>}/>
           <Route path='/test' element={<Test/>} />
+          <Route path={SUMMONER_PATH} element={<SearchComponent/>}/>
+          <Route path="/summoner/:gameName/:tagLine" element={<ProfileViewer/>}/>
           <Route path='*' element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>

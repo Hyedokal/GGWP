@@ -11,7 +11,7 @@ export const SEARCH_PATH:"/search" = '/search'
 export const MY_PATH:"/mypage"='/mypage'
 
 
-
+export const SUMMONER_PATH:"/summoner"='/summoner'
 
 export const BOARD_NUMBER_PATH_VARIABLE = ':boardNumber';
 export const DETAIL_PATH = (boardNumber: number | string) => `detail/${boardNumber}`;
