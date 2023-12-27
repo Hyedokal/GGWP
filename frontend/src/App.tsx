@@ -20,67 +20,67 @@ import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
 
-    const {pathname} = useLocation();   //          state: 현재 페이지 url 상태          //
-    const {user, setUser} = useUserStore();   //          state: 로그인 유저 상태          //
-    const [cookies, setCookie] = useCookies();  //          state: cookie 상태          //
-    const {userInfo, setUserInfo} = UserInfoStore();
+  const {pathname} = useLocation();   //          state: 현재 페이지 url 상태          //
+  const {user, setUser} = useUserStore();   //          state: 로그인 유저 상태          //
+  const [cookies, setCookie] = useCookies();  //          state: cookie 상태          //
+  const {userInfo, setUserInfo} = UserInfoStore();
 
-    //          function: get sign in user response 처리 함수 //
-    const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
-        const {code} = responseBody;
-        if (code !== 'SU') {
-            setCookie('accessToken', '', {expires: new Date(), path: MAIN_PATH});
-            setUser(null);
-            return;
-        }
-
-        setUser({...responseBody as GetSignInUserResponseDto});
+  //          function: get sign in user response 처리 함수 //
+  const getSignInUserResponse = (responseBody: GetSignInUserResponseDto | ResponseDto) => {
+    const {code} = responseBody;
+    if (code !== 'SU') {
+      setCookie('accessToken', '', {expires: new Date(), path: MAIN_PATH});
+      setUser(null);
+      return;
     }
 
-    // function: getUserRequest 처리 함수
-    const getUserResponse = (responseBody: GetUserResponseDto | ResponseDto) => {
-        const {code} = responseBody;
-        if (code !== 'SU') {
-            setUserInfo(null);
-            return;
-        }
-        setUserInfo({...responseBody as GetUserResponseDto});
+    setUser({...responseBody as GetSignInUserResponseDto});
+  }
+
+  // function: getUserRequest 처리 함수
+  const getUserResponse = (responseBody: GetUserResponseDto | ResponseDto) => {
+    const {code} = responseBody;
+    if (code !== 'SU') {
+      setUserInfo(null);
+      return;
+    }
+    setUserInfo({...responseBody as GetUserResponseDto});
+  }
+
+
+  useEffect(() => {    //          effect: 현재 path가 변경될 때마다 실행될 함수          //
+    const accessToken = cookies.accessToken;
+    if (!accessToken) {
+      setUser(null);
+      return;
     }
 
-
-    useEffect(() => {    //          effect: 현재 path가 변경될 때마다 실행될 함수          //
-        const accessToken = cookies.accessToken;
-        if (!accessToken) {
-            setUser(null);
-            return;
-        }
-
-        getSignInUserRequest(accessToken).then(getSignInUserResponse);
-        getUserRequest(accessToken).then(getUserResponse);
-    }, [pathname]);
+    getSignInUserRequest(accessToken).then(getSignInUserResponse);
+    getUserRequest(accessToken).then(getUserResponse);
+  }, [pathname]);
 
 
-    return (
-        <Routes>
-            <Route element={<Container/>}>
-                <Route path={MAIN_PATH} element={<Main/>}/>
-                <Route path={AUTH_PATH} element={<Authentication/>}/>
-                <Route path={USER_PATH} element={
-                    <ProtectedRoute>
-                        <User/>
-                    </ProtectedRoute>
-                }/>
+  return (
+    <Routes>
+      <Route element={<Container/>}>
+        <Route path={MAIN_PATH} element={<Main/>}/>
+        <Route path={AUTH_PATH} element={<Authentication/>}/>
+        <Route path={USER_PATH} element={
+          <ProtectedRoute>
+            <User/>
+          </ProtectedRoute>
+        }/>
 
-                <Route path={MATCH_PATH} element={
-                    <ProtectedRoute>
-                        <Match/>
-                    </ProtectedRoute>
-                }/>
-                <Route path="/summoner/:gameName/:tagLine" element={<ProfileViewer/>}/>
-                <Route path='*' element={<h1>404 Not Found</h1>}/>
-            </Route>
-        </Routes>
-    );
+        <Route path={MATCH_PATH} element={
+          <ProtectedRoute>
+            <Match/>
+          </ProtectedRoute>
+        }/>
+        <Route path="/summoner/:gameName/:tagLine" element={<ProfileViewer/>}/>
+        <Route path='*' element={<h1>404 Not Found</h1>}/>
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
