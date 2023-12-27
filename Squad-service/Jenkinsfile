@@ -1,6 +1,14 @@
 pipeline {
     agent any
     stages {
+        stage('Debugging') {
+            steps {
+                script {
+                    echo "Current user: $(whoami)"
+                    echo "SSH environment variables: $(env | grep SSH)"
+                }
+            }
+        }
         stage('Checkout') {
             steps {
                 checkout([
