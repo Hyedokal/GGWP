@@ -1,14 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Debugging') {
-            steps {
-                script {
-                    echo "Current user: ${whoami}"
-                    echo "SSH environment variables: ${env | grep SSH}"
-                }
-            }
-        }
         stage('Checkout') {
             steps {
                 checkout([
@@ -19,25 +11,19 @@ pipeline {
                 ])
             }
         }
+
         stage('Deploy to EC2') {
             steps {
-                script{
-                    // 디버깅을 위해 현재 사용자를 출력합니다.
-                    sh "whoami"
-
-                    // SSH 에이전트 환경 변수를 출력합니다.
-                    sh "env | grep SSH"
-                    dir('Squad-service') {
-                        sh """
-                            ssh -v -o StrictHostKeyChecking=no ubuntu@ec2-3-34-3-159.ap-northeast-2.compute.amazonaws.com '
-                                sudo docker stop \$(sudo docker ps -q) || true
-                                sudo docker rm \$(sudo docker ps -a -q) || true
-                                sudo docker rmi \$(sudo docker images -q) || true
-                                sudo docker pull hyedokal/ggwp_squad-service:latest
-                                sudo docker run -d -p 80:49870 hyedokal/ggwp_squad-service:latest
-                            '
-                        """
-                    }
+                dir('Squad-service') {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@ec2-3-34-3-159.ap-northeast-2.compute.amazonaws.com '
+                            sudo docker stop \$(sudo docker ps -q) || true
+                            sudo docker rm \$(sudo docker ps -a -q) || true
+                            sudo docker rmi \$(sudo docker images -q) || true
+                            sudo docker pull hyedokal/ggwp_squad-service:latest
+                            sudo docker run -d -p 80:49870 hyedokal/ggwp_squad-service:latest
+                        '
+                    """
                 }
             }
         }
