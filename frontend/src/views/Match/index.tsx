@@ -8,6 +8,7 @@
     import Announce from "../../components/Announce/Announce";
     import axios from "axios";
     import {deleteSquadApi, fetchMoreSquadsApi, fetchSquadsApi, fetchSquadsApi2} from "../../apis";
+    import SearchComponent from "../Squad";
 
     export default function Match() {
         const { userInfo } = UserInfoStore();
@@ -120,6 +121,9 @@
         return (
             <div>
                 <div>
+                    <div className="flex items-center justify-center ">
+                    <SearchComponent />
+                    </div>
                     <Announce />
 
                     <div className="bg-[#232a34] text-white">
