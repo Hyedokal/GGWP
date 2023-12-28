@@ -1,8 +1,10 @@
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import './style.css';
-
+import SearchComponent from "../Squad";
 
 const ProfileViewer: React.FC = () => {
 
@@ -10,7 +12,7 @@ const ProfileViewer: React.FC = () => {
     const [leagueData, setLeagueData] = useState<any[]>([]); // 여러 개의 리그 데이터를 저장하는 배열
     const [matchData, setMatchData] = useState<any[]>([]);
     // const [spellData, setSpellData] = useState<spellData | null>(null);
-    const { gameName, tagLine } = useParams();
+    const { gameName, tagLine } = useParams<{gameName:string; tagLine:string}>();
 
 
     useEffect(() => {
@@ -47,6 +49,7 @@ const ProfileViewer: React.FC = () => {
                 const response = await axios.post('http://localhost:8000/search-service/v1/match/get', {
                     gameName: gameName,
                     tagLine: tagLine
+
                 });
                 setMatchData(response.data.data); // 가져온 데이터 설정
             } catch (error) {
@@ -78,6 +81,17 @@ const ProfileViewer: React.FC = () => {
     const showAllMatches = () => {
         setFilteredMatchData(matchData);
     };
+    const getKoreanQueueType = (queueType:String) => {
+        switch (queueType) {
+            case 'RANKED_SOLO_5x5':
+                return '솔로   랭크';
+            case 'RANKED_FLEX_SR':
+                return '자유 5:5 랭크';
+            // 다른 Queue Type에 대한 경우 추가
+            default:
+                return queueType;
+        }
+    };
 
     // const groupedMatches: { [key: string]: any[] } = {};
     // matchData.forEach(match => {
@@ -88,6 +102,590 @@ const ProfileViewer: React.FC = () => {
     //     groupedMatches[matchId].push(match.info.participants);
     // });
 
+    interface ExpandedRows {
+        [key: number]: boolean;
+    }
+    const DisplayMatchData = () => {
+
+
+
+        const [expandedRows, setExpandedRows] = useState<ExpandedRows>({});
+
+        const filteredSummonerMatches = matchData.filter(match =>
+
+            match.info.participants.some(
+
+                (participant: any) => participant.summonerName === gameName
+
+            )
+        );
+
+        const getChampionName = (match: any) => {
+            if (!gameName || !match.info || !match.info.participants) {
+                return ''; // gameName이 undefined이거나 match.info 또는 match.info.participants가 없는 경우 처리
+            }
+
+            const participant = match.info.participants.find(
+                (participant: any) => participant.summonerName === gameName
+            );
+
+            return participant && participant.championName ? participant.championName : '';
+        };
+
+        const toggleRow = (index: number) => {
+            setExpandedRows({ ...expandedRows, [index]: !expandedRows[index] });
+        };
+
+
+        return (
+            <table>
+                <thead>
+                <tr style={{ display: 'flex', border: '1px solid black' }}>
+                    <th className="header">승</th>
+                    <td style={{ borderRight: '1px solid black', padding: '8px' }}></td>
+                    <th className="header">챔피언</th>
+                    <td style={{ borderLeft: '1px solid black', padding: '10px' }}></td>
+                    <th className="header">타입</th>
+                    <td style={{ borderLeft: '1px solid black', padding: '10px' }}></td>
+                    <th className="header">KDA</th>
+                    <td style={{ borderLeft: '1px solid black', padding: '10px' }}></td>
+                    <th className="header">S/R</th>
+                    <td style={{ borderLeft: '1px solid black', padding: '10px' }}></td>
+                    <th className="header">팀</th>
+                    <td style={{ borderLeft: '1px solid black', padding: '10px' }}></td>
+                    <th className="header">아이템</th>
+                </tr>
+                </thead>
+                <tbody>
+                {filteredSummonerMatches.map((match, index) => (
+                    <React.Fragment key={index}>
+                    <tr key={index} style={{ display:'flex' ,border: '1px solid black' }}>
+                        {/*<td>{new Date(match.info.gameEndTimestamp).toLocaleString()}</td>*/}
+                        {/*<td style={{ display: 'flex', padding: '10px' }}>{match.metadata.matchId}</td>*/}
+
+                        <td style={{ borderRight: '1px solid black', padding: '10px' }}>{match.info.teams[0].win ? '승' : '패'}</td>
+
+                        {match.info && match.info.participants && (
+                            <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                <img
+                                    className="ProfileImg"
+                                    src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${getChampionName(match)}.png`}
+                                    alt="Profile Icon"
+                                    style={{ width: '25px', height: '25px' }}
+                                />
+                            </td>
+                        )}
+                        <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                            {match.info.queueId === 420 ? '랭 크' : match.info.queueId === 440 ? '자유 랭크' : match.info.queueId === 450 ? '총력전' : match.info.queueId === 400 ? '일반' :' '}
+                        </td>
+                        <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                            {match.info.participants.map((participant: any, participantIndex: number) => (
+                                <div key={participantIndex}>
+                                    {participant.summonerName === gameName && (
+                                        <div>
+                                            <p>평점({((participant.kills + participant.deaths) / participant.assists).toFixed(2)})</p>
+                                            <p>{participant.kills}/{participant.deaths}/{participant.assists}</p>
+
+
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </td>
+                        <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                            {match.info.participants.map((participant: any, participantIndex: number) => (
+                                <div key={participantIndex}>
+                                    {participant.summonerName === gameName && (
+
+                                        <img
+                                            className="ProfileImg"
+                                            src={`/assets/${participant.summoner1Id}.png`}
+                                            alt="Profile Icon"
+                                            style={{ width: '25px', height: '25px' }} // 이미지 크기 조정
+                                        />
+
+                                    )}
+                                    {participant.summonerName === gameName && (
+                                        <img
+                                            className="ProfileImg"
+                                            src={`/assets/${participant.summoner2Id}.png`}
+                                            alt="Profile Icon"
+                                            style={{ width: '25px', height: '25px' }} // 이미지 크기 조정
+                                        />
+                                    )}
+                                    {/*{participant.summonerName === gameName && (*/}
+                                    {/*    <div>*/}
+                                    {/*        {participant.perks && participant.perks.styles && participant.perks.styles.map((style: any, styleIndex: number) => (*/}
+                                    {/*            <div key={styleIndex}>*/}
+                                    {/*                <p>Style: {style.style}</p>*/}
+                                    {/*                {style.selections && style.selections.map((selection: any, selectionIndex: number) => (*/}
+                                    {/*                    <div key={selectionIndex}>*/}
+                                    {/*                        <p>Perk: {selection.perk}</p>*/}
+
+                                    {/*                    </div>*/}
+                                    {/*                ))}*/}
+                                    {/*            </div>*/}
+                                    {/*        ))}*/}
+                                    {/*    </div>*/}
+                                    {/*)}*/}
+                                </div>
+                            ))}
+                        </td>
+                        <td style={{ display: 'flex', flexWrap: 'wrap', padding: '10px', borderRight: '1px solid black' }}>
+                            {match.info.participants.map((participant: any, participantIndex: number) => (
+                                <div key={participantIndex} style={{ margin: '', width: '10%' }}>
+                                    {participant.championName === 'FiddleSticks' ? (
+                                        <img
+                                            className="ProfileImg"
+                                            src={`/assets/${participant.championName}.png`}
+                                            alt="Custom Profile Icon"
+                                            style={{ width: '25px', height: '25px' }}
+                                        />
+                                    ) : (
+                                        <img
+                                            className="ProfileImg"
+                                            src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
+                                            alt="Profile Icon"
+                                            style={{ width: '25px', height: '25px' }}
+                                        />
+                                    )}
+                                </div>
+                            ))}
+                        </td>
+                        <td style={{ display: 'flex', flexWrap: 'wrap', padding: '10px',borderRight: '1px solid black' }}>
+                            {match.info.participants
+                                .filter((participant: any) => participant.summonerName === gameName)
+                                .map((participant: any, participantIndex: number) => (
+                                    participant.summonerName === gameName && (
+                                        <React.Fragment key={participantIndex}>
+                                            {[
+                                                participant.item0,
+                                                participant.item1,
+                                                participant.item2,
+                                                participant.item3,
+                                                participant.item4,
+                                                participant.item5,
+                                                participant.item6,
+                                            ].map((item, index) => (
+                                                item !== 0 && (
+                                                    <img
+                                                        key={index}
+                                                        src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${item}.png`}
+                                                        alt={`Item ${index}`}
+                                                        style={{ width: '25px', height: '25px', marginRight: '5px' }}
+                                                    />
+                                                )
+                                            ))}
+                                        </React.Fragment>
+                                    )
+                                ))}
+                        </td>
+
+                        <td style={{ width: '60px', padding: '10px' }}>
+                            <button
+                                onClick={() => toggleRow(index)}
+                                style={{ fontSize: '10px' }}
+                            >
+                                {expandedRows[index] ? '숨기기' : '더보기'}
+                            </button>
+                        </td>
+                        {/* 여기서 챔피언 정보를 추가하세요 */}
+                        {/* match.info.participants에서 챔피언 정보 가져와서 표시 */}
+                    </tr>
+                        {expandedRows[index] && (
+                            <tr key={`details-${index}`} style={{ display: 'flex', border: '1px solid black' }}>
+                                <td colSpan={3}>
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th>승리팀</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                {match.info.teams[0].win
+                                                    ? match.info.participants
+                                                        .filter((participant: any) => participant.teamId === match.info.teams[0].teamId)
+                                                        .map((participant: any, i: number) => (
+                                                            <table key={i} style={{ border: '1px solid black' }}>
+
+                                                                <tbody>
+                                                                <td>
+                                                                    {participant.championName === 'FiddleSticks' ? (
+                                                                        <img
+                                                                            src={`/assets/${participant.championName}.png`}
+                                                                            alt="Custom Champion Image"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    ) : (
+                                                                        <img
+                                                                            src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
+                                                                            alt="Champion"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    )}
+                                                                </td>
+
+                                                                    <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                        {participant.summonerName}
+                                                                    </td>
+                                                                    <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                        <img
+                                                                            src={`/assets/${participant.summoner1Id}.png`}
+                                                                            alt="summoner1Id"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                        <img
+                                                                            src={`/assets/${participant.summoner2Id}.png`}
+                                                                            alt="summoner2Id"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+
+                                                                    </td>
+
+
+                                                                    <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+
+                                                                        {participant.summonerLevel}
+                                                                    </td>
+
+                                                                    <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                        <p>평점 {((participant.kills + participant.deaths) / participant.assists).toFixed(2)}</p>
+                                                                        <p>{participant.kills}/{participant.deaths}/{participant.assists}</p>
+                                                                    </td>
+
+                                                                    <td style={{ display: 'flex' }}>
+                                                                        {[
+                                                                            participant.item0,
+                                                                            participant.item1,
+                                                                            participant.item2,
+                                                                            participant.item3,
+                                                                            participant.item4,
+                                                                            participant.item5,
+                                                                            participant.item6,
+                                                                        ].map((itemId, i) => (
+                                                                            itemId !== 0 && ( // Check if itemId exists (not 0)
+                                                                                <img
+                                                                                    key={i}
+                                                                                    src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${itemId}.png`}
+                                                                                    alt={`Item ${i}`}
+                                                                                    style={{ width: '25px', height: '25px', marginRight: '5px' }}
+                                                                                />
+                                                                            )
+                                                                        ))}
+                                                                    </td>
+
+                                                                    <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                        <p>딜량</p>
+                                                                        {participant.totalDamageDealtToChampions}
+                                                                    </td>
+
+                                                                    <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                        <p>피해량</p>
+                                                                        {participant.totalDamageTaken}
+                                                                    </td>
+
+
+
+
+                                                                {/* 다른 필드 추가 */}
+                                                                </tbody>
+                                                            </table>
+                                                        ))
+                                                    : match.info.participants
+                                                        .filter((participant: any) => participant.teamId !== match.info.teams[0].teamId)
+                                                        .map((participant: any, i: number) => (
+                                                            <table key={i} style={{ border: '1px solid black' }}>
+
+                                                                <tbody>
+                                                                <td>
+                                                                    {participant.championName === 'FiddleSticks' ? (
+                                                                        <img
+                                                                            src={`/assets/${participant.championName}.png`}
+                                                                            alt="Custom Champion Image"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    ) : (
+                                                                        <img
+                                                                            src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
+                                                                            alt="Champion"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    )}
+                                                                </td>
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    {participant.summonerName}
+                                                                </td>
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    <img
+                                                                        src={`/assets/${participant.summoner1Id}.png`}
+                                                                        alt="summoner1Id"
+                                                                        style={{ width: '25px', height: '25px' }}
+                                                                    />
+                                                                    <img
+                                                                        src={`/assets/${participant.summoner2Id}.png`}
+                                                                        alt="summoner2Id"
+                                                                        style={{ width: '25px', height: '25px' }}
+                                                                    />
+
+                                                                </td>
+
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+
+                                                                    {participant.summonerLevel}
+                                                                </td>
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    <p>평점 {((participant.kills + participant.deaths) / participant.assists).toFixed(2)}</p>
+                                                                    <p>{participant.kills}/{participant.deaths}/{participant.assists}</p>
+                                                                </td>
+
+                                                                <td style={{ display: 'flex' }}>
+                                                                    {[
+                                                                        participant.item0,
+                                                                        participant.item1,
+                                                                        participant.item2,
+                                                                        participant.item3,
+                                                                        participant.item4,
+                                                                        participant.item5,
+                                                                        participant.item6,
+                                                                    ].map((itemId, i) => (
+                                                                        itemId !== 0 && ( // Check if itemId exists (not 0)
+                                                                            <img
+                                                                                key={i}
+                                                                                src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${itemId}.png`}
+                                                                                alt={`Item ${i}`}
+                                                                                style={{ width: '25px', height: '25px', marginRight: '5px' }}
+                                                                            />
+                                                                        )
+                                                                    ))}
+                                                                </td>
+
+                                                                <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                    <p>딜량</p>
+                                                                    {participant.totalDamageDealtToChampions}
+                                                                </td>
+
+                                                                <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                    <p>피해량</p>
+                                                                    {participant.totalDamageTaken}
+                                                                </td>
+
+
+
+
+                                                                {/* 다른 필드 추가 */}
+                                                                </tbody>
+                                                            </table>
+                                                        ))}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <br />
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th>패배팀</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                {!match.info.teams[0].win
+                                                    ? match.info.participants
+                                                        .filter((participant: any) => participant.teamId === match.info.teams[0].teamId)
+                                                        .map((participant: any, i: number) => (
+                                                            <table key={i} style={{ border: '1px solid black' }}>
+
+                                                                <tbody>
+                                                                <td>
+                                                                    {participant.championName === 'FiddleSticks' ? (
+                                                                        <img
+                                                                            src={`/assets/${participant.championName}.png`}
+                                                                            alt="Custom Champion Image"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    ) : (
+                                                                        <img
+                                                                            src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
+                                                                            alt="Champion"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    )}
+                                                                </td>
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    {participant.summonerName}
+                                                                </td>
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    <img
+                                                                        src={`/assets/${participant.summoner1Id}.png`}
+                                                                        alt="summoner1Id"
+                                                                        style={{ width: '25px', height: '25px' }}
+                                                                    />
+                                                                    <img
+                                                                        src={`/assets/${participant.summoner2Id}.png`}
+                                                                        alt="summoner2Id"
+                                                                        style={{ width: '25px', height: '25px' }}
+                                                                    />
+
+                                                                </td>
+
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+
+                                                                    {participant.summonerLevel}
+                                                                </td>
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    <p>평점 {((participant.kills + participant.deaths) / participant.assists).toFixed(2)}</p>
+                                                                    <p>{participant.kills}/{participant.deaths}/{participant.assists}</p>
+                                                                </td>
+
+                                                                <td style={{ display: 'flex' }}>
+                                                                    {[
+                                                                        participant.item0,
+                                                                        participant.item1,
+                                                                        participant.item2,
+                                                                        participant.item3,
+                                                                        participant.item4,
+                                                                        participant.item5,
+                                                                        participant.item6,
+                                                                    ].map((itemId, i) => (
+                                                                        itemId !== 0 && ( // Check if itemId exists (not 0)
+                                                                            <img
+                                                                                key={i}
+                                                                                src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${itemId}.png`}
+                                                                                alt={`Item ${i}`}
+                                                                                style={{ width: '25px', height: '25px', marginRight: '5px' }}
+                                                                            />
+                                                                        )
+                                                                    ))}
+                                                                </td>
+
+                                                                <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                    <p>딜량</p>
+                                                                    {participant.totalDamageDealtToChampions}
+                                                                </td>
+
+                                                                <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                    <p>피해량</p>
+                                                                    {participant.totalDamageTaken}
+                                                                </td>
+
+
+
+
+                                                                {/* 다른 필드 추가 */}
+                                                                </tbody>
+                                                            </table>
+                                                        ))
+                                                    : match.info.participants
+                                                        .filter((participant: any) => participant.teamId !== match.info.teams[0].teamId)
+                                                        .map((participant: any, i: number) => (
+                                                            <table key={i} style={{ border: '1px solid black' }}>
+
+                                                                <tbody>
+                                                                <td>
+                                                                    {participant.championName === 'FiddleSticks' ? (
+                                                                        <img
+                                                                            src={`/assets/${participant.championName}.png`}
+                                                                            alt="Custom Champion Image"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    ) : (
+                                                                        <img
+                                                                            src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
+                                                                            alt="Champion"
+                                                                            style={{ width: '25px', height: '25px' }}
+                                                                        />
+                                                                    )}
+                                                                </td>
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    {participant.summonerName}
+                                                                </td>
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    <img
+                                                                        src={`/assets/${participant.summoner1Id}.png`}
+                                                                        alt="summoner1Id"
+                                                                        style={{ width: '25px', height: '25px' }}
+                                                                    />
+                                                                    <img
+                                                                        src={`/assets/${participant.summoner2Id}.png`}
+                                                                        alt="summoner2Id"
+                                                                        style={{ width: '25px', height: '25px' }}
+                                                                    />
+
+                                                                </td>
+
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+
+                                                                    {participant.summonerLevel}
+                                                                </td>
+
+                                                                <td style={{ borderRight: '1px solid black', padding: '10px' }}>
+                                                                    <p>평점 {((participant.kills + participant.deaths) / participant.assists).toFixed(2)}</p>
+                                                                    <p>{participant.kills}/{participant.deaths}/{participant.assists}</p>
+                                                                </td>
+
+                                                                <td style={{ display: 'flex' }}>
+                                                                    {[
+                                                                        participant.item0,
+                                                                        participant.item1,
+                                                                        participant.item2,
+                                                                        participant.item3,
+                                                                        participant.item4,
+                                                                        participant.item5,
+                                                                        participant.item6,
+                                                                    ].map((itemId, i) => (
+                                                                        itemId !== 0 && ( // Check if itemId exists (not 0)
+                                                                            <img
+                                                                                key={i}
+                                                                                src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${itemId}.png`}
+                                                                                alt={`Item ${i}`}
+                                                                                style={{ width: '25px', height: '25px', marginRight: '5px' }}
+                                                                            />
+                                                                        )
+                                                                    ))}
+                                                                </td>
+
+                                                                <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                    <p>딜량</p>
+                                                                    {participant.totalDamageDealtToChampions}
+                                                                </td>
+
+                                                                <td style={{ borderLeft: '1px solid black', padding: '10px' }}>
+                                                                    <p>피해량</p>
+                                                                    {participant.totalDamageTaken}
+                                                                </td>
+
+
+
+
+                                                                {/* 다른 필드 추가 */}
+                                                                </tbody>
+                                                            </table>
+                                                        ))}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        )}
+            </React.Fragment>
+                ))}
+
+                </tbody>
+            </table>
+        );
+    };
 
 
 
@@ -96,13 +694,15 @@ const ProfileViewer: React.FC = () => {
             <div className = "Look">
                 {summonerData &&(
                     <div>
-
+                        <div className="flex items-center justify-center ">
+                            <SearchComponent />
+                        </div>
                     </div>
                 )}
             </div>
             <div className = "SummonerBody">
 
-                <div className = "SideContent">
+                <div className = "SideContent" >
                 {summonerData && (
                     <div>
                         <img className = "ProfileImg"
@@ -113,8 +713,8 @@ const ProfileViewer: React.FC = () => {
 
                         <p>
                             {/*Profile Icon ID: {summonerData.profileIconId} <br />*/}
-                            Summoner Name: {summonerData.name} <br />
-                            Summoner Level: {summonerData.summonerLevel} <br />
+                            소환사명: {summonerData.name} <br />
+                            레벨: {summonerData.summonerLevel} <br />
 
                         </p>
 
@@ -122,21 +722,6 @@ const ProfileViewer: React.FC = () => {
                 )}
 
                         {leagueData   && (
-                            // <div>
-                            //     <h2>League Data</h2>
-                            //     {leagueData.map((data, index) => (
-                            //         <div key={index}>
-                            //             <p>Queue Type: {data.queueType}</p>
-                            //             <p>Tier: {data.tier}</p>
-                            //             <p>Rank: {data.rank}</p>
-                            //             <p>League Points: {data.leaguePoints}</p>
-                            //             {/* 다른 필드들도 출력 */}
-                            //             <img
-                            //
-                            //                 src={tierImages[data.tier]}
-                            //                 alt={data.tier}
-                            //             />
-                            //         </div>
 
 
                             <div>
@@ -144,14 +729,15 @@ const ProfileViewer: React.FC = () => {
                                 {leagueData.map((data) => (
                                     <div key={data.leagueId}>
                                         {/*<p>League ID: {data.leagueId}</p>*/}
-                                        <p>Queue Type: {data.queueType}</p>
-                                        <p>Tier: {data.tier}</p>
+                                        <p>Queue Type:  {getKoreanQueueType(data.queueType)}</p>
+                                        <p>티어: {data.tier} {data.rank}</p>
                                         {/* tierImages 객체를 사용하여 tier에 맞는 이미지를 화면에 출력 */}
-                                        <img className="RankIcon" src={require(`../../views/Summoner/assets/${data.tier}.png`)} alt={data.tier} />
+                                        <img className="RankIcon" src={require(`../../views/Summoner/assets/${data.tier}.png`)} alt={data.tier}
+                                             style={{ width: '100px', height: '100px' }}/>
                                         {/* 나머지 데이터 출력 */}
-                                        <p>League Points: {data.leaguePoints}</p>
-                                        <p>Wins: {data.wins}</p>
-                                        <p>Losses: {data.losses}</p>
+                                        <p>LP: {data.leaguePoints}</p>
+                                        <p>승리: {data.wins}</p>
+                                        <p>패배: {data.losses}</p>
                                         {/* 필요한 다른 데이터 출력 */}
                                     </div>
                                 ))}
@@ -169,81 +755,17 @@ const ProfileViewer: React.FC = () => {
                 <div className="RealContent">
 
 
-                    <table>
-                        <thead>
-                        <tr>
-                            <th colSpan={2}>
-                                <button onClick={showAllMatches}>전체</button>
-                            </th>
-                        <th colSpan={2}>
-                                <button onClick={() => filterMatchesByQueue(420)}>솔로랭크</button>
-                            </th>
-                        <th colSpan={2}>
-                                <button onClick={() => filterMatchesByQueue(440)}>자유랭크</button>
-                            </th>
-                        </tr>
+                    {/*<table>*/}
+                    {/*    <thead>*/}
+                    {/*    <tr>*/}
+                    {/*        <th className="header">Match ID</th>*/}
+                    {/*        <th className="header">승리 여부</th>*/}
+                    {/*        <th className="header">챔피언</th>*/}
+                    {/*    </tr>*/}
+                    {/*    </thead>*/}
 
-                        </thead>
-                        <tbody style={{ fontSize: '9px' }}>
-                        {Object.values(
-                            filteredMatchData.reduce((acc: any, match) => {
-                                if (!acc[match.metadata.matchId]) {
-                                    acc[match.metadata.matchId] = {
-                                        matchId: match.metadata.matchId,
-                                        queueId: match.info.queueId,
-                                        teams: {
-                                            100: [],
-                                            200: [],
-                                        },
-                                    };
-                                }
-                                match.info.participants.forEach((participant: any) => {
-                                    acc[match.metadata.matchId].teams[participant.teamId].push(participant);
-                                });
-                                return acc;
-                            }, {})
-                        ).map((matchGroup: any, index: number) => (
-                            <tr key={index}>
-                                <React.Fragment>
-                                    <td colSpan={2}>Match ID: {matchGroup.matchId}</td>
-                                    {/* 100팀의 정보 출력 */}
-                                    <td style={{ border: '1px solid black', padding: '5px' }}>
-                                        {matchGroup.teams[100].map((participant: any, pIndex: number) => (
-                                            <div key={`${index}-100-${pIndex}`} style={{ marginBottom: '10px' }}>
-                                                <div>{participant.summonerName}</div>
-                                                <div>{participant.teamId}</div>
-                                                <img
-                                                    className="champion"
-                                                    src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
-                                                    alt="champion"
-                                                    style={{ width: '30px', height: '30px' }}
-                                                />
-                                                {/* Add other participant details here */}
-                                            </div>
-                                        ))}
-                                    </td>
-                                    {/* 200팀의 정보 출력 */}
-                                    <td style={{ border: '1px solid black', padding: '5px' }}>
-                                        {matchGroup.teams[200].map((participant: any, pIndex: number) => (
-                                            <div key={`${index}-200-${pIndex}`} style={{ marginBottom: '10px' }}>
-                                                <div>{participant.summonerName}</div>
-                                                <div>{participant.teamId}</div>
-                                                <img
-                                                    className="champion"
-                                                    src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
-                                                    alt="champion"
-                                                    style={{ width: '30px', height: '30px' }}
-                                                />
-                                                {/* Add other participant details here */}
-                                            </div>
-                                        ))}
-                                    </td>
-                                </React.Fragment>
-                            </tr>
-                        ))}
-                        </tbody>
-
-                    </table>
+                    {/*</table>*/}
+                    {DisplayMatchData()}
                 </div>
             </div>
         </div>
@@ -253,512 +775,3 @@ const ProfileViewer: React.FC = () => {
 export default ProfileViewer;
 
 
-
-// import React, { useEffect, useState } from 'react';
-//  import axios from 'axios';
-//
-// const ProfileViewer: React.FC = () => {
-// const [summonerData, setSummonerData] = useState<any>(null);
-// const [leagueData, setLeagueData] = useState<any[]>([]);
-// const [matchData, setMatchData] = useState<any[]>([]);
-// const [spellData, setSpellData] = useState<any>(null);
-// const fetchData = async () => {
-//     try {
-//         const response = await axios.post('http://localhost:8000/search-service/v1/summoner/get', {
-//             gameName: '쌈오징어',
-//             tagLine: 'KR1'
-//         });
-//         if (response.status === 200) {
-//             setSummonerData(response.data.data);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//     }
-// };
-// const fetchLeagueData = async () => {
-//     try {
-//         const response = await axios.post('http://localhost:8000/search-service/v1/league/get', {
-//             gameName: '쌈오징어',
-//             tagLine: 'KR1'
-//         });
-//         if (response.status === 200) {
-//             setLeagueData(response.data.data);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching league data:', error);
-//     }
-// };
-// const fetchMatchData = async () => {
-//     try {
-//         const response = await axios.post('http://localhost:8000/search-service/v1/match/get', {
-//             gameName: '쌈오징어',
-//             tagLine: 'KR1'
-//         });
-//         setMatchData(response.data.data);
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//     }
-// };
-//     const readJsonFile = async (summonerId: number) => {
-//         try {
-//             const response = await fetch('../json/summoner.json');
-//             const jsonData = await response.json();
-//             const spellData = jsonData[summonerId];
-//             setSpellData(spellData); // Promise 대신 실제 값을 상태에 저장
-//         } catch (error) {
-//             console.error('파일 읽기 오류:', error);
-//         }
-//     };
-//
-// useEffect(() => {
-//     fetchData();
-//     fetchLeagueData();
-//     fetchMatchData();
-//      // 이 부분이 이전에 말씀드린대로 여러 번 호출되는 문제가 있을 수 있습니다.
-// }, []);
-//     useEffect(() => {
-//         if (spellData) {
-//             const summonerId = spellData.id;
-//             readJsonFile(summonerId).then((data) => {
-//                 setSpellData(data); // 받은 데이터를 상태에 업데이트
-//             });
-//         }
-//     }, [spellData]);
-//
-//     // 나머지 코드
-
-
-
-
-
-
-
-
-// {/*<div className= "RealContent">*/}
-// {/*        {matchData.map((match, index) => (*/}
-// {/*            <div key={index}>*/}
-// {/*                /!*<h2>Match {index + 1}</h2>*!/*/}
-// {/*                <ul>*/}
-// {/*                    {match.info.participants.map((participant: any, pIndex: number) => (*/}
-// {/*                        <li key={pIndex}>*/}
-// {/*                            /!*<p>Participant ID: {participant.participantId}</p>*!/*/}
-// {/*                            <p>  {participant.summonerId}</p>*/}
-// {/*                            /!*<p> {participant.profileIcon}</p>*!/*/}
-// {/*                            <img className = "ChampionImg"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/profileicon/${participant.profileIcon}.png`}*/}
-// {/*                                 alt="Champion Img"*/}
-// {/*                                 style={{ width: '50px', height: '50px' }}*/}
-// {/*                            />*/}
-// {/*                            /!*<p>PUUID: {participant.puuid}</p>*!/*/}
-// {/*                            <p>Summoner Level: {participant.summonerLevel}</p>*/}
-// {/*                            <p>Summoner Name: {participant.summonerName}</p>*/}
-// {/*                            /!*<p>Riot ID Name: {participant.riotIdName}</p>*!/*/}
-// {/*                            /!*<p>Riot ID Tagline: {participant.riotIdTagline}</p>*!/*/}
-// {/*                            <p>Kills: {participant.kills}</p>*/}
-// {/*                            <p>Assists: {participant.assists}</p>*/}
-// {/*                            <p>Deaths: {participant.deaths}</p>*/}
-// {/*                            <p>Champ Experience: {participant.champExperience}</p>*/}
-// {/*                            <p>Champ Level: {participant.champLevel}</p>*/}
-// {/*                            /!*<p>Champion ID: {participant.championId}</p>*!/*/}
-// {/*                            <img className = "ChampionImg"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}*/}
-// {/*                                 alt="Champion Img"*/}
-// {/*                                 style={{ width: '60px', height: '60px' }}*/}
-// {/*                            />*/}
-// {/*                            <p>Champion Name: {participant.championName}</p>*/}
-// {/*                            <p>Item0: {participant.item0}</p>*/}
-// {/*                            <img className = "ItemImg0"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item0}.png`}*/}
-// {/*                                 alt="Item0Img"*/}
-// {/*                                 style={{ width: '50px', height: '50px' }}*/}
-// {/*                            />*/}
-// {/*                            <p>Item1: {participant.item1}</p>*/}
-// {/*                            <img className = "ItemImg0"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item1}.png`}*/}
-// {/*                                 alt="Item0Img"*/}
-// {/*                                 style={{ width: '50px', height: '50px' }}*/}
-// {/*                            />*/}
-// {/*                            <p>Item2: {participant.item2}</p>*/}
-// {/*                            <img className = "ItemImg0"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item2}.png`}*/}
-// {/*                                 alt="Item0Img"*/}
-// {/*                                 style={{ width: '50px', height: '50px' }}*/}
-// {/*                            />*/}
-// {/*                            <p>Item3: {participant.item3}</p>*/}
-// {/*                            <img className = "ItemImg0"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item3}.png`}*/}
-// {/*                                 alt="Item0Img"*/}
-// {/*                                 style={{ width: '50px', height: '50px' }}*/}
-// {/*                            />*/}
-// {/*                            <p>Item4: {participant.item4}</p>*/}
-// {/*                            {participant.item4 === 0 ? (*/}
-// {/*                                <img*/}
-// {/*                                    className="ItemImg0"*/}
-// {/*                                    src={require(`../../views/Test/assets/0.png`)}*/}
-// {/*                                    alt="Item2Img0"*/}
-// {/*                                    style={{ width: '50px', height: '50px' }}*/}
-// {/*                                />*/}
-// {/*                            ) : (*/}
-// {/*                                <img*/}
-// {/*                                    className="ItemImg0"*/}
-// {/*                                    src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item2}.png`}*/}
-// {/*                                    alt="Item2Img"*/}
-// {/*                                    style={{ width: '50px', height: '50px' }}*/}
-// {/*                                />*/}
-// {/*                            )}*/}
-// {/*                            <p>Item5: {participant.item5}</p>*/}
-// {/*                            <img className = "ItemImg0"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item5}.png`}*/}
-// {/*                                 alt="Item0Img"*/}
-// {/*                                 style={{ width: '50px', height: '50px' }}*/}
-// {/*                            />*/}
-// {/*                            <p>Item6: {participant.item6}</p>*/}
-// {/*                            <img className = "ItemImg0"*/}
-// {/*                                 src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item6}.png`}*/}
-// {/*                                 alt="Item0Img"*/}
-// {/*                                 style={{ width: '50px', height: '50px' }}*/}
-// {/*                            />*/}
-// {/*                            <p>Summoner1 ID: {participant.summoner1Id}</p>*/}
-//
-// {/*                            <p>Summoner2 ID: {participant.summoner2Id}</p>*/}
-// {/*                            <p>Perks Styles: {participant.perks.styles[0].style}</p>*/}
-// {/*                            <p>Neutral Minions Killed: {participant.neutralMinionsKilled}</p>*/}
-// {/*                            <p>Total Minions Killed: {participant.totalMinionsKilled}</p>*/}
-// {/*                            <p>Total Damage Dealt To Champions: {participant.totalDamageDealtToChampions}</p>*/}
-// {/*                            <p>Total Damage Taken: {participant.totalDamageTaken}</p>*/}
-// {/*                            <p>Team ID: {participant.teamId}</p>*/}
-// {/*                            <p>Team Position: {participant.teamPosition}</p>*/}
-// {/*                        </li>*/}
-// {/*                    ))}*/}
-// {/*                </ul>*/}
-// {/*            </div>*/}
-// {/*        ))}*/}
-// {/*</div>*/}
-
-
-
-
-// <td>
-//     {participant.perks.styles.map((style: any, styleIndex: any) => (
-//         <div key={`${index}-${pIndex}-${styleIndex}`}>
-//             <p>Style: {style.style}</p>
-//             {/* 다른 Perks 정보 */}
-//         </div>
-//     ))}
-// </td>
-
-                            //
-                            //     {participant.item4 === 0 ? (
-                            //     <img
-                            //         className="ItemImg0"
-                            //         src={require(`../../views/Test/assets/0.png`)}
-                            //         alt="Item2Img0"
-                            //         style={{ width: '50px', height: '50px' }}
-                            //     />
-                            // ) : (
-                            //     <img
-                            //         className="ItemImg0"
-                            //         src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item2}.png`}
-                            //         alt="Item2Img"
-                            //         style={{ width: '50px', height: '50px' }}
-                            //     />
-                            // )}
-
-//
-// {/*<tbody>*/}
-// {/*{Object.values(*/}
-// {/*    filteredMatchData.reduce((acc: any, match) => {*/}
-// {/*        match.info.participants.forEach((participant: any) => {*/}
-// {/*            if (!acc[match.metadata.matchId]) {*/}
-// {/*                acc[match.metadata.matchId] = {*/}
-// {/*                    matchId: match.metadata.matchId,*/}
-// {/*                    queueId: match.info.queueId,*/}
-// {/*                    participants: [],*/}
-// {/*                };*/}
-// {/*            }*/}
-// {/*            acc[match.metadata.matchId].participants.push(participant);*/}
-// {/*        });*/}
-// {/*        return acc;*/}
-// {/*    }, {})*/}
-// {/*).map((matchGroup: any, index: number) => (*/}
-// {/*    <tr key={index}>*/}
-// {/*        <td>{matchGroup.matchId}</td>*/}
-// {/*        <td>{matchGroup.queueId}</td>*/}
-// {/*        {matchGroup.participants.map((participant: any, pIndex: number) => (*/}
-// {/*            <React.Fragment key={`${index}-${pIndex}`}>*/}
-// {/*                <td>{participant.profileIcon}</td>*/}
-// {/*                <td>*/}
-// {/*                <img*/}
-// {/*                    className="ChampionImg"*/}
-// {/*                    src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/profileicon/${participant.profileIcon}.png`}*/}
-// {/*                    alt="Champion Img"*/}
-// {/*                    style={{ width: '50px', height: '50px' }}*/}
-// {/*                />*/}
-// {/*                </td>*/}
-// {/*                <td>{participant.summonerLevel}</td>*/}
-// {/*                <td>{participant.summonerName}</td>*/}
-// {/*                <td>{participant.kills}</td>*/}
-// {/*                <td>{participant.assists}</td>*/}
-// {/*                <td>{participant.deaths}</td>*/}
-// {/*                <td>{participant.champExperience}</td>*/}
-// {/*                <td>{participant.champLevel}</td>*/}
-// {/*                <td>{participant.championId}</td>*/}
-// {/*                <td>{participant.championName}</td>*/}
-// {/*                <td>*/}
-// {/*                <img*/}
-// {/*                    className="champion"*/}
-// {/*                    src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}*/}
-// {/*                    alt="champion"*/}
-// {/*                    style={{ width: '50px', height: '50px' }}*/}
-// {/*                />*/}
-// {/*                </td>*/}
-// {/*                /!* 여기에 다른 participant 정보들도 추가할 수 있어요 *!/*/}
-// {/*            </React.Fragment>*/}
-// {/*        ))}*/}
-// {/*    </tr>*/}
-// {/*))}*/}
-// {/*</tbody>*/}
-
-
-
-//
-// <tbody>
-// {filteredMatchData.map((match, index) => (
-//     <React.Fragment key={index}>
-//         {match.info.participants.map((participant: { participantId: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; summonerId: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; profileIcon: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; puuid: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; summonerLevel: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; summonerName: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; riotIdName: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; riotIdTagline: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; kills: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; assists: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; deaths: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; champExperience: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; champLevel: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; championId: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; championName: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; item0: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; item1: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; item2: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; item3: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; item4: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; item5: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; item6: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; summoner1Id: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; summoner2Id: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; perks: { styles: { style: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }[]; }; neutralMinionsKilled: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; totalMinionsKilled: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; totalDamageDealtToChampions: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; totalDamageTaken: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; teamId: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; teamPosition: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }, pIndex: any) => (
-//             <tr key={`${index}-${pIndex}`}>
-//                 <td>{match.metadata.matchId}</td>
-//                 <td>{match.info.queueId}</td>
-//                 {/*<td>{participant.participantId}</td>*/}
-//                 {/*<td>{participant.summonerId}</td>*/}
-//                 <td>{participant.profileIcon}</td>
-//                 <td>
-//                     <img className = "ChampionImg"
-//                          src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/profileicon/${participant.profileIcon}.png`}
-//                          alt="Champion Img"
-//                          style={{ width: '50px', height: '50px' }}
-//                     />
-//                 </td>
-//                 {/*<td>{participant.puuid}</td>*/}
-//                 <td>{participant.summonerLevel}</td>
-//                 <td>{participant.summonerName}</td>
-//
-//                 {/*<td>{participant.riotIdName}</td>*/}
-//                 {/*<td>{participant.riotIdTagline}</td>*/}
-//                 {/*<td>{participant.kills}</td>*/}
-//                 {/*<td>{participant.assists}</td>*/}
-//                 {/*<td>{participant.deaths}</td>*/}
-//                 {/*<td>{participant.champExperience}</td>*/}
-//                 {/*<td>{participant.champLevel}</td>*/}
-//                 {/*<td>{participant.championId}</td>*/}
-//                 <td>{participant.championName}</td>
-//                 <td>
-//                     <img className = "champion"
-//                          src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
-//                          alt="champion"
-//                          style={{ width: '50px', height: '50px' }}
-//                     />
-//                 </td>
-//                 <td>{participant.item0}</td>
-//                 <td>
-//                     {participant.item0 === 0 ? (
-//                         <img
-//                             className="ItemImg0"
-//                             src={require(`../../views/Test/assets/0.png`)}
-//                             alt="Item2Img0"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     ) : (
-//                         <img
-//                             className="ItemImg0"
-//                             src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item0}.png`}
-//                             alt="Item0Img"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     )}
-//                 </td>
-//
-//                 <td>{participant.item1}</td>
-//                 <td>
-//                     {participant.item1 === 0 ? (
-//                         <img
-//                             className="ItemImg0"
-//                             src={require(`../../views/Test/assets/0.png`)}
-//                             alt="Item2Img0"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     ) : (
-//                         <img
-//                             className="ItemImg0"
-//                             src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item1}.png`}
-//                             alt="Item2Img"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     )}
-//                 </td>
-//                 <td>{participant.item2}</td>
-//                 <td>
-//                     {participant.item2 === 0 ? (
-//                         <img
-//                             className="ItemImg0"
-//                             src={require(`../../views/Test/assets/0.png`)}
-//                             alt="Item2Img0"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     ) : (
-//                         <img
-//                             className="ItemImg0"
-//                             src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item2}.png`}
-//                             alt="Item2Img"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     )}
-//                 </td>
-//                 <td>{participant.item3}</td>
-//                 <td>
-//                     {participant.item3 === 0 ? (
-//                         <img
-//                             className="ItemImg0"
-//                             src={require(`../../views/Test/assets/0.png`)}
-//                             alt="Item2Img0"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     ) : (
-//                         <img
-//                             className="ItemImg0"
-//                             src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item3}.png`}
-//                             alt="Item2Img"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     )}
-//                 </td>
-//                 <td>{participant.item4}</td>
-//                 <td>
-//                     {participant.item4 === 0 ? (
-//                         <img
-//                             className="ItemImg0"
-//                             src={require(`../../views/Test/assets/0.png`)}
-//                             alt="Item2Img0"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     ) : (
-//                         <img
-//                             className="ItemImg0"
-//                             src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item4}.png`}
-//                             alt="Item2Img"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     )}
-//                 </td>
-//                 <td>{participant.item5}</td>
-//
-//                 <td>
-//                     {participant.item5 === 0 ? (
-//                         <img
-//                             className="ItemImg0"
-//                             src={require(`../../views/Test/assets/0.png`)}
-//                             alt="Item2Img0"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     ) : (
-//                         <img
-//                             className="ItemImg0"
-//                             src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item5}.png`}
-//                             alt="Item2Img"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     )}
-//                 </td>
-//                 <td>{participant.item6}</td>
-//                 <td>
-//                     {participant.item6 === 0 ? (
-//                         <img
-//                             className="ItemImg0"
-//                             src={require(`../../views/Test/assets/0.png`)}
-//                             alt="Item2Img0"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     ) : (
-//                         <img
-//                             className="ItemImg0"
-//                             src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${participant.item6}.png`}
-//                             alt="Item2Img"
-//                             style={{ width: '50px', height: '50px' }}
-//                         />
-//                     )}
-//                 </td>
-//                 <td>{participant.summoner1Id}</td>
-//                 <td>
-//                     <img src={require(`../../views/Test/assets/${participant.summoner1Id}.png`)}
-//                          alt= "item6"
-//                          style={{ width: '50px', height: '50px' }}/>
-//                 </td>
-//
-//                 <td>{participant.summoner2Id}</td>
-//                 <td>
-//                     <img className = "summoner2Id"
-//                          src={require(`../../views/Test/assets/${participant.summoner2Id}.png`)}
-//                          alt="summoner2Id"
-//                          style={{ width: '50px', height: '50px' }}
-//                     />
-//                 </td>
-//                 <td>{participant.perks.styles[0].style}</td>
-//                 {/*<td>*/}
-//                 {/*    {participant.perks.styles.map((style: any, styleIndex: any) => (*/}
-//                 {/*        <div key={`${index}-${pIndex}-${styleIndex}`}>*/}
-//                 {/*            <p>Style: {style.style}</p>*/}
-//                 {/*            /!* 다른 Perks 정보 *!/*/}
-//                 {/*        </div>*/}
-//                 {/*    ))}*/}
-//                 {/*</td>*/}
-//                 <td>{participant.neutralMinionsKilled}</td>
-//                 <td>{participant.totalMinionsKilled}</td>
-//                 <td>{participant.totalDamageDealtToChampions}</td>
-//                 <td>{participant.totalDamageTaken}</td>
-//
-//                 <td>{participant.teamId}</td>
-//                 <td>{participant.teamPosition}</td>
-//             </tr>
-//         ))}
-//     </React.Fragment>
-// ))}
-// </tbody>
-
-
-// <tbody style={{ fontSize: '9px' }}>
-// {Object.values(
-//     filteredMatchData.reduce((acc: any, match) => {
-//         match.info.participants.forEach((participant: any) => {
-//             if (!acc[match.metadata.matchId]) {
-//                 acc[match.metadata.matchId] = {
-//                     matchId: match.metadata.matchId,
-//                     queueId: match.info.queueId,
-//                     participants: [],
-//                 };
-//             }
-//             acc[match.metadata.matchId].participants.push(participant);
-//         });
-//         return acc;
-//     }, {})
-// ).map((matchGroup: any, index: number) => (
-//     <tr key={index}>
-//
-//         {matchGroup.participants.map((participant: any, pIndex: number) => (
-//             <React.Fragment key={`${index}-${pIndex}`}>
-//
-//                 <td>{participant.summonerName}</td>
-//                 <td>
-//                     <img className = "champion"
-//                          src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${participant.championName}.png`}
-//                          alt="champion"
-//                          style={{ width: '50px', height: '50px' }}
-//                     />
-//                 </td>
-//
-//
-//                 {/* Add other participant details here */}
-//             </React.Fragment>
-//         ))}
-//     </tr>
-// ))}
-// </tbody>

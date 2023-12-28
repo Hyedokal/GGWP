@@ -24,7 +24,7 @@ const SearchComponent = () => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-full shadow-md w-[80%] max-w-[600px] flex items-center justify-between">
+        <div className="mt-4 bg-white p-4 rounded-full shadow-md w-[80%] max-w-[600px] flex items-center justify-between">
             <input
                 type="text"
                 value={gameName}
