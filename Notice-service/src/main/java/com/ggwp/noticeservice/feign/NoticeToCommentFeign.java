@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-@FeignClient(name = "comment-service")
+
+@FeignClient(name = "comment-service", url = "http://43.202.68.220")
 public interface NoticeToCommentFeign {
 
-        @GetMapping("/v1/comments/feign/{cId}") // commentId를 통해 커멘트 가져오기
-        ResponseCommentDto getComment(@PathVariable Long cId);
+    @GetMapping("/v1/comments/feign/{cId}")
+        // commentId를 통해 커멘트 가져오기
+    ResponseCommentDto getComment(@PathVariable Long cId);
 }
 

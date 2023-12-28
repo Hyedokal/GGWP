@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "squad-service")
+@FeignClient(name = "squad-service", url = "http://3.34.3.159")
 public interface SquadFeignClient {
 
     @PostMapping("v1/squads/match/list")
     ResponseEntity<ResponseMatchDto> getMatchInfo(@RequestBody RequestMatchDto dto);
 
     @PutMapping("v1/squads/lolNickname-tag")
-     ResponseEntity<FeignLolNickNameTagResponseDto> feignLolNickNameTag(@RequestBody FeignLolNickNameTagRequestDto requestBody);
+    ResponseEntity<FeignLolNickNameTagResponseDto> feignLolNickNameTag(@RequestBody FeignLolNickNameTagRequestDto requestBody);
 
 }

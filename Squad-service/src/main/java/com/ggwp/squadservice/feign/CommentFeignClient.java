@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "Comment-service")
+@FeignClient(name = "Comment-service", url = "http://43.202.68.220")
 public interface CommentFeignClient {
     @GetMapping("/v1/comments/search")
     Page<ResponseCommentDto> getPagedComment(@RequestBody RequestCommentPageDto.Search dto);
