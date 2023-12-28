@@ -10,35 +10,36 @@ spring:
         # 이 밑에 본인의 Microservice 등록하기
         # 스쿼드 id, predicate 설정 오류로 수정했습니다. (jong ha)
         - id: Announce-service
-          uri: http://13.125.198.145
+          uri:
+            http://13.125.198.145:49872/
           predicates:
             - Path=/v1/announces/**
         - id: Squad-service
-          uri: http://3.34.3.159
+          uri: http://3.34.3.159:49870/
           predicates:
             - Path=/v1/squads/**
         - id: Comment-service
-          uri: http://43.202.68.220
+          uri: http://43.202.68.220:49871/
           predicates:
             - Path=/v1/comments/**
         - id: Member-service
-          uri: http://13.125.14.248
+          uri: http://13.125.14.248:49875/
           predicates:
             - Path=/member-service/**
         - id: Notice-service
-          uri: http://43.200.180.146
+          uri: http://43.200.180.146:49874/
           predicates:
             - Path=/notice-service/**
         - id: WebSocket-service
-          uri: http://43.200.180.146/ws-stomp
+          uri: http://43.200.180.146:49874/ws-stomp
           predicates:
             - Path=/ws-stomp/**
         - id: HTTP-service
-          uri: http://43.200.180.146
+          uri: http://43.200.180.146:49874/
           predicates:
             - Path=/webjars/**
         - id: Search-service
-          uri: http://15.165.236.226
+          uri: http://15.165.236.226:49873/
           predicates:
             - Path=/search-service/**
 
