@@ -1,0 +1,4 @@
+mq:
+  hostname: amqps://b-ed300ef9-3b6e-49f2-85bc-6f0373ed42a3.mq.ap-northeast-2.amazonaws.com
+  adminid: ggwp
+  password: ggwprabbitmq

@@ -1,0 +1,5 @@
+spring:
+  cloud:
+    config:
+      uri: http://3.38.178.21
+      name: notice
