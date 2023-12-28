@@ -20,6 +20,7 @@ spring:
   jwt:
     secret-key: ${secret-key}
 
+
 file:
   path: ${filepath}
   url: ${file_url}
