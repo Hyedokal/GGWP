@@ -121,7 +121,7 @@
         return (
             <div>
                 <div>
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center ">
                     <SearchComponent />
                     </div>
                     <Announce />
